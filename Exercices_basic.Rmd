@@ -1,0 +1,192 @@
+---
+title: "R Übungen"
+output: html_notebook
+---
+
+## Einführung
+
+Dieses RMarkdown Notebook enthält eine Reihe von Übungen, die dabei helfen sollen, euch mit R und RStudio vertraut zu machen. Wir werden dabei vor allem das *Tidyverse* verwenden.
+
+Notebooks vereinen Code für die Analysen, die Ergebnisse des Codes und begleitende Texte wie diesen hier, was sie insbesondere für die Dokumentation von Projekten geeignet macht. In der Toolbar am oberen Rand des Notebooks könnt ihr zwischen "Source" (dem vollständigen Code) und "Visual" (dem, was eure Leser\*innen später sehen) wechseln. "Source" bietet einige zusätzliche Optionen, z.B. in der Art und Weise, wie Code Chunks dargestellt werden. Diese lassen sich aber auch mit einem Klick auf das Zahnrad eines Code Chunks (teilweise) einstellen. "Visual" zeigt euch insbesondere, wie der begleitende Text später formatiert wird und bietet einige praktische Formatierungsoptionen in der Toolbar sowie einfache Möglichkeiten, Code Chunks, Bilder und Links einzufügen. Wechselt zwischen den beiden Ansichten und ihr werdet sehen, wie Code in der "Source"-Ansicht u.a. den Text für "Visual" mit Markdown formatiert.
+
+Die "Code Chunks" beginnend mit "\`\`\`{r}" stellen dabei R-Code dar. Ihr könnt ihn entweder zeilenweise mit der Tastenkombination `Strg+ENTER` ausführen oder den gesamten Chunk mit dem grünen Pfeil oben rechts in der Ecke des Chunk-Felds auf einmal ausführen. Diese Art Notebook ist also vergleichbar mit den Jupyter Notebooks, die ihr bereits kennengelernt habt. Ihr könnt Code aber auch direkt in der RStudio Console ausführen, indem ihr in dorthin kopiert oder direkt dort eintippt. Das Ergebnis wird dann nicht in dem Notebook, sondern in der Console angezeigt. Das ist praktisch, wenn ihr kurz etwas ausprobieren oder die Helpfiles aufrufen wollt, z.B. mit `?filter`. Wichtig: Weder Code, den ihr in der Console ausführt, noch dessen Ergebnisse werden im Notebook gespeichert!
+
+Mit `Strg+Alt+I` oder *Insert-\>Code Chunk-\>R* in der Toolbar könnt ihr neue Code Chunks hinzufügen. Ihr könnt auch andere Programmiersprachen in Notebooks einbinden, z.B. Python. Beachtet aber, dass *R* und *Python* nicht dieselbe Umgebung benutzen, ihr Daten also jeweils wieder neu einlesen müsst - und ihr müsst darauf achten, dass die Datenformate kompatibel sind!
+
+Mit einem Klick auf "Preview" könnt ihr euch euer aktuelles Notebook als HTML anzeigen lassen. Stellt sicher, dass ihr alle Code Chunks, die ihr in euerem Dokument sehen wollt, ausgeführt hat - sonst werden sie in "Preview" nicht angezeigt. Ihr könnt das Notebook auch in andere Formate exportieren, z.B. PDF (benötigt eine LaTeX Installation), Word (benötigt eine Word Installation) oder HTML (lässt sich mit jedem Browser öffnen). Geht dazu auf das Drop-Down Menü neben "Preview" (der kleine Pfeil nach unten) und wählt eine "Knit"-Option aus. Beachtet, dass "Knit" immer alle Code Chunks im Notebook ausführt.
+
+## 1. Packages laden & installieren
+
+Wir wollen in dieser Übung vor allem das *Tidyverse* verwenden und uns mit dessen Funktionen vertraut machen. Dazu müssen wir es zunächst einmal installieren:
+
+```{r}
+install.packages("tidyverse")
+
+```
+
+Beachtet, dass ihr diesen Code Chunk nur einmal ausführen müsst. Ein einmal installiertes Package ist bei jedem Start von R wieder verfügbar. Einzige Ausnahme: Größere Updates von R (z.b. von 4.1 auf 4.2) machen eine Neuinstallation aller Packages nötig. Bei kleineren Updates (z.B. von R 4.1.1 auf 4.1.2) ist dies nicht nötig. Dennoch empfiehlt es sich, regelmäßig Package Updates durchzuführen. Wenn ein Package bereits installiert ist, führt `install.packages()` ein Update durch.
+
+Nachdem wir das Package installiert haben, müssen wir es in unsere aktuelle R Umgebung laden, um Zugriff auf dessen Funktionen zu haben. Dies geschieht mit folgendem Code:
+
+```{r}
+library(tidyverse)
+```
+
+### Übung 1:
+
+Neben dem tidyverse werden wir im Verlauf der Übung außerdem das package "tuber" benötigen, mit dem wir auf die YouTube API zugreifen können. Schreibt Code, welcher das Package installiert und lädt.
+
+Installiere das Package "tuber":
+
+```{r}
+
+```
+
+Lade das Package tuber:
+
+```{r}
+
+```
+
+## 2. Daten einlesen
+
+Im Learnweb findet ihr den Datensatz "party_videos.RDS". Darin finden sich Metadaten aller 13.512 Videos, die zum Zeitpunkt der Erhebung auf den YouTube Channels der großen deutschen Parteien verfügbar waren. Neben Metadaten wie der VideoID und dem Veröffentlichungsdatum findet sich dort auch ein Variable, welche angibt, von welcher Partei ein Video stammt.
+
+Legt auf eurem Computer einen Ordner an, in dem ihr alle für diese Übung relevanten Dateien speichert und speichert den Datensatz dort ab. Ihr könnt auch dieses Notebook mit *File-\>Save As* dort ablegen. Nur weil euer Notebook in diesem Ordner liegt, heißt das aber noch nicht, dass eure R-Umgebung diesen auch als aktuellen Ordner wahrnimmt! Folgender Code gibt euch euer aktuelles *Working Directory* aus:
+
+```{r}
+getwd()
+```
+
+Ihr sehr euer aktuelles Working Director auch über dem Console-Fenster - neben der aktuell verwendeten R-Version. Zwar könnt ihr auch auf Dateien außerhalb eures Working Directory zugreifen. Dazu müsst ihr jedoch immer den gesamten Pfad der Daten mit angeben - was sehr mühselig sein kann. Deshalb macht es Sinn, euer Working Directory zu ändern. Das geht mit der `setwd()`-Funktion:
+
+```{r}
+setwd("C:/meine_R_Projekte/YouTube_Seminar/Uebung_1")
+```
+
+Beachtet, dass ihr der hier angegeben Ordnerpfad bei euch wahrscheinlich nicht existiert. Ihr müsst ihn also entsprechend so anpassen, dass er auf euren Ordner zeigt, in den ihr den Datensatz geladen habt. Wichtig ist, dass ihr euren Pfad in Anführungszeichen ("...") setzt und Schrägstriche ( / ), keine Backslashes ( \\ ), verwendet, um den Pfad zu schreiben. Beachtet, dass das Working Director bei jedem Start von R idR. neu gesetzt werden muss.
+
+Wenn wir unser Working Directory gesetzt haben, können wir die Daten in unsere aktuelle Umgebung laden. Die `readRDS()`-Funktion lädt .RDS-Dateien und ordnet sie einem Objekt zu:
+
+```{r}
+party_videos <- readRDS("party_videos.RDS")
+```
+
+Beachtet, dass es sich bei dem RDS-Format um ein R-eigenes Format handelt, welches häufig nicht mit anderen Programmen wie Python kompatibel ist. R ist allerdings auch in der Lage, andere Dateitypen einzulesen, etwa das unisverselle .csv. Das Tidyverse bietet dazu die `read_csv`-Funktion an. Sie bietet einige zusätzliche Funktionen, etwa die Spezifizierung der Variablen-Typen für einzelne Spalten, funktioniert im Prinzip aber analog zu `readRDS()`. Die *party_videos.csv*-Datei lässt sich so ebenfalls einlesen. Sie ist inhaltlich identisch mit der .RDS-Datei.
+
+```{r}
+party_videos <- read_csv("data/party_videos.csv")
+```
+
+**Tipp:** Wenn ihr einen Dateipfad oder eine Datei mit R auswählen wollt, indem ihr den Pfad eintippt, (z.B. `setwd("C:/meine_R_Projekte/...")`, könnt ihr euch mit der TAB-Taste Dateien im aktuellen Pfad bzw. Vorschläge zur Autovervollständigung anzeigen lassen. Das spart besonders bei langen Pfaden Zeit und Nerven, da es Vertippern vorbeugt.
+
+### Übung 2:
+
+Legt euer Working Directory mit `setwd()` auf euren Projektordner fest. Überprüft mit `getwd()`, ob ihr im richtigen Ordner gelandet sein. Lest dann den *party_videos*-Datensatz ein: einmal als .RDS, einmal als .csv.
+
+```{r}
+
+```
+
+## 3. Daten inspizieren
+
+Es gibt eine Reihe an Möglichkeiten, euch die eingelesenen Daten bzw. deren Struktur anzeigen zu lassen. Die einfachste ist, ein Objekt einfach "ausdrucken" zu lassen. Das geht via print() oder indem ihr den Objektnamen eingebt.
+
+```{r}
+print(party_videos)
+
+party_videos
+```
+
+Der Befehl `View()` ermöglicht es, sich ein Objekt in einem neuen Fenster anzeigen zu lassen. Dort ist es außerdem durchsuchbar, lässt sich leicht scrollen und mit einem Klick auf die Spalten sortieren:
+
+```{r}
+View(party_videos)
+```
+
+In dem "Environment"-Reiter von RStudio seht ihr außerdem alle Objekte, die in euer aktuellen Umgebung vorhanden sind. Ein Klick auf das Pfeil-Symbol links zeigt euch die Struktur innerhalb des Reiters an. Ein Klick auf den Objektnamen selbst öffnet das Objekt wie mit `View()`.
+
+Das *Tidyverse* bietet außerdem eine Reihe an Möglichkeiten, weitere Informationen aus unserem Datensatz zu erhalten. So wollen wir z.B. wissen, welche Parteien in unserem Datensatz vertreten sind. Die Funktion `distinct()` gibt euch alle einzigartigen Variablen-Kombinationen in einem Datensatz aus. Das ist praktisch, wenn wir Duplikate entfernen wollen. Wir können sie aber auch benutzen, um uns alle Werte einer einzigen Variable anzeigen zu lassen:
+
+```{r}
+party_videos %>% distinct(party)
+```
+
+Die `pull()`-Funktion erlaubt es uns, die Vektoren einzelner Spalten aus einem Datensatz zu "ziehen". Das ist u.a. dann praktisch, wenn wir einzelne Variablen weiterverarbeiten oder inspizieren wollen. So können wir die Werte einer Variable an Funktionen weitergeben, die einen Vektor erwarten. Wie etwa die Funktion `min()`, welche uns den niedrigsten Wert eines Vektors ausgibt. Beispielsweise den niedrigsten Wert der "publiziert"-Variable, also den Zeitpunkt des ersten Videos in unserem Datensatz:
+
+```{r}
+party_videos %>% pull(contentDetails.videoPublishedAt) %>% min()
+```
+
+### Übung 3
+
+Schaut euch das party_videos Objekt an. Verwendet dazu sowohl `View()` als auch den "Environmet"-Reiter. Sortiert den Datensatz nach unterschiedlichen Variablen (Spalten).
+
+```{r}
+
+View()
+
+# Mit "#" könnt ihr Kommentare in euren Code einfügen. Alles, was hinter dem "#" steht, wird nicht ausgeführt. Das ist praktisch, um Code zu kommentieren, kleine Beobachtungen, Anweisungen und Tipps zu vermerken
+```
+
+Lasst euch mittels `distinct()` die distinkten Werte für die Variablen *party* und *party_label* ausgeben. Was fällt euch auf?
+
+```{r}
+
+```
+
+Was passiert, wenn ihr euch mittels `distinct()` alle einzigartigen Kombinationen der Variablen *party* und *id* ausgeben lasst? Hinweis: `distinct()` lässt euch beliebig viele Variablenkombinationen angeben, wenn ihr diese mit einem Komma (,) trennt.
+
+```{r}
+
+```
+
+Zieht erneut die *contentDetails.videoPublishedAt*-Variable mittels `pull()` aus dem Datensatz. Wendet dieses Mal jedoch andere Funktionen darauf an, um weitere Informationen zu erhalten. Insbesondere folgende Funktionen sind sinnvoll: `max()`, `mean()`, `range()`. Welche Informationen erhaltet ihr jeweils? Wenn ihr euch unsicher seid, schaut mittels `?` in die Helpfiles, z.B. mit `?mean()`.
+
+```{r}
+
+```
+
+## 4. Daten manipulieren
+
+Wie bereits erwähnt, lässt sich `distinct()` auch dazu verwenden, Duplikate zu entfernen, indem wir uns nur die eizigartigen Werte einer Variable (oder die einzigartigen Wertkombinationen mehrerer Variablen) ausgeben lassen. In unserem Datensatz befindet sich u.a. die *videoID*-Variable, welche einen einzigartigen Identifikator für alle Videos auf YouTube darstellt. Um sicherzugehen, dass sich keine Duplikate in unserem Datensatz befinden, können wir `distinct()` auf unsere Daten anwenden und den so entstandenen Datensatz einem neuen Objekt zuordnen. Beachtet, dass die Funktion standardmäßig nur die spezifizierten Variablen ausgibt und alle anderen entfernt. Um dies zu ändern, können wir die Option `.keep_all` spezifizieren. `TRUE` behält alle anderen Variablen, das standardmäßig eingestellte `FALSE` entfernt sie.
+
+```{r}
+party_videos_distinct <- party_videos %>% distinct(contentDetails.videoId, .keep_all = TRUE)
+```
+
+Die `select()`-Funktion erlaubt, es Variablen aus unserem Datensatz zu entfernen. Dies ist praktisch, wenn wir nicht alle Variablen für eine Analyse benötigen. Falls wir beispielsweise nur die VideoID und das Veröffentlichungsdatum aus unserem Datensatz benötigen, können wir `select()` verwenden, um alle anderen Variablen zu entfernen:
+
+```{r}
+party_videos_small <- party_videos %>% select(contentDetails.videoId, contentDetails.videoPublishedAt)
+```
+
+Mittels `rename()` können wir außedem Variablen in unserem Datensatz umbenennen. Dies ist praktisch, wenn einzelne Variablen lange, wenig informative Namen haben. So können wir beispielsweise die Variablennamen in unserem verkleinerten Datensatz kürzen:
+
+```{r}
+party_videos_small <- party_videos_small %>% 
+  rename(video_id = contentDetails.videoId,
+         published_at = contentDetails.videoPublishedAt)
+```
+
+Die `mutate()`-Funktion erlaubt es,
+
+Mittels der Funktion `summarise()` können wir den Datensatz zusammenfassen lassen. Dazu legen wir fest, welche neuen Variablen wir wie definieren möchten und erhalten einen Datensatz, welcher nur diese Variablen enthält.
+
+`group_by()` sorgt dabei für eine Gruppierung der Daten: Jede weitere Aktion wird Mittels der Funktion `summarise()` können wir den Datensatz zusammenfassen lassen. Dazu können wir definieren, welche
+
+`group_by()` sorgt dabei für eine Gruppierung der Daten: Jede weitere Aktion wird
+
+-   group_by vs .by
+
+-   Duplikate entfernen mit distinct()
+
+### Übungen 4
+
+Unterschiede zwischen distinct_party_videos und party_videos. Auch: identical()
+
+"kind"-Variable relevant (distinct()), sonst entfernen...
+
+## 5. Daten visualisieren
+
+## 6. Daten speichern

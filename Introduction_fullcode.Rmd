@@ -1,0 +1,608 @@
+---
+title: "Introduction"
+author: "Tim König"
+date: "2023-02-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+devtools::install_github("soodoku/tuber", build_vignettes = TRUE) # the latest development version is required to get related videos, due to a bug fix
+
+{
+  library(tidyverse)
+  library(tuber) 
+  library(lubridate)
+  library(igraph)
+  library(ggraph)
+  library(quanteda)
+  library(quanteda.textstats)
+  library(stm)
+}
+
+
+yt_oauth("81481321824-btqvdmev607hbbq3n34i4qpb194spdq7.apps.googleusercontent.com",
+         "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")
+
+party_videos <- readRDS("data/party_videos.RDS")
+comments_january <- readRDS("data/comments_january.RDS")
+related_videos_january <- readRDS("data/related_videos_january.RDS")
+
+
+```
+
+# Videos
+
+## Youtube Kanäle der Parteien
+
+Channel IDs
+
+```{r}
+party_channels <- tibble(
+  party = c("cdu",
+            "spd",
+            "gruene",
+            "fdp", 
+            "afd", 
+            "linke"),
+  channel_id = c("UCKyWIEse3u7ExKfAWuDMVnw",
+                 "UCSmbK1WtpYn2sOGLvSSXkKw",
+                 "UC7TAA2WYlPfb6eDJCeX4u0w",
+                 "UC-sMkrfoQDH-xzMxPNckGFw",
+                 "UCq2rogaxLtQFrYG3X3KYNww",
+                 "UCA95T5bSGxNOAODBdbR2rYQ")
+)
+
+print(party_channels)
+```
+
+## Videos der Kanäle
+
+```{r}
+
+party_videos <- tibble() # empty container object to fill
+
+for (i in 1:nrow(party_channels)) { # loop through every row in the dataframe of party channels
+  
+  videos <-  list_channel_videos(channel_id = party_channels$channel_id[i], # make the API call
+                                 max_results = Inf)
+  
+  videos <- videos %>% mutate(party = party_channels$party[i]) # add party indicator
+
+  party_videos <- bind_rows(party_videos, videos) # bind results
+  
+  cat(party_channels$party[i], ": ", nrow(videos), " videos retrieved \n", sep = "") # some printout to keep track
+  
+  Sys.sleep(1) # a sleep period between calls to avoid API errors
+  
+}
+
+saveRDS(party_videos, "data/party_videos.RDS") # safe the data retrieved from the API
+
+```
+
+## Überblickstatistiken
+
+```{r, echo = F}
+party_videos <- party_videos %>% # some data cleaning
+  mutate(contentDetails.videoPublishedAt = ymd_hms(contentDetails.videoPublishedAt)) %>%  # proper datetime format
+  distinct(contentDetails.videoId, .keep_all = T) %>% # make sure there are no duplicates
+  mutate(party_label = case_when( # add some proper party labels
+    party == "afd" ~ "AfD",
+    party == "cdu" ~ "CDU",
+    party == "spd" ~ "SPD",
+    party == "fdp" ~ "FDP",
+    party == "gruene" ~ "Bündnis 90/Die Grünen",
+    party == "linke" ~ "DIE LINKE"
+  ))
+
+party_videos %>% 
+  group_by(party_label) %>% # grouping the analyses results by party
+  summarise(nr_videos = n(), # count entries
+            first_video = min(contentDetails.videoPublishedAt)) %>%  # lowest value = first published video
+  arrange(desc(nr_videos)) %>%  # order in descending order of videos posted
+  print()
+
+colors <-
+  tibble(
+    Partei = c(
+      "AfD",
+      "CDU",
+      "CSU",
+      "DIE LINKE",
+      "FDP",
+      "Bündnis 90/Die Grünen",
+      "SPD"
+    ),
+    # a tibble storing the correct party colors
+    Farbe = c(
+      rgb(0, 60, 145, maxColorValue = 255),
+      rgb(50, 48, 46, maxColorValue = 255),
+      rgb(98, 180, 255, maxColorValue = 255),
+      rgb(182, 28, 62, maxColorValue = 255),
+      rgb(255, 237, 0, maxColorValue = 255),
+      rgb(70, 150, 43, maxColorValue = 255),
+      rgb(227, 0, 15, maxColorValue = 255)
+    )
+  )
+
+party_videos %>% mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% # make month indicator
+  group_by(party_label, month) %>% reframe(videos_published = n()) %>%  # aggregate by party and month
+  ggplot() +                                                            # initiate ggplot on the wrangled data
+  geom_line(aes(x = month, y = videos_published, color = party_label)) +   # draw a line plot
+  scale_color_manual(values = pivot_wider(colors, names_from = Partei, values_from = Farbe) %>% unlist()) + # add the manual party colors
+  facet_wrap( ~ party_label, ncol = 3) +                              # facet by party (each has its own plot)
+  labs(                                                               # make some proper labels to improve readability for audiences
+    x = "Monat",             
+    y = "Veröffentlichte Videos",
+    color = "Partei",
+    title = "Videos über Zeit nach Partei, Gesamtzeitraum"
+  ) +
+  theme_bw()
+
+party_videos %>% mutate(week = floor_date(contentDetails.videoPublishedAt, unit = "week")) %>% # make week indicator (more fine-grained than month)
+  group_by(party_label, week) %>% reframe(videos_published = n()) %>%  # aggregate by party and week
+  filter(week >= ymd("2021-01-01")) %>%                                # let's take a closer look at the timeline from 2021 onwards via filterin data
+  ggplot() +                                                            # initiate ggplot on the wrangled data
+  geom_line(aes(x = week, y = videos_published, color = party_label)) +   # draw a line plot
+  scale_color_manual(values = pivot_wider(colors, names_from = Partei, values_from = Farbe) %>% unlist()) + # add the manual party colors
+  scale_x_datetime(guide = guide_axis(angle = 30)) + # angle the labels on the X axis for better readability
+  facet_wrap( ~ party_label, ncol = 3) +             # facet by party (each has its own plot)
+  labs(                                              # make some proper labels to improve readability for audiences
+    x = "Woche",
+    y = "Veröffentlichte Videos",
+    color = "Partei",
+    title = "Videos über Zeit nach Partei, ab 2021"
+  ) +
+  theme_bw()
+
+party_videos %>% mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% # make month indicator (for higher aggregation than week)
+  group_by(month) %>% reframe(videos_published = n()) %>%  # aggregate by mnth only, across all parties
+  filter(month >= ymd("2021-01-01")) %>%                                # let's take a closer look at the timeline from 2021 onwards via filtering date
+  ggplot() +                                                            # initiate ggplot on the wrangled data
+  geom_point(aes(x = month, y = videos_published, size = videos_published)) +   # draw a point plot
+  geom_line(aes(x = month, y = videos_published)) +                             # draw a line plot over it. Note how there is no color argument, as we do no distinguish parties
+  scale_x_datetime(guide = guide_axis(angle = 30), breaks = "3 month") + # angle the labels on the X axis for better readability, set label breaks every 3 months
+  labs(                                                                  # make some proper labels to improve readability for audiences
+    x = "Monat",
+    y = "Veröffentlichte Videos",
+    size = "",
+    title = "Videos über Zeit gesamt, ab 2021"
+  ) +
+  theme_bw()
+
+## Note how the green party did not post a video since October last year
+## Note how there is a visible peak during the federal elections, but there are other peaks as well, e.g. in January 2022
+
+```
+
+# Youtube-Kommentare zu Parteivideos, Januar 2022
+
+```{r}
+videos_january <- party_videos %>% filter(contentDetails.videoPublishedAt >= ymd("2022-01-01"), contentDetails.videoPublishedAt < ymd("2022-02-01")) # filter by publication dates
+
+videos_january %>% group_by(party_label) %>% summarise(videos = n())
+```
+
+```{r}
+
+comments_january <- tibble() # empty container
+
+for (i in videos_january$contentDetails.videoId) { 
+  # note how we can loop directly over the contents of this list, rather than using i in 1:nrow(videos_january) and accessing the content later through videos_january$contentDetails.videoId[i]
+  
+  comments <- NULL # this is only necessary to indicate missing / erroneous API calls correctly (otherwise we could just overwrite it every loop)
+  
+  cat(i, "\n")
+  
+  
+  try({  # wrapping the call in try() makes sure the loop continues when an API call fails. Wrapping bind_rows() as well _after_ the call makes sure rows are only bound if comments are retrieved
+    
+      comments <- get_all_comments(video_id = i) # make API call
+    
+      comments_january <- bind_rows(comments_january, comments) # bind results
+      
+  })
+  
+  if(!is.null(comments)) {cat(nrow(comments), "comments retrieved\n")} # some output to keep track
+  else {cat("no results \n")}
+    
+  Sys.sleep(1) # a sleep period between calls to avoid API errors
+}
+
+## Note that this retrieves only top-level comments, no threads
+
+
+saveRDS(comments_january, "data/comments_january.RDS") # safe the data retrieved from the API
+
+```
+
+```{r}
+party_comments_january <- left_join(videos_january, 
+                                    comments_january %>% # join the comments on the video list...
+                                      select(videoId, textDisplay, textOriginal, authorDisplayName, likeCount, publishedAt, id) %>%  # ... but select relevant data first ...
+                                      rename(comment_id = id),    # ... and rename the ID variable for clarity
+                                    by = join_by(contentDetails.videoId == videoId), # we need to specify that the IDs have different column names in the two datasets
+                                    multiple = "all") %>%  # we expect multiple matches from the right-hand side (comments_january) to the left-hand side (videos_january)
+  mutate(likeCount = as.integer(likeCount),              # count as integer, not character
+         publishedAt = ymd_hms(publishedAt)) %>%       # proper dateteime format
+  rename(video_id = contentDetails.videoId,              # rename some variables for clarity
+         video_PublishedAt = contentDetails.videoPublishedAt,
+         comment_PublishedAt = publishedAt) %>% 
+  select(!c(kind, etag, id))                             # drop unnecessary variables
+
+print(party_comments_january)
+
+cat("Missing comments for", # some printout to check the number of videos with missing comments
+    party_comments_january %>% filter(is.na(comment_id)) %>% nrow(), # count number of rows with missing comment_id, effectively one for each video without comments
+    "out of",
+    party_comments_january %>% distinct(video_id) %>% nrow(), # count total number of videos in the dataset (incl. those with missing comments)
+    "videos.") # note that cat() is only used for the printout here and not strictly necessary
+
+party_comments_january %>% group_by(party_label) %>% 
+  count(!is.na(comment_id), .drop = F) %>%                               # count non-missing and missing comments
+  pivot_wider(names_from = `!is.na(comment_id)`, values_from = n) %>%    # wrangle into wide format
+  rename(comments = "TRUE", videos_without_comments = "FALSE") %>%       # rename variables for clarity
+  replace_na(list(comments = 0, videos_without_comments = 0)) %>%        # replace NA values with 0
+  left_join(videos_january %>% group_by(party_label) %>% summarise(total_videos = n()), by = "party_label") %>%  # add total number of videos through another dataframe
+  mutate(average_comments_per_video = comments / total_videos)           # calculate average comments per video (this is a good engagement measure!)
+
+# a closer look at youtube.com reveals that: 
+#     a) the Green party has comments deactivated
+#     b) it seems nobody cared to comment on videos by the FDP
+
+```
+
+## Netzwerkanalyse / Diskursräume
+
+```{r}
+graph <- comments_january %>% select(authorDisplayName, videoId) %>% # we only need the name of the comment author and the videoID of the commented video
+  graph_from_data_frame() # igraph automatically build a graph from this data (which is a symbolic edge list)
+
+node_attributes <- tibble(name = V(graph)$name) %>% # we make a dataframe (tibble) of node attributes to pass on to the graph object
+  left_join(party_comments_january %>%       # we can just add the party label as a node attribute later, but we need to make sure the labels are in the right order
+              select(video_id, party_label), # we do this via join, by joining the names (which are both user names and video IDs) with the videoIds and party labels from the other DF
+            by = join_by(name == video_id), 
+            multiple = "first") %>%              # we do not want multiple matches, as there is only one node per video in the graph data
+  mutate(type = case_when(is.na(party_label) ~ TRUE, # we also add a type attribute, which is TRUE for all nodes without a party label (that is, all users), and FALSE for all videos
+                          !is.na(party_label) ~ FALSE))
+
+V(graph)$party_label <- node_attributes$party_label # we can now add the attributes to the graph through V(graph)$, because they are in the same order 
+
+V(graph)$type <- node_attributes$type # note that adding a "type" attribute makes the graph bipartite (i.e. it has two different types of nodes)
+
+V(graph)$betweenness <- betweenness(graph) # we can also calculate the betweenness and add it as a node attribute
+
+V(graph)$indegree <- degree(graph, mode = "in", loops = F) # ...and the indegree
+
+V(graph)$total_degree <- degree(graph, mode = "total", loops = F) # ...and the total degree (indegree + outdegree)
+
+graph
+
+layout <- create_layout(graph, layout = "kk") # creating the layout seperately speeds up experimenting with other parameters in the visualisation, since it only needs to be calculated once
+
+ggraph(layout = layout) +
+  geom_edge_arc(color = "darkgrey") +
+  geom_node_point(aes(color = as.factor(party_label)))
+
+
+subgraph <- induced_subgraph(graph, V(graph)$total_degree > 1) # for visualisation purposes, we reduce the graph to notes having/making more than 1 comment 
+
+subgraph_layout <- create_layout(subgraph, layout = "kk") # creating the layout seperately speeds up experimenting with other parameters in the visualisation, since it only needs to be calculated once
+
+ggraph(layout = subgraph_layout) +
+  geom_edge_arc(color = "darkgrey") +
+  geom_node_point(aes(color = as.factor(party_label)))
+
+
+projection <- bipartite_projection(graph) # since we defined the type attribute as TRUE and FALSE earlier, igraph automatically picks the correct nodes for each projection
+
+projection[[1]] # the first graph in the object is the video-video projection, projection[[2]] is the user-user projection
+
+ggraph(graph = projection[[1]], layout = "kk") +
+  geom_edge_arc(color = "darkgrey") +
+  geom_node_point(aes(color = as.factor(party_label))) +
+  scale_color_manual(values = pivot_wider(colors, names_from = Partei, values_from = Farbe) %>% unlist())
+
+
+
+party_graph <- party_comments_january %>% # we can just as well make a graph between users and parties, rather than between users and videos
+  filter(!is.na(comment_id)) %>% select(authorDisplayName, party_label) %>% # we simply drop videos without comments and use the party label as a second node type
+  filter(authorDisplayName != party_label) %>%   # we need to drop comments by the parties itself on their own videos for the analysis (otherwise the projection won't work)
+  graph_from_data_frame() # igraph automatically build a graph from this data (which is a symbolic edge list)
+
+V(party_graph)$type <- tibble(name = V(party_graph)$name) %>% 
+  mutate(type = case_when(name %in% party_comments_january$party_label ~ TRUE, # Type is TRUE for all names in the party labels, i.e. all parties
+                          .default = FALSE)) %>% 
+  pull(type) # we take only the type argument for the type vector. As we took the names from the graph, it is in the correct order
+
+party_graph %>%  bipartite_projection(which = "true") %>%  # we can compute the party-party-graph only by selecting the TRUE types 
+  ggraph(layout = "star") + # initialize ggraph directly in the pipe
+  geom_edge_link(aes(edge_width = weight),color = "darkgrey") +
+  geom_node_label(aes(label = name, color = name)) +
+  scale_color_manual(values = pivot_wider(colors, names_from = Partei, values_from = Farbe) %>% unlist(), guide = "none") +
+  labs(edge_width = "Users commenting \non the same videos") +
+  theme_graph(base_family = NULL)
+
+# interestingly, no users comment on both SPD and LINKE videos
+# The connection between AfD and CDU is very strong though - possibly because both parties are in the opposition and share a certain clientel. It may also hint at the attempts of the CDU to gain voters on the populist right
+
+
+```
+
+## Bonus: related videos
+
+```{r}
+
+devtools::load_all("D:/academicCloud/R/tuber/") # get_related_videos bugfix version
+
+related_videos_january <- tibble()
+
+for (id in videos_january$contentDetails.videoId) {
+  
+  cat(id, "\n")
+  
+  try({
+    
+    related_videos <- get_related_videos(id, max_results = 10) # top 10 - we can assume most people won't scroll further, and this is less taxing on the rate limits than e.g. 50
+    
+    related_videos_january <- bind_rows(related_videos_january, related_videos)
+    
+    Sys.sleep(1)
+    
+  })
+  
+}
+
+
+# if we hit an API rate limit, we have to wait for it to refresh and resume the collection
+
+missing_related_videos <- videos_january %>% anti_join(related_videos_january, by = join_by(contentDetails.videoId == video_id)) # an anti_join is an easy way to return all videos without a match in the related_video data
+
+
+for (id in missing_related_videos$contentDetails.videoId) {
+  
+  cat(id, "\n")
+  
+  try({
+    
+    related_videos <- get_related_videos(id, max_results = 10) # top 10 - we can assume most people won't scroll further, and this is less taxing on the rate limits than e.g. 50
+    
+    related_videos_january <- bind_rows(related_videos_january, related_videos)
+    
+    Sys.sleep(1)
+    
+  })
+  
+}
+
+saveRDS(related_videos_january, "data/related_videos_january.RDS")
+
+```
+
+```{r}
+related_video_graph <- related_videos_january %>% select(video_id, rel_video_id) %>% # take video and related video IDs from original video
+  graph_from_data_frame()
+  
+
+
+attributes <- tibble(name = V(related_video_graph)$name) %>%
+  left_join(
+    related_videos_january,            # add some attributes
+    by = join_by(name == rel_video_id),
+    multiple = "first"
+  ) %>%
+  left_join(
+    videos_january %>% select(contentDetails.videoId, party_label),
+    by = join_by(name == contentDetails.videoId)
+  ) %>% 
+  mutate(party_label = case_when(is.na(party_label) ~ "vorgeschlagenes Video", # add indicator for related videos (all videos not associated with a party)
+                                 .default = party_label))
+
+V(related_video_graph)$title <- attributes$title
+
+V(related_video_graph)$party <- attributes$party_label
+
+V(related_video_graph)$degree <- degree(related_video_graph, mode = "total")
+
+ggraph(related_video_graph, layout = "kk") +
+  geom_edge_arc(color = "darkgrey") +
+  geom_node_point(aes(color = as.factor(party))) +
+  scale_color_manual(values = pivot_wider(colors, names_from = Partei, values_from = Farbe) %>% unlist()) +
+  labs(color = "Partei / Typ")
+
+
+related_video_subgraph <- induced_subgraph(related_video_graph, V(related_video_graph)$degree > 1) # a subgraph with only videos related to more than one video
+
+ggraph(related_video_subgraph, layout = "kk") +
+  geom_edge_arc(color = "darkgrey") +
+  geom_node_point(aes(color = as.factor(party))) +
+  scale_color_manual(values = pivot_wider(colors, names_from = Partei, values_from = Farbe) %>% unlist()) + # this implicitly colors values not in the list (i.e. related videos) grey
+  labs(color = "Partei", title = "Vorgeschlagene Videos zwischen Parteien")
+
+
+
+```
+
+## Hiveplot
+
+```{r, echo = F}
+# related_video_hive <-
+#   related_videos_january %>% left_join(
+#     videos_january %>% select(contentDetails.videoId, party_label),
+#     by = join_by(video_id == contentDetails.videoId)
+#   ) %>% 
+
+# related_video_graph_hive <- related_videos_january %>% select(video_id, rel_video_id, channelTitle) %>% # take video and related video IDs from original video
+#   as_tbl_graph()
+# 
+# related_video_graph_hive <- related_video_graph_hive %>% 
+#   activate(nodes) %>% 
+#   mutate(type = case_when(name %in% related_videos_january$video_id ~ TRUE,
+#                           .default = FALSE))
+# 
+# bipartite.projection(related_video_graph_hive)
+# 
+# V(related_video_graph)$relevant_channel <- 
+#   tibble(video_id = V(related_video_graph)$name, # make a tibble of the names first to assure correct order of the nodes and attributes to be passed on
+#          channel = V(related_video_graph)$channel) %>% 
+#   left_join(measures %>% group_by(channelTitle) %>% 
+#               summarise(total_indegree = sum(indegree)) %>% 
+#               slice_max(total_indegree, n = 10) %>%  
+#               mutate(relevant_channel = TRUE) %>% # dummy variable for relevant channel to pass on with the join
+#               select(!total_indegree), # the degree is no longer needed
+#             by = join_by(channel == channelTitle)) %>% 
+#   mutate(relevant_channel_name = case_when(relevant_channel == TRUE ~ channel,
+#                                            .default = "andere")) %>% # everything else is labeled "other"
+#   pull(relevant_channel_name) # eventually, we only need the relevant_channel_name in the correct order to pass as an attribute
+#   
+# V(related_video_graph)$type <- # type attribute for projection
+#   tibble(party = V(related_video_graph)$party) %>% 
+#   mutate(type = case_when(party == "vorgeschlagenes Video" ~ FALSE, # type is TRUE only for party videos
+#                           .default = TRUE)) %>% 
+#   pull(type)
+# 
+# 
+# ggraph(related_video_graph, layout = "hive", axis = party, sort.by = degree) +
+#   geom_edge_hive() +
+#   geom_axis_hive(aes(color = party)) +
+#   scale_color_manual(values = pivot_wider(colors, names_from = Partei, values_from = Farbe) %>% unlist()) + # this implicitly colors values not in the list (i.e. related videos) grey
+#   labs(color = "Partei", title = "Vorgeschlagene Videos zwischen Parteien", caption = "Begrenzt auf Videos, welche von mindestens 2 Parteivideos vorgeschlagen werden.")
+```
+
+## Korpusanalyse
+
+<https://quanteda.io/articles/quickstart.html>
+
+```{r}
+corpus <- corpus(party_comments_january %>%  # make a quanteda corpus
+                   filter(!is.na(comment_id)), # remove missing comments 
+                 docid_field = "comment_id",   # assign docid
+                 text_field = "textOriginal")  # assign text; docvars are saved automatically
+
+print(corpus)
+
+tokens <- tokens(corpus,            # extract word tokens and remove punctuation
+                 what = "word",
+                 remove_punct = T)
+
+print(tokens)
+
+
+dfm <- dfm(tokens,       # construct document-feature-matrix, all words to lower casing
+           tolower = T) %>% 
+  dfm_remove(stopwords("german")) %>%  # remove german stopwords
+  dfm_wordstem(language = "de")        # stem the words
+
+print(dfm)
+```
+
+```{r}
+tokens %>% tokens_group(party_label) %>% kwic("deutschland")
+```
+
+```{r}
+dfm %>% dfm_group(party_label) %>% dfm_sort()
+
+# get top tokens for each party
+
+dfm %>% textstat_frequency(groups = party_label) %>%
+  group_by(group) %>% slice_max(docfreq, n = 10) %>%      # top tokens by doc frequency (occurrence in unique documents) rather than total occurrence
+  select(!rank)          # drop rank of total frequency (we sort by docfreq)
+                       ## we can see that e.g. certain emojis are used a lot of times in the same document, boosting their frequency but not their doc frequency
+
+# similarity and distance
+
+# tstat_dist <- dfm %>% dfm_group(video_id) %>% dfm_weight(scheme = "prop") %>% textstat_dist() # hierarchical clustering - get distances on normalized dfm
+# 
+# cluster <- hclust(as.dist(tstat_dist))  # hiarchical clustering the distance object
+# 
+# cluster$labels <- paste0(dfm %>% dfm_group(video_id) %>% docvars("party"), "_", dfm %>% dfm_group(video_id) %>% docnames()) # label with party names
+# 
+# # plot as a dendrogram
+# plot(cluster, xlab = "", sub = "", main = "Euclidean Distance on Normalized Token Frequency")
+
+
+# tstat_dist <- dfm %>% dfm_group(party_label) %>% dfm_weight(scheme = "prop") %>% textstat_dist(method = "euclidean") # hierarchical clustering - get distances on normalized dfm
+# 
+# cluster <- hclust(as.dist(tstat_dist))  # hiarchical clustering the distance object
+# 
+# cluster$labels <- dfm %>% dfm_group(party_label) %>% docnames() # label
+# 
+# # plot as a dendrogram
+# plot(cluster, xlab = "", sub = "", main = "Euclidean Distance on Normalized Token Frequency")
+
+
+
+tstat_simi<- dfm %>% dfm_group(party_label) %>% dfm_weight(scheme = "prop") %>% textstat_simil(method = "cosine") # hierarchical clustering - get distances on normalized dfm
+
+cluster_simi <- hclust(as.dist(tstat_simi))  # hiarchical clustering the distance object
+
+cluster_simi$labels <- dfm %>% dfm_group(party_label) %>% docnames() # label 
+
+# plot as a dendrogram
+plot(cluster_simi, xlab = "", sub = "", main = "Cosine Similarity on Normalized Token Frequency")
+
+```
+
+# Bonus: Structural Topic Modeling
+
+```{r}
+out <- convert(dfm, to = "stm")
+
+
+Ks_prevalence <- searchK(documents = out$documents, vocab = out$vocab, 
+                         K = c(5:100),# Number of topics for diagnostics (each K is a model) [this is excessive and would take a while to process on a normal machine]
+                         prevalence = ~party, data = out$meta,               # ~ is only in the beggining of the equation since it seperates left and right hand side!
+                         gamma.prior = "L1", init.type = "Spectral",
+                         cores = 20)
+
+saveRDS(Ks_prevalence, "results/K_tests.RDS")
+
+```
+
+```{r}
+
+Ks_prevalence <- readRDS("results/K_tests.RDS")
+
+plot.searchK(Ks_prevalence)
+
+ggplot(Ks_prevalence$results) +
+  geom_point(aes(x=as.double(exclus), y = as.double(semcoh), color = as.integer(K))) +
+  labs(x = "Exclusivity", y = "Semantic Coherence", color = "K")
+
+ggplot(Ks_prevalence$results %>% filter(K <= 20)) +
+  geom_point(aes(x=as.double(exclus), y = as.double(semcoh), color = as.character(K))) +
+    labs(x = "Exclusivity", y = "Semantic Coherence", color = "K")
+```
+
+```{r}
+stm <- stm(documents = out$documents, vocab = out$vocab, # actual topic model
+            K = 6,
+            prevalence = ~party, data = out$meta,               
+            gamma.prior = "L1", init.type = "Spectral")
+
+saveRDS(stm, "results/stm_k6.RDS")
+```
+
+```{r}
+stm <- readRDS("results/stm_k6.RDS")
+
+summary(stm)
+
+findThoughts(stm, 
+             texts = out$meta$textDisplay,
+             n = 3)
+
+# we can see that the topics are rather dominated by AfD content; we can also spot duplicated comments - a closer look reveals certain users copy-paste their comments under numerous videos (or the same video)
+
+```
+
+```{r}
+effects <- estimateEffect(~party, stmobj = stm, metadata = out$meta)
+
+summary(effects)
+
+# the effects also show how the AfD content dominates due to a strong imbalance in the amount of comments between parties (see statistics above)
+```

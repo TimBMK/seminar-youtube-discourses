@@ -1,0 +1,688 @@
+---
+title: "R Übungen"
+output: html_notebook
+---
+
+## Einführung
+
+Dieses RMarkdown Notebook enthält eine Reihe von Übungen, die dabei helfen sollen, euch mit R und RStudio vertraut zu machen. Wir werden dabei vor allem das *Tidyverse* verwenden.
+
+Notebooks vereinen Code für die Analysen, die Ergebnisse des Codes und begleitende Texte wie diesen hier, was sie insbesondere für die Dokumentation von Projekten geeignet macht. In der Toolbar am oberen Rand des Notebooks könnt ihr zwischen "Source" (dem vollständigen Code) und "Visual" (dem, was eure Leser\*innen später sehen) wechseln. "Source" bietet einige zusätzliche Optionen, z.B. in der Art und Weise, wie Code Chunks dargestellt werden. Diese lassen sich aber auch mit einem Klick auf das Zahnrad eines Code Chunks (teilweise) einstellen. "Visual" zeigt euch insbesondere, wie der begleitende Text später formatiert wird und bietet einige praktische Formatierungsoptionen in der Toolbar sowie einfache Möglichkeiten, Code Chunks, Bilder und Links einzufügen. Wechselt zwischen den beiden Ansichten und ihr werdet sehen, wie Code in der "Source"-Ansicht u.a. den Text für "Visual" mit Markdown formatiert.
+
+Die "Code Chunks" beginnend mit "\`\`\`{r}" stellen dabei R-Code dar. Ihr könnt ihn entweder zeilenweise mit der Tastenkombination `Strg+ENTER` ausführen oder den gesamten Chunk mit dem grünen Pfeil oben rechts in der Ecke des Chunk-Felds auf einmal ausführen. Diese Art Notebook ist also vergleichbar mit den Jupyter Notebooks, die ihr bereits kennengelernt habt. Ihr könnt Code aber auch direkt in der RStudio Console ausführen, indem ihr in dorthin kopiert oder direkt dort eintippt. Das Ergebnis wird dann nicht in dem Notebook, sondern in der Console angezeigt. Das ist praktisch, wenn ihr kurz etwas ausprobieren oder die Helpfiles aufrufen wollt, z.B. mit `?filter`. Wichtig: Weder Code, den ihr in der Console ausführt, noch dessen Ergebnisse werden im Notebook gespeichert!
+
+Mit `Strg+Alt+I` oder *Insert-\>Code Chunk-\>R* in der Toolbar könnt ihr neue Code Chunks hinzufügen. Ihr könnt auch andere Programmiersprachen in Notebooks einbinden, z.B. Python. Beachtet aber, dass *R* und *Python* nicht dieselbe Umgebung benutzen, ihr Daten also jeweils wieder neu einlesen müsst - und ihr müsst darauf achten, dass die Datenformate kompatibel sind!
+
+Mit einem Klick auf "Preview" könnt ihr euch euer aktuelles Notebook als HTML anzeigen lassen. Stellt sicher, dass ihr alle Code Chunks, die ihr in euerem Dokument sehen wollt, ausgeführt hat - sonst werden sie in "Preview" nicht angezeigt. Ihr könnt das Notebook auch in andere Formate exportieren, z.B. PDF (benötigt eine LaTeX Installation), Word (benötigt eine Word Installation) oder HTML (lässt sich mit jedem Browser öffnen). Geht dazu auf das Drop-Down Menü neben "Preview" (der kleine Pfeil nach unten) und wählt eine "Knit"-Option aus. Beachtet, dass "Knit" immer alle Code Chunks im Notebook ausführt.
+
+## 1. Packages laden & installieren
+
+Wir wollen in dieser Übung vor allem das *Tidyverse* verwenden und uns mit dessen Funktionen vertraut machen. Dazu müssen wir es zunächst einmal installieren:
+
+```{r}
+install.packages("tidyverse")
+
+```
+
+Beachtet, dass ihr diesen Code Chunk nur einmal ausführen müsst. Ein einmal installiertes Package ist bei jedem Start von R wieder verfügbar. Einzige Ausnahme: Größere Updates von R (z.b. von 4.1 auf 4.2) machen eine Neuinstallation aller Packages nötig. Bei kleineren Updates (z.B. von R 4.1.1 auf 4.1.2) ist dies nicht nötig. Dennoch empfiehlt es sich, regelmäßig Package Updates durchzuführen. Wenn ein Package bereits installiert ist, führt `install.packages()` ein Update durch.
+
+Nachdem wir das Package installiert haben, müssen wir es in unsere aktuelle R Umgebung laden, um Zugriff auf dessen Funktionen zu haben. Dies geschieht mit folgendem Code:
+
+```{r}
+library(tidyverse)
+```
+
+### Übung 1:
+
+Neben dem tidyverse werden wir im Verlauf der Übung außerdem das package "lubridate" benötigen, mit dem wir Daten manipulieren können. Schreibt Code, welcher das Package installiert und lädt.
+
+Installiere das Package "lubridate":
+
+```{r}
+install.packages("lubridate")
+```
+
+Lade das Package lubridate:
+
+```{r}
+library(lubridate)
+```
+
+## 2. Daten einlesen
+
+Im Learnweb findet ihr den Datensatz "party_videos.RDS". Darin finden sich Metadaten aller 13.512 Videos, die zum Zeitpunkt der Erhebung auf den YouTube Channels der großen deutschen Parteien verfügbar waren. Neben Metadaten wie der VideoID und dem Veröffentlichungsdatum findet sich dort auch ein Variable, welche angibt, von welcher Partei ein Video stammt.
+
+Legt auf eurem Computer einen Ordner an, in dem ihr alle für diese Übung relevanten Dateien speichert und speichert den Datensatz dort ab. Ihr könnt auch dieses Notebook mit *File-\>Save As* dort ablegen. Nur weil euer Notebook in diesem Ordner liegt, heißt das aber noch nicht, dass eure R-Umgebung diesen auch als aktuellen Ordner wahrnimmt! Folgender Code gibt euch euer aktuelles *Working Directory* aus:
+
+```{r}
+getwd()
+```
+
+Ihr sehr euer aktuelles Working Director auch über dem Console-Fenster - neben der aktuell verwendeten R-Version. Zwar könnt ihr auch auf Dateien außerhalb eures Working Directory zugreifen. Dazu müsst ihr jedoch immer den gesamten Pfad der Daten mit angeben - was sehr mühselig sein kann. Deshalb macht es Sinn, euer Working Directory zu ändern. Das geht mit der `setwd()`-Funktion:
+
+```{r}
+setwd("C:/meine_R_Projekte/YouTube_Seminar/Uebung_1")
+```
+
+Beachtet, dass ihr der hier angegeben Ordnerpfad bei euch wahrscheinlich nicht existiert. Ihr müsst ihn also entsprechend so anpassen, dass er auf euren Ordner zeigt, in den ihr den Datensatz geladen habt. Wichtig ist, dass ihr euren Pfad in Anführungszeichen ("...") setzt und Schrägstriche ( / ), keine Backslashes ( \\ ), verwendet, um den Pfad zu schreiben. Beachtet, dass das Working Director bei jedem Start von R idR. neu gesetzt werden muss.
+
+Wenn wir unser Working Directory gesetzt haben, können wir die Daten in unsere aktuelle Umgebung laden. Die `readRDS()`-Funktion lädt .RDS-Dateien und ordnet sie einem Objekt zu:
+
+```{r}
+party_videos <- readRDS("party_videos.RDS")
+```
+
+Beachtet, dass es sich bei dem RDS-Format um ein R-eigenes Format handelt, welches häufig nicht mit anderen Programmen wie Python kompatibel ist. R ist allerdings auch in der Lage, andere Dateitypen einzulesen, etwa das unisverselle .csv. Das Tidyverse bietet dazu die `read_csv`-Funktion an. Sie bietet einige zusätzliche Funktionen, etwa die Spezifizierung der Variablen-Typen für einzelne Spalten, funktioniert im Prinzip aber analog zu `readRDS()`. Die *party_videos.csv*-Datei lässt sich so ebenfalls einlesen. Sie ist inhaltlich identisch mit der .RDS-Datei.
+
+```{r}
+party_videos_csv <- read_csv("party_videos.csv")
+```
+
+**Tipp:** Wenn ihr einen Dateipfad oder eine Datei mit R auswählen wollt, indem ihr den Pfad eintippt, (z.B. `setwd("C:/meine_R_Projekte/...")`, könnt ihr euch mit der TAB-Taste Dateien im aktuellen Pfad bzw. Vorschläge zur Autovervollständigung anzeigen lassen. Das spart besonders bei langen Pfaden Zeit und Nerven, da es Vertippern vorbeugt.
+
+### Übung 2:
+
+Legt euer Working Directory mit `setwd()` auf euren Projektordner fest. Überprüft mit `getwd()`, ob ihr im richtigen Ordner gelandet sein. Lest dann den *party_videos*-Datensatz ein: einmal als .RDS, einmal als .csv.
+
+```{r}
+setwd("...")
+
+getwd()
+
+party_videos <- readRDS("party_videos.RDS")
+
+party_videos_csv <- read_csv("party_videos.csv")
+```
+
+## 3. Daten inspizieren
+
+Es gibt eine Reihe an Möglichkeiten, euch die eingelesenen Daten bzw. deren Struktur anzeigen zu lassen. Die einfachste ist, ein Objekt einfach "ausdrucken" zu lassen. Das geht via print() oder indem ihr den Objektnamen eingebt.
+
+```{r}
+print(party_videos)
+
+party_videos
+```
+
+Der Befehl `View()` ermöglicht es, sich ein Objekt in einem neuen Fenster anzeigen zu lassen. Dort ist es außerdem durchsuchbar, lässt sich leicht scrollen und mit einem Klick auf die Spalten sortieren:
+
+```{r}
+View(party_videos)
+```
+
+In dem "Environment"-Reiter von RStudio seht ihr außerdem alle Objekte, die in euer aktuellen Umgebung vorhanden sind. Ein Klick auf das Pfeil-Symbol links zeigt euch die Struktur innerhalb des Reiters an. Ein Klick auf den Objektnamen selbst öffnet das Objekt wie mit `View()`.
+
+Das *Tidyverse* bietet außerdem eine Reihe an Möglichkeiten, weitere Informationen aus unserem Datensatz zu erhalten. So wollen wir z.B. wissen, welche Parteien in unserem Datensatz vertreten sind. Die Funktion `distinct()` gibt euch alle einzigartigen Variablen-Kombinationen in einem Datensatz aus. Das ist praktisch, wenn wir Duplikate entfernen wollen. Wir können sie aber auch benutzen, um uns alle Werte einer einzigen Variable anzeigen zu lassen:
+
+```{r}
+party_videos %>% distinct(party)
+```
+
+Die `pull()`-Funktion erlaubt es uns, die Vektoren einzelner Spalten aus einem Datensatz zu "ziehen". Das ist u.a. dann praktisch, wenn wir einzelne Variablen weiterverarbeiten oder inspizieren wollen. So können wir die Werte einer Variable an Funktionen weitergeben, die einen Vektor erwarten. Wie etwa die Funktion `min()`, welche uns den niedrigsten Wert eines Vektors ausgibt. Beispielsweise den niedrigsten Wert der "publiziert"-Variable, also den Zeitpunkt des ersten Videos in unserem Datensatz:
+
+```{r}
+party_videos %>% pull(contentDetails.videoPublishedAt) %>% min()
+```
+
+### Übung 3
+
+Schaut euch das party_videos Objekt an. Verwendet dazu sowohl `View()` als auch den "Environmet"-Reiter. Sortiert den Datensatz nach unterschiedlichen Variablen (Spalten).
+
+```{r}
+
+View(party_videos)
+
+# Mit "#" könnt ihr Kommentare in euren Code einfügen. Alles, was hinter dem "#" steht, wird nicht ausgeführt. Das ist praktisch, um Code zu kommentieren, kleine Beobachtungen, Anweisungen und Tipps zu vermerken
+```
+
+Lasst euch mittels `distinct()` die distinkten Werte für die Variablen *party* und *party_label* ausgeben. Was fällt euch auf?
+
+```{r}
+party_videos %>% distinct(party)
+
+party_videos %>% distinct(party_label)
+
+# selbe Informationen, nur unterschiedliche Label
+```
+
+Was passiert, wenn ihr euch mittels `distinct()` alle einzigartigen Kombinationen der Variablen *party* und *id* ausgeben lasst? Hinweis: `distinct()` lässt euch beliebig viele Variablenkombinationen angeben, wenn ihr diese mit einem Komma (,) trennt.
+
+```{r}
+party_videos %>% distinct(party, id)
+
+# selbe Anzahl an Einträgen wie im ursprünglichen Datensatz, da jedes Video eine einzigartige ID hat und jedem Video nur eine Partei zugeordnet ist. Der Datensatz hat jetzt allerdings nur noch die beiden Variablen id und party
+```
+
+Zieht erneut die *contentDetails.videoPublishedAt*-Variable mittels `pull()` aus dem Datensatz. Wendet dieses Mal jedoch andere Funktionen darauf an, um weitere Informationen zu erhalten. Insbesondere folgende Funktionen sind sinnvoll: `max()`, `mean()`, `range()`. Welche Informationen erhaltet ihr jeweils? Wenn ihr euch unsicher seid, schaut mittels `?` in die Helpfiles, z.B. mit `?mean()`.
+
+```{r}
+party_videos %>% pull(contentDetails.videoPublishedAt) %>% max()
+
+party_videos %>% pull(contentDetails.videoPublishedAt) %>% mean()
+
+party_videos %>% pull(contentDetails.videoPublishedAt) %>% range()
+```
+
+## 4. Daten manipulieren
+
+#### **distinct()**
+
+Wie bereits erwähnt, lässt sich `distinct()` auch dazu verwenden, Duplikate zu entfernen, indem wir uns nur die eizigartigen Werte einer Variable (oder die einzigartigen Wertkombinationen mehrerer Variablen) ausgeben lassen. In unserem Datensatz befindet sich u.a. die *videoID*-Variable, welche einen einzigartigen Identifikator für alle Videos auf YouTube darstellt. Um sicherzugehen, dass sich keine Duplikate in unserem Datensatz befinden, können wir `distinct()` auf unsere Daten anwenden und den so entstandenen Datensatz einem neuen Objekt zuordnen. Beachtet, dass die Funktion standardmäßig nur die spezifizierten Variablen ausgibt und alle anderen entfernt. Um dies zu ändern, können wir die Option `.keep_all` spezifizieren. `TRUE` behält alle anderen Variablen, das standardmäßig eingestellte `FALSE` entfernt sie.
+
+```{r}
+party_videos_distinct <- party_videos %>% distinct(contentDetails.videoId, .keep_all = TRUE)
+```
+
+#### **filter()**
+
+Die `filter()`-Funktion erlaubt es uns, Daten nach unterschiedlichen Bediungen zu filtern. So können wir uns z.B. nur die Videos einer einzigen Partei anzeigen lassen:
+
+```{r}
+party_videos_cdu <- party_videos %>% 
+  filter(party == "cdu")
+
+party_videos_cdu
+```
+
+Mit dem Operator `|` können wir mehrere Bedingungen kombinieren. `|` bedeutet dabei: "oder". Also beispielsweise alle Videos der CDU *oder* der SPD:
+
+```{r}
+party_videos_cdu_spd <- party_videos %>% 
+  filter(party == "cdu" | party == "spd")
+
+party_videos_cdu_spd %>% distinct(party)
+```
+
+Wir können uns Daten auch nur für einen bestimmten Zeitraum ausgeben lassen. Wir verwenden hier die *lubridate*-Funktion `dmy()` (für das Format **D**ay-**M**onth-**Y**ear) um sicherzustellen, dass unsere Angabe des Datums als String in das korrekte Datumsformat umgewandelt wird. `>=` bedeutet dabei "größer gleich." Der Wert der Variable muss also mindestens dem angegebenen Wert entsprechen, etwa mindestens dem 1. Januar 23, um alle Videos dieses Jahres zu erhalten:
+
+```{r}
+party_videos_23 <- party_videos %>%
+  filter(contentDetails.videoPublishedAt >= dmy("1.1.2023"))
+
+party_videos_23 
+```
+
+Wir können ebenso einen Zeitraum festlegen, indem wir neben einem Mindest- auch einen Höchstwert, also ein Start- und Enddatum angeben. Dazu nutzen wir `<=` für "kleiner gleich" und den Operator `&` für "und", welche bestimmt, dass ein Datensatz beiden Konditionen entsprechen muss:
+
+```{r}
+party_videos_jan_23 <- party_videos %>%
+  filter(
+    contentDetails.videoPublishedAt >= dmy("1.1.2023") &
+      contentDetails.videoPublishedAt <= dmy("31.1.2023")
+  )
+
+party_videos_jan_23
+```
+
+Wir können die Operatoren von `filter()` beliebig kombinieren, um unseren Datensatz zu filtern. Zum Beispiel, um alle Videos der SPD aus dem Januar '23 zu erhalten:
+
+```{r}
+party_videos_spd_jan_23 <- party_videos %>%
+  filter(
+    party == "spd" &
+      contentDetails.videoPublishedAt >= dmy("1.1.2023") &
+      contentDetails.videoPublishedAt <= dmy("31.1.2023")
+  )
+
+party_videos_spd_jan_23
+```
+
+#### select()
+
+Die `select()`-Funktion erlaubt es, nur bestimmte Variablen aus unserem Datensatz auszuwählen - und alle anderen zu entfernen. Dies ist praktisch, wenn wir nicht alle Variablen für eine Analyse benötigen. Falls wir beispielsweise nur die VideoID und das Veröffentlichungsdatum aus unserem Datensatz benötigen, können wir `select()` verwenden, um alle anderen Variablen zu entfernen:
+
+```{r}
+party_videos_small <- party_videos %>% 
+  select(contentDetails.videoId, contentDetails.videoPublishedAt)
+
+party_videos_small
+```
+
+#### **rename()**
+
+Mittels `rename()` können wir außedem Variablen in unserem Datensatz umbenennen. Dies ist praktisch, wenn einzelne Variablen lange, wenig informative Namen haben. So können wir beispielsweise die Variablennamen in unserem verkleinerten Datensatz kürzen:
+
+```{r}
+party_videos_small <- party_videos_small %>% 
+  rename(video_id = contentDetails.videoId,
+         published_at = contentDetails.videoPublishedAt)
+
+party_videos_small
+```
+
+#### **mutate()**
+
+Die `mutate()`-Funktion erlaubt es, Variablen zu "mutieren", also zu verändern. Dazu muss bestimmt werden, welche Variable verändert werden soll, und auf welche Art und Weise dies geschehen soll. Beispielsweise können wir mit der Funktion `as_date()` den Publikationszeitpunkt auf das Datum, also den Publikationstag, kürzen. Wenn wir eine Funktion verwenden, um Daten zu verändern, wird diese immer auf jede Reihe in unseren Daten angewendet. Das heißt, `as_date()` nimmt jeden einzelnen Wert in der *published_at*-Spalte und "mutiert" ihn mittels der Funktion zu einem Datum. Beachtet, dass `as_date()` eine Funktion des packages lubridate ist, ihr dieses also geladen haben müsst.
+
+```{r}
+party_videos_small <- party_videos_small %>% 
+  mutate(published_at = as_date(published_at))
+
+party_videos_small
+```
+
+Wir können mit `mutate()` aber auch neue Variablen hinzufügen. Außerdem müssen wir nicht unbedingt eine Funktion verwenden, um Werte zu manipulieren. Wir können ebensogut einen festen Wert setzen, beispielsweise einen Character String. Das ist praktisch, wenn wir beispielweise einen fixen Indikator setzen wollen, etwa um zu vermerken, woher die Daten Stammen:
+
+```{r}
+party_videos_small <- party_videos_small %>% 
+  mutate(source = "learnweb")
+
+party_videos_small
+```
+
+#### **summarise()**
+
+Mittels der Funktion `summarise()` können wir einen Datensatz zusammenfassen lassen. Dazu legen wir fest, welche neuen Variablen wir wie definieren möchten und erhalten einen Datensatz, welcher nur diese (idR. transformierten) Variablen enthält. So können wir beispielsweise den Mittelwert der Publikations-Variable ermitteln. Beachtet, dass wir das Ergebnis keinem Objekt zuweisen, sondern uns lediglich ausdrucken lassen:
+
+```{r}
+party_videos %>% summarise(mean_date = mean(contentDetails.videoPublishedAt))
+```
+
+In diesem Sinne ist `summarise()` trivial, da es eine ähnliche Funktion wie oben bereits `pull()` erfüllt. Interessanter wird es, wenn wir die Daten vorher gruppieren. Dazu bietet das *Tidyverse* die Funktion `group_by()` bzw. (seit Version 1.1.0) die Option `.by`. Darüber können wir Variablen festlegen, für deren einzelne Ausprägungen die folgenden Operationen (bzw. bei `.by` die aktuelle Operation) getrennt durchgeführt wird. So können wir uns beispielsweise für jede Partei den Mittelwert des Publikationszeitpunkts anzeigen lassen:
+
+```{r}
+party_videos %>% 
+  group_by(party_label) %>% 
+  summarise(mean_date = mean(contentDetails.videoPublishedAt))
+```
+
+Die Funktion `n()` gibt uns in Kombination mit `summarise()` die Gesamtzahl an Beobachtungen (also Reihen) eines Datensatzes aus. Wenn wir die Daten vorher gruppieren, auch für alle Ausprägungen einer Variable, bspws. die Parteien:
+
+```{r}
+party_summary <- party_videos %>% 
+  group_by(party_label) %>% 
+  summarise(total_videos = n())
+
+party_summary
+```
+
+#### **group_by()**
+
+Ebenso können wir `group_by()` zum gruppenweisen "mutieren" vorhandener Variablen nutzen. So können wir beispielsweise zuerst eine neue Variable erstellen, welche uns den Tag der Publikation anzeigt, und dann für jeden Tag die Gesamtzahl an Videos zu dem vorhandenen Datensatz hinzufügen:
+
+```{r}
+party_videos_day <- party_videos %>% 
+  mutate(day = as_date(contentDetails.videoPublishedAt)) %>% 
+  group_by(day) %>% 
+  mutate(daily_videos = n())
+
+party_videos_day
+```
+
+Beachtet, dass bei Verwendung von `group_by()` ***alle*** folgenden Operationen auf den gruppierten Daten stattfinden, was zu unerwarteten Ergebnissen führen kann. Wenn wir jetzt beispielsweise die Summe der Videos anzeigen lassen wollen, erhalten wir ein unerwartetes Ergebnis:
+
+```{r}
+party_videos_day %>% summarise(total_videos = sum(daily_videos))
+```
+
+Anstatt uns die Gesamtzahl der Videos zu zeigen, gibt uns die Funktion die Summe der Videos für jede Ausprägung der gruppierenden Variable aus. Um dies zu ändern, müssen wir die Funktion `ungroup()` verwenden, welche alle Gruppierungen in einem Objekt aufhebt:
+
+```{r}
+party_videos_day %>% ungroup() %>% summarise(total_videos = sum(daily_videos))
+```
+
+Darum ist es sinnvoll, nach jeder `group_by()` Operation die Gruppierung aufzuheben, wenn wir das Ergebnis einem Objekt zuordnen. So vermeiden wir zu vergessen, dass ein Objekt gruppiert ist. Sonst kann es mitunter zu Fehlern in den folgenden Berechnungen kommen!
+
+```{r}
+party_videos_day <- party_videos %>% 
+  mutate(day = as_date(contentDetails.videoPublishedAt)) %>% 
+  group_by(day) %>% 
+  mutate(daily_videos = n()) %>% 
+  ungroup()
+```
+
+Wenn wir dplyr 1.1.0 oder neuer installier haben, können wir auch die Option `.by` verwenden, die genau diese Problematik beheben soll. Anstatt den Datensatz insgesamt zu gruppieren, erlaubt sie es ihn für eine einzelne Operation temporär zu gruppieren. `group_by()` ist also nützlicher, wenn wir mehrere Operationen auf ein und derselben Gruppierung durchführen wollen, während `.by` für einzelne gruppierte Operationen geeignet und weniger fehleranfällig ist.
+
+```{r}
+party_videos_day <- party_videos %>% 
+  mutate(day = as_date(contentDetails.videoPublishedAt)) %>% 
+  mutate(daily_videos = n(), .by = day)
+
+party_videos_day
+
+party_videos_day %>% summarise(total_videos = sum(daily_videos))
+```
+
+#### **mutate()** vs. **summarise()**
+
+Was fällt in dem letzten Ergebnis auf? Genau, die Summe der täglichen Videos ist deutlich höher als die Anzahl an Beobachtungen in unserem ursprünglichen Dataframe. Das liegt daran, dass wir ***für jedes Video*** einen Eintrag gemacht haben, welcher die Anzahl aller Videos an diesem Tag enthält. Mit anderen Worten: wir haben die Gesamtzahl täglicher Videos quadriert, da wir die Anzahl der täglichen Videos für jedes Video einzeln aufaddiert haben. Wenn es an einem Tag 3 Videos gab also (3 + 3 + 3). Je nachdem, was wir vorhaben, kann es trotzdem sinnvoll sein, eine solche Kontrollvariable wie die gesamten täglichen Videos vorzuhalten. Wenn wir die Summe der Videos brauchen, ist sie aber nicht geeignet. Hätten wir `summarise()` verwendet, wäre dieses Problem nicht aufgetreten, da `summarise()` nur eine Reihe pro Gruppenvariable ausgibt:
+
+```{r}
+party_videos_day_sum <- party_videos %>% 
+  mutate(day = as_date(contentDetails.videoPublishedAt)) %>% 
+  summarise(daily_videos = n(), .by = day)
+
+party_videos_day_sum
+
+party_videos_day_sum %>% summarise(total_videos = sum(daily_videos))
+```
+
+Wären wir nur an der Gesamtzahl an Beobachtungen interessiert gewesen, hätten wir diese sogar noch einfacher mit `n()` oder `nrow()` erhalten können. `nrow()` gibt uns lediglich die Anzahl Reihen in einem Dataframe aus, während `n()` und `summarise()` ein neues, zusammengefasstes Dataframe (bzw. eine Tidyverse *Tibble*) produzieren:
+
+```{r}
+party_videos %>% summarise(total_videos = n())
+
+party_videos %>% nrow()
+                           
+```
+
+### Übungen 4
+
+Überprüfe, ob es einen Unterschied zwischen `party_videos` und `party_videos_distinct` gibt. Hinweis: da `distinct()` duplizierte Reihen (in diesem Fall identische IDs) entfernt, sollte sich, falls ein Unterschied besteht, die Anzahl Reihen unterscheiden. Dies könnt ihr mit `nrow()` oder `summarise()` und `n()` prüfen. Außerdem erlaubt es `identical()`, zu prüfen, ob zwei Objekte vollkommen identisch sind. Lest dazu auch die Helpfiles von `identical()`.
+
+```{r}
+party_videos %>% nrow()
+
+party_videos_distinct %>% summarise(videos = n())
+
+identical(party_videos, party_videos_distinct)
+
+
+
+```
+
+Filtert den Datensatz, um euch: \
+a) alle Videos der FDP anzeigen zu lassen,\
+b) alle Videos ab August 2022 anzeigen zu lassen,\
+c) alle Videos der AfD im September 2021 anzeigen zu lassen.
+
+```{r}
+party_videos %>% filter(party == "fdp")
+
+party_videos %>% filter(contentDetails.videoPublishedAt >= ymd("1.8.2022"))
+
+party_videos %>% filter(party == "fdp" & 
+                          contentDetails.videoPublishedAt >= ymd("1.9.2021") &
+                          contentDetails.videoPublishedAt <= ymd("30.9.2021"))
+```
+
+Prüft, welche Variablen in `party_videos` möglicherweise keine relevanten Informationen enthalten. Dazu könnt ihr u.a. die Funktion `distinct()` verwenden. Hinweis: Denkt daran, dass, wenn ihr mehrere Variablen an `distinct()` gebt, einzigartige Kombinationen dieser Variablen ausgegeben werden, bei einer Variable alle distinkten Werte dieser einen Variable. Verwendet dann `select()`, um diese Variablen zu entfernen und speichert das Ergebnis als ein neues Objekt. Benennt außerdem mindestens eine der übrigen Variablen mittels `rename()` um.
+
+```{r}
+party_videos %>% distinct(kind) # nur ein Wert
+
+party_videos %>% distinct(etag) # je ein einzigartiger Wert pro Video
+
+party_videos %>% distinct(id, contentDetails.videoId) # beide je einzigartig pro Video
+
+party_videos %>% distinct(party, party_label) # unterschiedliche Labels, selbe Information
+
+party_videos_2 <- party_videos %>% 
+  select(contentDetails.videoId,          # eine ID ausreichend
+         contentDetails.videoPublishedAt, # Publikationszeitpunkt relevant
+         party_label) %>%                 # ein Parteiindikator ausreichend
+  rename(video_id = contentDetails.videoId, # Vereinfachung der Variablennamen
+         published_at = contentDetails.videoPublishedAt)
+```
+
+Verwendet `mutate()`, um eurem Datensatz eine neue Variable hinzuzufügen, die den Monat ausgibt, in der das Video veröffentlich wurde. Dazu könnt ihr die *lubridate*-Funktion `floor_date(x, unit = "month")` verwenden, um den Veröffentlichungszeitpunkt in den ersten des Monats umzuwandeln (wobei *x* die zu modifizierende Variable darstellt).
+
+```{r}
+party_videos_2 <- party_videos_2 %>% 
+  mutate(month = floor_date(published_at, unit = "month"))
+```
+
+Fasst euren Datensatz zusammen, indem ihr euch mit `summarise()` die Anzahl an Videos pro Woche und Partei ausgeben lasst. Speichert diese Zusammenfassung als neues Objekt ab. Hinweis: `group_by()` und `.by` nehmen mehrere Variablen an, indem ihr sie mit einem Komma trennt bzw. zu einem Vektor zusammenfasst (`group_by(x, y)` bzw. `summarise(..., .by = c(x, y))`).
+
+```{r}
+party_videos_monthly <- party_videos_2 %>% 
+  summarise(videos = n(), .by = c(month, party_label))
+```
+
+## 5. Daten visualisieren
+
+Mit **ggplot** können wir innerhalb des *Tidyverse* Daten visualisieren. Dazu können wir verschiedene Arten von Graphen wählen sowie bestimmen, welche *aesthetics*, also welche Axen bzw. weitere Visualisierungsmöglichkeiten, durch welche Variablen dargestellt werden sollen. Beispielsweise können wir uns mittels eines Bar-Diagramms anzeigen lassen, wieviele Beobachtungen einer Variable im Datensatz vorhanden sind. `geom_bar()` zählt dabei automatisch die Beobachtungen und ordnet diesen *count* der Y-Achse zu. Beachtet, dass **ggplot** ein **`+`** statt der *pipe* `&>&` verwendet.
+
+```{r}
+ggplot(party_videos, aes(x = party_label)) +
+  geom_bar()
+```
+
+Wir können aber auch die Anzahl Videos im Zeitverlauf darstellen. Dazu müssen wir neben der X-Achse als Zeitpunkt auch die Y-Achse als Anzahl Videos angeben. Da wir die Anzahl der Videos zu einem Zeitpunkt nicht in unseren Daten haben, müssen wir diese zunächst berechnen. Dazu können wir erneut `summary()` nutzen, um die Anzahl an Videos zusammenzufassen. Das Ergebnis können wir mittels der *pipe* direkt an `ggplot()` geben:
+
+```{r}
+party_videos %>% 
+  summarise(videos = n(), .by = contentDetails.videoPublishedAt) %>% 
+  ggplot(aes(x = contentDetails.videoPublishedAt, y = videos)) +
+  geom_line()
+```
+
+Wie wir sehen, ist eine Darstellung nach Publikationszeitpunkt ungeeignet. Das liegt daran, dass so nur diejenigen Videos denselben Punkt auf der Y-Achse belegen, die zum exakt selben Zeitpunkt publiziert wurden. Mit anderen Worten: wir müssen unsere Daten aggregieren, um eine bessere Darstellung zu erzielen. Dies können wir erneut mit `mutate()` und `summarise()` erzielen, indem wir die Videos nach Publikationsmonat aggregieren:
+
+```{r}
+party_videos %>% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% 
+  summarise(videos = n(), .by = month) %>% 
+  ggplot(aes(x = month, y = videos)) +
+  geom_line()
+```
+
+Wir können die publizierten Videos ebenso nach Parteien aufteilen, indem wir die Daten entsprechend aufbereiten und der Variable *Partei* das Attribut *Farbe* zuordnen:
+
+```{r}
+party_videos %>% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% 
+  summarise(videos = n(), .by = c(month, party_label)) %>% 
+  ggplot(aes(x = month, y = videos, color = party_label)) +
+  geom_line()
+```
+
+Diese Darstellung ist jedoch etwas unübersichtlich, da sich teilweise nur schwer erkennen lässt, welche Partei zu welchem Zeitpunkt wieviele Videos veröffentlicht hat. Das lässt sich mit der Funktion `facet_wrap()` besser darstellen. Damit wird jede Ausprägung der spezifizierten Variable in einem eigenen Graphen dargestellt.
+
+```{r}
+party_videos %>% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% 
+  summarise(videos = n(), .by = c(month, party_label)) %>% 
+  ggplot(aes(x = month, y = videos, color = party_label)) +
+  geom_line() +
+  facet_wrap( ~ party_label, ncol = 3)
+```
+
+Wir können die Darstellung noch weiter verbessern und verschönern. Beispielsweise ist die Unterteilung der Graphlinien nach Farbe nicht mehr nötig, da wir dieselben Informationen bereits in den Facetten des Graphs darstellen. Wir könnten einfach das Attribut `color = party_label` aus `aes()` entfernen. Wir finden aber, dass die unterschiedlichen Farben unsere Grafik ansrprechender machen. Dennoch nimmt die Legende auf der rechten Seite zu viel Platz ein und bietet keine zusätzlichen Informationen. Wir können sie entfernen, indem wir die sogenannten *guides*, also die Legenden, bearbeiten:
+
+```{r}
+party_videos %>% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% 
+  summarise(videos = n(), .by = c(month, party_label)) %>% 
+  ggplot(aes(x = month, y = videos, color = party_label)) +
+  geom_line() +
+  facet_wrap( ~ party_label, ncol = 3) +
+  guides(color = "none")
+```
+
+Schon besser. Wir hätten allerdings gerne, dass die Farben der Linien für jede Partei den ihrer klassischen Parteifarbe (also rot für die SPD, schwarz für die CDU, etc.) entspricht. Dazu müssen wir zunächst ein Objekt mit den Namen und RGB-Werten der Parteien erstellen, dass wir daraufhin mittels `scale_color_manual()` unserem Graphen hinzugeben. Beachtet, dass die Objektwerte den Werten in der Variable entsprechen müssen, der sie zugeordnet werden sollen. In unserem Falle also den korrekten Parteinamen. Der zweite Wert muss ein RGB- oder anderer Farbwert sein. Ansonsten weiß die Funktion nicht, welche Farbe sie welchem Wert zuordnen soll.
+
+```{r}
+colors <-
+  c(
+    "AfD" = rgb(0, 60, 145, maxColorValue = 255),
+    "CDU" = rgb(50, 48, 46, maxColorValue = 255),
+    "DIE LINKE" = rgb(182, 28, 62, maxColorValue = 255),
+    "FDP" = rgb(255, 237, 0, maxColorValue = 255),
+    "Bündnis 90/Die Grünen" = rgb(70, 150, 43, maxColorValue = 255),
+    "SPD" = rgb(227, 0, 15, maxColorValue = 255)
+  )
+
+party_videos %>% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% 
+  summarise(videos = n(), .by = c(month, party_label)) %>% 
+  ggplot(aes(x = month, y = videos, color = party_label)) +
+  geom_line() +
+  facet_wrap( ~ party_label, ncol = 3) +
+  guides(color = "none") +
+  scale_color_manual(values = colors)
+```
+
+Nun wollen wir noch unsere Axen umbenennen und dem Graphen einen informativen Titel geben, der beschreibt, was wir hier sehen und berechnet haben. Das geht einfach mit der `labs()`-Funktion:
+
+```{r}
+party_videos %>% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% 
+  summarise(videos = n(), .by = c(month, party_label)) %>% 
+  ggplot(aes(x = month, y = videos, color = party_label)) +
+  geom_line() +
+  facet_wrap( ~ party_label, ncol = 3) +
+  guides(color = "none") +
+  scale_color_manual(values = colors) +
+  labs(
+    x = "Monat",
+    y = "Veröffentlichte Videos",
+    color = "Partei",
+    title = "Videos über Zeit nach Partei, Gesamtzeitraum"
+  ) 
+```
+
+Schlussendlich können wir noch das sogenannte *theme* anpassen, also das Farbthema, das vorgibt, wie beispielsweise der Hintergrund der Graphen coloriert ist. `theme_bw()` ist ein schlichtes schwarz-weiß Thema, welches die Farben in unserem Graphen gut zur Geltung bringt:
+
+```{r}
+party_videos %>% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = "month")) %>% 
+  summarise(videos = n(), .by = c(month, party_label)) %>% 
+  ggplot(aes(x = month, y = videos, color = party_label)) +
+  geom_line() +
+  facet_wrap( ~ party_label, ncol = 3) +
+  guides(color = "none") +
+  scale_color_manual(values = colors) +
+  labs(
+    x = "Monat",
+    y = "Veröffentlichte Videos",
+    color = "Partei",
+    title = "Videos über Zeit nach Partei, Gesamtzeitraum"
+  ) +
+  theme_bw()
+```
+
+### Übungen 5
+
+Probiert weitere Visualisierungsmöglichkeiten aus. Verwendet dazu zunächst das `party_summary`-Objekt, welches wir in einer der vorherigen Abschnitte erstellt haben. Zur Erinnerung: `party_summary` enthält eine mit `summarise()` erstellte Zusammenfassung der Videos pro Partei. Nutzt `aes()`, um die Variable *party_label* als X-, *total_videos* als Y-Achse festzulegen und dann die Funktion `geom_col()`, um ein Balkendiagramm zu erstellen. Was fällt auf, wenn ihr das Ergebnis mit dem Bar-Diagramm vergleicht, das wir zu Beginn dieses Abschnitts erstellt haben?
+
+```{r}
+ggplot(party_summary, aes(x = party_label, y = total_videos)) +
+  geom_col()
+```
+
+Tauscht nun die X- und die Y-Achse eurer Balkendiagramms, indem ihr die Werte in `aes()` entsprechend ändert.
+
+```{r}
+ggplot(party_summary, aes(y = party_label, x = total_videos)) +
+  geom_col()
+```
+
+Fügt zusätzlich die Farbe als Attribut der Partei hinzu (erneut mit `aes()`). Entfernt außerdem die Legende des Farbattributs mit `guides()`. Hinweis: um die Balken zu "füllen" (und nicht nur den Außenrand einzufärben) müsst ihr das Attribut *fill* in `aes()` und `guides()` verwenden.
+
+```{r}
+ggplot(party_summary, aes(y = party_label, x = total_videos, fill = party_label)) +
+  geom_col() +
+  guides(fill = "none")
+```
+
+Ändert nun die Farben zu den offiziellen Parteifarben, indem ihr die Funktion `scale_fill_manual()` verwendet. Hinweis: ihr könnt das `colors`-Objekt verwenden, das wir bereits erstellt haben.
+
+```{r}
+ggplot(party_summary, aes(y = party_label, x = total_videos, fill = party_label)) +
+  geom_col() +
+  guides(fill = "none") +
+  scale_fill_manual(values = colors)
+```
+
+Ändert mit `labs()` die Label der X- und Y-Achse und fügt einen Titel ein. Ändert außerdem das Farbthema. Mit `?theme_bw()` könnt ihr euch die verfügbaren Themen anzeigen lassen.
+
+```{r}
+?theme_bw()
+
+ggplot(party_summary, aes(y = party_label, x = total_videos, fill = party_label)) +
+  geom_col() +
+  guides(fill = "none") +
+  scale_fill_manual(values = colors) +
+  labs(x = "Videos", y = "Partei", title = "Parteivideos gesamt") +
+  theme_light()
+```
+
+## 6. Daten speichern
+
+Wir können unsere Ergebnisse speichern, indem wir Datensätze als .RDS abspeichern:
+
+```{r}
+saveRDS(party_summary, "party_summary.RDS")
+```
+
+Ebensogut können wir sie als .csv exportieren, indem wir die *Tidyverse* Funktion `write_csv()` verwenden:
+
+```{r}
+write_csv(party_summary, "party_summary.csv")
+```
+
+Unser Grafiken können wir auf unterschiedliche Weise speichern. Zum wird euch die Grafik, die ihr erstellt, unter dem Reiter "Plots" in RStudio angezeigt, wenn ihr den Code direkt in der Konsole ausführt (wenn ihr den Code wie hier in einem Notebook ausführt, ist das nicht der Fall!). Dort findet ihr eine praktische "Export"-Funktion. Zum anderen bietet *ggplot* die Funktion `ggsave()`, mit der ihr den letzten ausgeführten Plot (oder ein Plot-Objekt eurer Wahl) exportieren könnt. Hinweis: `ggsave()` bietet zahlreiche Optionen zum Export, die ihr unter `?ggsave()` findet. Die Standardeinstellungen sind häufig aber ausreichend:
+
+```{r}
+ggsave("party_overview.png")
+```
+
+Schlussendlich könnt ihr die Ergebnisse eures Notebooks mitsamt dem Text exportieren. Geht dazu auf den kleinen Pfeil neben "Preview" und klickt auf einen der "Knit"-Einträge. Hinweis: Der PDF-Export benötigt eine installierte LaTeX Distribution, der Word-Export eine Word-Installation. HTML lässt sich immer exportieren und kann mit einem Browser eurer Wahl geöffnet werden.
+
+### Übungen 6
+
+Speichert die Objekte, die ihr in **Übung 4** erstellt habt als .csv und .RDS ab.
+
+```{r}
+
+```
+
+Speichert den Plot der Parteivideos über Zeit, den wir in Übung 5 gemeinsam erstellt haben, ab. Denkt daran, dass `ggsave()` standardmäßig immer den letzten Plot exportiert. Führt ggf. also noch einmal den Code aus, der den Plot erstellt hat, bevor ihr `ggsave()` verwendet.
+
+```{r}
+
+```
+
+Exportiert die Ergebnisse dieses Notebooks als HTML, indem ihr "Knit to HTML" verwendet.
+
+## Zusätzliche Übungen
+
+Ihr findet im Learnweb außerdem den Datensatz *party_comments_january.csv*, welcher alle Kommentare zu den Parteivideos aus dem Januar 2022 enthält. Lest diesen in eure R-Umgebung ein:
+
+```{r}
+party_comments_january <- readRDS("party_comments_january.RDS")
+```
+
+Lasst euch mit `summarise()` anzeigen, wieviele Kommentare jede Partei bekommen hat.
+
+```{r}
+party_comments_january %>% summarise(comments = n(), .by = party_label)
+```
+
+Verwendet `filter()`, um euch die Kommentare für:\
+a) einen Tag,\
+b) eine Partei,\
+c) ein einzelnes Video,\
+d) einen Tag für zwei Parteien \
+anzeigen zu lassen. \
+Hinweis: Bedenkt, dass ihr ggf. zunächst mit `mutate()` das Datenformat anpassen müsst, um euch einzelne Tage anzeigen zu lassen. Alternativ könnt ihr mit `dmy_hms()` (**D**ay-**M**onth-**Y**ear-**H**our-**M**inute**-S**econd) nach genaueren Zeitpunkten, etwa dem Beginn und Ende eines Tages, filtern. Um mehrere `filter()` Kombinationen zu kombinieren kann es außerdem nützlich sein, Klammern zu setzen, da diese gemeinsam evaluiert werden (Tag UND (Party a oder b) oder mehrere `filter()`-Befehle nacheinander auszuführen.
+
+```{r}
+party_comments_january <- party_comments_january %>% 
+  mutate(day = as_date(comment_PublishedAt)) 
+
+party_comments_january %>% filter(day == dmy("31.1.2022"))
+
+party_comments_january %>% filter(party == "cdu")
+
+party_comments_january %>% filter(video_id == "8aqEV5Sa4d4")
+
+party_comments_january %>% filter(day == dmy("13.1.2022") & 
+                                    (party == "cdu" | party == "spd"))
+
+```
+
+Visualisiert die Daten mit `ggplot()`. Lasst euch die Kommentare in unterschiedlichen Formaten anzeigen, etwa als Balkendiagramm oder über Zeit als Linie. Probiert auch weitere Visualisierungstypen, etwa `geom_point()` oder `geom_smooth()` aus. Ihr könnt auch mehrere Plot-Typen kombinieren, indem ihr sie hintereinander hinzufügt. Passt ebenfalls die Labels, Themes und Guides eurer Plots an und probiert, die Daten in unterschiedliche Formate zu bringen, bevor ihr sie plottet - etwa mit `summarise()`. \
+Hinweis: Beachtet, dass *video_PublishedAt* den Zeitpunkt der Videopublikation, *comment_PublishedAt* den Zeitpunkt des Kommentars angibt.
+
+```{r}
+party_comments_january %>% summarise(comments = n(), .by = c(day, party_label)) %>% 
+  ggplot(aes(x = day, y = comments, color = party_label)) +
+  geom_point()
+
+party_comments_january %>% summarise(comments = n(), .by = c(day, party_label)) %>% 
+  ggplot(aes(x = day, y = comments, color = party_label)) +
+  geom_point() +
+  geom_smooth()
+```

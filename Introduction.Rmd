@@ -3,14 +3,14 @@ title: "Analyse von YouTube-Daten mit R"
 author: "Tim König"
 date: "2023-02-15"
 output:
-  powerpoint_presentation:
-    fig_width: 9
-    fig_height: 7
   ioslides_presentation:
     logo: "D:/academicCloud/EPINETZ/logo-hildesheim-rd_gr_fr.png"
     fig_width: 9
     fig_height: 7
     highlight: tango
+  powerpoint_presentation:
+    fig_width: 9
+    fig_height: 7
   slidy_presentation:
     fig_width: 9
     fig_height: 7
@@ -30,20 +30,21 @@ knitr::opts_chunk$set(echo = F, warning = F, out.width="80%", out.height="80%")
 }
 
 party_videos <- readRDS("data/party_videos.RDS")
-comments_january <- readRDS("data/comments_january.RDS")
+# comments_january <- readRDS("data/comments_january.RDS")
+party_comments_january <- readRDS("data/party_comments_january.RDS")
 related_videos_january <- readRDS("data/related_videos_january.RDS")
 
-party_videos <- party_videos %>% # some data cleaning
-  mutate(contentDetails.videoPublishedAt = ymd_hms(contentDetails.videoPublishedAt)) %>%  # proper datetime format
-  distinct(contentDetails.videoId, .keep_all = T) %>% # make sure there are no duplicates
-  mutate(party_label = case_when( # add some proper party labels
-    party == "afd" ~ "AfD",
-    party == "cdu" ~ "CDU",
-    party == "spd" ~ "SPD",
-    party == "fdp" ~ "FDP",
-    party == "gruene" ~ "Bündnis 90/Die Grünen",
-    party == "linke" ~ "DIE LINKE"
-  ))
+# party_videos <- party_videos %>% # some data cleaning
+#   mutate(contentDetails.videoPublishedAt = ymd_hms(contentDetails.videoPublishedAt)) %>%  # proper datetime format
+#   distinct(contentDetails.videoId, .keep_all = T) %>% # make sure there are no duplicates
+#   mutate(party_label = case_when( # add some proper party labels
+#     party == "afd" ~ "AfD",
+#     party == "cdu" ~ "CDU",
+#     party == "spd" ~ "SPD",
+#     party == "fdp" ~ "FDP",
+#     party == "gruene" ~ "Bündnis 90/Die Grünen",
+#     party == "linke" ~ "DIE LINKE"
+#   ))
 
 colors <-
   tibble(
@@ -70,18 +71,19 @@ colors <-
 
 videos_january <- party_videos %>% filter(contentDetails.videoPublishedAt >= ymd("2022-01-01"), contentDetails.videoPublishedAt < ymd("2022-02-01")) # filter by publication dates
 
-party_comments_january <- left_join(videos_january, 
-                                    comments_january %>% # join the comments on the video list...
-                                      select(videoId, textDisplay, textOriginal, authorDisplayName, likeCount, publishedAt, id) %>%  # ... but select relevant data first ...
-                                      rename(comment_id = id),    # ... and rename the ID variable for clarity
-                                    by = join_by(contentDetails.videoId == videoId), # we need to specify that the IDs have different column names in the two datasets
-                                    multiple = "all") %>%  # we expect multiple matches from the right-hand side (comments_january) to the left-hand side (videos_january)
-  mutate(likeCount = as.integer(likeCount),              # count as integer, not character
-         publishedAt = ymd_hms(publishedAt)) %>%       # proper dateteime format
-  rename(video_id = contentDetails.videoId,              # rename some variables for clarity
-         video_PublishedAt = contentDetails.videoPublishedAt,
-         comment_PublishedAt = publishedAt) %>% 
-  select(!c(kind, etag, id))                             # drop unnecessary variables
+# party_comments_january <- left_join(videos_january,
+#                                     comments_january %>% # join the comments on the video list...
+#                                       select(videoId, textDisplay, textOriginal, authorDisplayName, likeCount, publishedAt, id) %>%  # ... but select relevant data first ...
+#                                       rename(comment_id = id),    # ... and rename the ID variable for clarity
+#                                     by = join_by(contentDetails.videoId == videoId), # we need to specify that the IDs have different column names in the two datasets
+#                                     multiple = "all") %>%  # we expect multiple matches from the right-hand side (comments_january) to the left-hand side (videos_january)
+#   mutate(likeCount = as.integer(likeCount),              # count as integer, not character
+#          publishedAt = ymd_hms(publishedAt)) %>%       # proper dateteime format
+#   rename(video_id = contentDetails.videoId,              # rename some variables for clarity
+#          video_PublishedAt = contentDetails.videoPublishedAt,
+#          comment_PublishedAt = publishedAt) %>%
+#   select(!c(kind, etag, id))  %>%                            # drop unnecessary variables
+#   filter(!is.na(textDisplay))                       # remove missing comments
 
 ```
 
@@ -93,21 +95,21 @@ party_comments_january <- left_join(videos_january,
 knitr::include_graphics("yt-data-api-search_720.png")
 ```
 
-## Vorteile der YouTube API
+<!-- ## Vorteile der YouTube API -->
 
-**Vorteile gegenüber Webscraping**
+<!-- **Vorteile gegenüber Webscraping** -->
 
--   sauber formatierte, verlässliche Daten
--   legale, durch Terms of Service regulierte Datenbeschaffung
--   gute Dokumentation
--   *keine HTML-Kenntnisse nötig*
--   R-Packages zum Umgang mit der API, z.B. tuber
+<!-- -   sauber formatierte, verlässliche Daten -->
+<!-- -   legale, durch Terms of Service regulierte Datenbeschaffung -->
+<!-- -   gute Dokumentation -->
+<!-- -   *keine HTML-Kenntnisse nötig* -->
+<!-- -   R-Packages zum Umgang mit der API, z.B. tuber -->
 
-**Nachteile**
+<!-- **Nachteile** -->
 
--   Mögliche Daten durch die Endpoints der API vorgegeben
--   Rate Limits reglementieren die täglich verfügbare Datenmenge
--   Authentifizierung via OAuth 2.0 / API Keys etwas umständlich
+<!-- -   Mögliche Daten durch die Endpoints der API vorgegeben -->
+<!-- -   Rate Limits reglementieren die täglich verfügbare Datenmenge -->
+<!-- -   Authentifizierung via OAuth 2.0 / API Keys etwas umständlich -->
 
 ## Fallbeispiel: Youtube Kanäle der Parteien
 

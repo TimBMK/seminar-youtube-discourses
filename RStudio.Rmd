@@ -1,0 +1,73 @@
+---
+title: "R & RSTudio"
+author: "Tim König"
+date: "2023-03-15"
+output:
+  ioslides_presentation: 
+    logo: "D:/academicCloud/EPINETZ/logo-hildesheim-rd_gr_fr.png"
+    fig_width: 9
+    fig_height: 7
+    highlight: tango
+---
+
+## R & RStudio installieren
+
+### **R**
+
+[**https://cran.r-project.org/**](https://cran.r-project.org/){.uri}
+
+-   Windows: <https://cran.r-project.org/bin/windows/>
+
+-   Mac: <https://cran.r-project.org/bin/macosx/>
+
+-   Linux: <https://cran.r-project.org/bin/linux/>
+
+### **RStudio**
+
+[**https://posit.co/download/rstudio-desktop/**](https://posit.co/download/rstudio-desktop/){.uri}\
+
+## Einstellungen
+
+![](images/image-2020106027.png)
+
+## Workspace
+
+Zur Reproduzierbarkeit von Daten ist es besser, RStudio immer "clean", d.h. ohne Daten zu starten. So muss der Code jedesmal neu aufgerufen werden, um Ergebnisse zu produzieren. Zwischenergebnisse müssen per Hand gespeichert werden. So ist sichergestellt, dass der Code reproduzierbar ist!
+
+![](images/image-686169053.png)
+
+## Aussehen / Themes
+
+![](images/image-1456181771.png)
+
+## Anordnung der Fenster
+
+![](images/image-771555495.png)
+
+## Regenbogenklammern
+
+![](images/image-1850337578.png)
+
+## Regenbogenklammern: Beispiel
+
+![](images/image-1325612891.png) ![](images/image-1370936867.png)
+
+## Elemente von RStudio
+
+![](images/image-1252578274.png){width="800"}
+
+## Shortcuts
+
+`strg + ENTER` (im Script/Notebook): aktuelle Zeile Code abspielen
+
+`strg + PfeilOben` (in Console): letzte Befehle (nur Pfeil nach oben = letzter Befehl)
+
+`strg + shift + m`: Pipe einfügen (***%\>%***)
+
+`tab`: Vorschläge anzeigen (beim tippen von Funktionen oder Pfaden)
+
+`strg + s`: aktuelles Script/Notebook speichern
+
+`strg + klick`: Klickl auf Objekt im Skript/Notebook zeigt das Objekt an. Funktionier auch für Funktionen!
+
+`alt + shift + k`: Alle Shortcuts anzeigen

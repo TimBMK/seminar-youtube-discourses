@@ -32,7 +32,7 @@ Nachdem wir das Package installiert haben, müssen wir es in unsere aktuelle R U
 library(tidyverse)
 ```
 
-### Übung 1:
+### Übung 1
 
 Neben dem tidyverse werden wir im Verlauf der Übung außerdem das package "lubridate" benötigen, mit dem wir Daten manipulieren können. Schreibt Code, welcher das Package installiert und lädt.
 
@@ -80,7 +80,7 @@ party_videos_csv <- read_csv("party_videos.csv")
 
 **Tipp:** Wenn ihr einen Dateipfad oder eine Datei mit R auswählen wollt, indem ihr den Pfad eintippt, (z.B. `setwd("C:/meine_R_Projekte/...")`, könnt ihr euch mit der TAB-Taste Dateien im aktuellen Pfad bzw. Vorschläge zur Autovervollständigung anzeigen lassen. Das spart besonders bei langen Pfaden Zeit und Nerven, da es Vertippern vorbeugt.
 
-### Übung 2:
+### Übung 2
 
 Legt euer Working Directory mit `setwd()` auf euren Projektordner fest. Überprüft mit `getwd()`, ob ihr im richtigen Ordner gelandet sein. Lest dann den *party_videos*-Datensatz ein: einmal als .RDS, einmal als .csv.
 
@@ -350,9 +350,9 @@ party_videos %>% nrow()
                            
 ```
 
-### Übungen 4
+### Übung 4
 
-Überprüfe, ob es einen Unterschied zwischen `party_videos` und `party_videos_distinct` gibt. Hinweis: da `distinct()` duplizierte Reihen (in diesem Fall identische IDs) entfernt, sollte sich, falls ein Unterschied besteht, die Anzahl Reihen unterscheiden. Dies könnt ihr mit `nrow()` oder `summarise()` und `n()` prüfen. Außerdem erlaubt es `identical()`, zu prüfen, ob zwei Objekte vollkommen identisch sind. Lest dazu auch die Helpfiles von `identical()`.
+Überprüfe, ob es einen Unterschied zwischen `party_videos` und `party_videos_distinct` gibt. Hinweis: da `distinct()` duplizierte Reihen (in diesem Fall identische IDs) entfernt, sollte sich, falls ein Unterschied besteht, die Anzahl Reihen unterscheiden. Dies könnt ihr mit `nrow()` oder `summarise()` und `n()` prüfen. Außerdem erlaubt es `identical(objekt1, objekt2)`, zu prüfen, ob zwei Objekte (z.B. zwei Datensätze) vollkommen identisch sind.
 
 ```{r}
 
@@ -511,7 +511,7 @@ party_videos %>%
   theme_bw()
 ```
 
-### Übungen 5
+### Übung 5
 
 Probiert weitere Visualisierungsmöglichkeiten aus. Verwendet dazu zunächst das `party_summary`-Objekt, welches wir in einer der vorherigen Abschnitte erstellt haben. Zur Erinnerung: `party_summary` enthält eine mit `summarise()` erstellte Zusammenfassung der Videos pro Partei. Nutzt `aes()`, um die Variable *party_label* als X-, *total_videos* als Y-Achse festzulegen und dann die Funktion `geom_col()`, um ein Balkendiagramm zu erstellen. Was fällt auf, wenn ihr das Ergebnis mit dem Bar-Diagramm vergleicht, das wir zu Beginn dieses Abschnitts erstellt haben?
 
@@ -565,7 +565,7 @@ ggsave("party_overview.png")
 
 Schlussendlich könnt ihr die Ergebnisse eures Notebooks mitsamt dem Text exportieren. Geht dazu auf den kleinen Pfeil neben "Preview" und klickt auf einen der "Knit"-Einträge. Hinweis: Der PDF-Export benötigt eine installierte LaTeX Distribution, der Word-Export eine Word-Installation. HTML lässt sich immer exportieren und kann mit einem Browser eurer Wahl geöffnet werden.
 
-### Übungen 6
+### Übung 6
 
 Speichert die Objekte, die ihr in **Übung 4** erstellt habt als .csv und .RDS ab.
 

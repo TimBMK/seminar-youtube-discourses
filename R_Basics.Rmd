@@ -1,12 +1,12 @@
 ---
 title: ' R & Tidyverse Basics'
 author: "Tim König"
-date: "2023-03-02"
+date: "2023-03-17"
 output:
   ioslides_presentation:
-    logo: "D:/academicCloud/EPINETZ/logo-hildesheim-rd_gr_fr.png"
-    fig_width: 9
-    fig_height: 7
+    logo: "C:/academicCloud/EPINETZ/logo-hildesheim-rd_gr_fr.png"
+    fig_width: 8
+    fig_height: 4.5
     highlight: tango
 ---
 
@@ -21,9 +21,14 @@ library(tidyverse)
 -   flexible Anwendungsmöglichkeiten, u.a. Statistik, Textverarbeitung, Visualisierung, Netzwerkanalyse, API-Zugriff, Webscraping, Interaktive Anwendungen....
 -   Zahlreiche Funktionen werden über sogenannte "Packages" bereitgestellt
 -   vergleichbar mit *Python*, allerdings mit Wurzeln in der statistischen Analyse - daher ein leicht engerer Fokus, welcher *R* insbesondere in den Sozial- und Politikwissenschaften beliebt macht
--   **R Studio** IDE (*Integrated Development Environment*) ermöglicht u.a. komfortables anlegen von Scripts, Inspektion von Objekten, Öffnen von Help-Files sowie das Anzeigen von Grafiken und Graphen
--   **RMarkdown** ermöglich das komfortable anlegen von Dokumentationen, Berichten oder Präsentation wie dieser hier, die auf R-Code basieren
 -   Ähnlich wie in *Python* werden in *R* **Funktionen** auf **Objekte** angewendet, um diese zu manipulieren
+
+
+## *R*: weitere Funktionen 
+
+-   **R Studio** IDE (*Integrated Development Environment*) ermöglicht u.a. komfortables anlegen von Scripts, Inspektion von Objekten, Öffnen von Help-Files sowie das Anzeigen von Grafiken und Graphen
+-   **RMarkdown** ermöglicht das komfortable anlegen von Dokumentationen, Berichten oder Präsentation (wie dieser hier), die auf R-Code basieren
+
 
 # Programmieren mit *R*
 
@@ -66,46 +71,46 @@ y <- x + 5
 y
 ```
 
-## Objekttypen
+<!-- ## Objekttypen -->
 
-```{r}
-numerisches_objekt <- 4
-numerisches_objekt
-```
+<!-- ```{r} -->
+<!-- numerisches_objekt <- 4 -->
+<!-- numerisches_objekt -->
+<!-- ``` -->
 
-```{r}
-text_objekt <- "ein Objekt voll Text"
-text_objekt
-```
+<!-- ```{r} -->
+<!-- text_objekt <- "ein Objekt voll Text" -->
+<!-- text_objekt -->
+<!-- ``` -->
 
-```{r}
-logisches_objekt <- TRUE
-logisches_objekt
-```
+<!-- ```{r} -->
+<!-- logisches_objekt <- TRUE -->
+<!-- logisches_objekt -->
+<!-- ``` -->
 
-## Objekttypen
+<!-- ## Objekttypen -->
 
-```{r}
-datum <- as.Date("2023-03-10")
-datum
-```
+<!-- ```{r} -->
+<!-- datum <- as.Date("2023-03-10") -->
+<!-- datum -->
+<!-- ``` -->
 
-## Objekttypen ändern
+<!-- ## Objekttypen ändern -->
 
-```{r}
-z <- "25"
-z
-is.character(z)
-```
+<!-- ```{r} -->
+<!-- z <- "25" -->
+<!-- z -->
+<!-- is.character(z) -->
+<!-- ``` -->
 
-## Objekttypen ändern
+<!-- ## Objekttypen ändern -->
 
-```{r}
-z <- as.numeric(z)
-z
-is.character(z)
-is.numeric(z)
-```
+<!-- ```{r} -->
+<!-- z <- as.numeric(z) -->
+<!-- z -->
+<!-- is.character(z) -->
+<!-- is.numeric(z) -->
+<!-- ``` -->
 
 ## Fehlende Werte: NA
 
@@ -115,15 +120,15 @@ missing
 is.na(missing)
 ```
 
-## Fehlende Werte: NULL
+<!-- ## Fehlende Werte: NULL -->
 
-```{r}
-is.null(missing)
-nothing <- NULL
-is.na(nothing)
-```
+<!-- ```{r} -->
+<!-- is.null(missing) -->
+<!-- nothing <- NULL -->
+<!-- is.na(nothing) -->
+<!-- ``` -->
 
-NULL bezeichnet undefinierte Werte, welche nicht evaluiert werden können. NULL kann kein Teil anderer Datenstrukturen, z.B. Vektoren sein (NULL wird bei der Zuordnung ignoriert). NA kann hingegen Teil anderer Datenstrukturen sein, um fehlende Werte anzuzeigen.
+<!-- NULL bezeichnet undefinierte Werte, welche nicht evaluiert werden können. NULL kann kein Teil anderer Datenstrukturen, z.B. Vektoren sein (NULL wird bei der Zuordnung ignoriert). NA kann hingegen Teil anderer Datenstrukturen sein, um fehlende Werte anzuzeigen. -->
 
 ## Datenstrukturen I: Vektoren
 
@@ -169,22 +174,22 @@ my_list <- list(1, 3, 5)
 my_list
 ```
 
-## Datenstrukturen II: Listen
+<!-- ## Datenstrukturen II: Listen -->
 
-```{r}
-my_fancy_list <- list(c(1,2,5), 43, "what a list!", list(TRUE, 42))
-my_fancy_list
-```
+<!-- ```{r} -->
+<!-- my_fancy_list <- list(c(1,2,5), 43, "what a list!", list(TRUE, 42)) -->
+<!-- my_fancy_list -->
+<!-- ``` -->
 
-## Datenstrukturen II: Listen
+<!-- ## Datenstrukturen II: Listen -->
 
-```{r, error=T}
-sum(my_list)
-```
+<!-- ```{r, error=T} -->
+<!-- sum(my_list) -->
+<!-- ``` -->
 
-```{r}
-sum(my_fancy_list[[1]])
-```
+<!-- ```{r} -->
+<!-- sum(my_fancy_list[[1]]) -->
+<!-- ``` -->
 
 ## Datenstrukturen III: Dataframes
 

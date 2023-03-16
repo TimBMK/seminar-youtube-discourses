@@ -60,7 +60,7 @@ yt_oauth(
 
 ## Zugriff auf Metadaten von Videos
 
-Testen wir zunächst anhand eines einzelnen Videos, ob unser Zugriff funktioniert. Das geht einfach mit der Funktion `get_video_details()`, die uns für eine Video ID die spezifizierten Metadaten zurückgibt. Die ID eines Videos findet ihr, wenn ihr ein Video auf YouTube aufruft, in der Adresszeile eures Browsers nach dem Schema: https://www.youtube.com/watch?v=**VIDEO_ID**
+Testen wir zunächst anhand eines einzelnen Videos, ob unser Zugriff funktioniert. Das geht einfach mit der Funktion `get_video_details()`, die uns für eine Video ID die spezifizierten Metadaten zurückgibt. Die ID eines Videos findet ihr, wenn ihr ein Video auf YouTube aufruft, in der Adresszeile eures Browsers nach dem Schema: <https://www.youtube.com/watch?v=>**VIDEO_ID**
 
 Wir wollen beispielsweise für die Regierungserklärung von Kanzler Scholz, das sogenannte `"snippet"`, also die Kurzinformationen zu Titel, Publikationsdatum, Beschreibung etc. Weitere Informationen zu den verfügbaren Daten findet ihr unter `?get_video_details()`. Außerdem können wir mit `as.data.frame = TRUE` spezifizieren, dass wir die Daten gerne als Dataframe hätten, bei dem eine Spalte einer Variable entspricht.
 

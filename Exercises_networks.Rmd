@@ -69,22 +69,96 @@ ggraph(comments_graph, layout = "fr") +
   geom_node_point()
 ```
 
-Das wirkt noch etwas chaotisch. Außerdem sehen wir, dass wir zwei *Outlier* haben, die keine Verbindungen zu den restlichen Knoten zu besitzen scheinen. Da wir daran interessiert sind, welche User mehrere Videos kommentieren, können wir den Graph entsprechend filtern. Dazu machen wir uns den sogenannten **Degree** zunutze. Dieser zählt die Anzahl an Kanten (bzw. die addierten Gewichte bei gewichteten Graphen), die von einem Knoten ein- oder ausgehen. **Der Indegree zählt die eingehenden, der Outdegree die ausgehenden Verbindungen.** Wir sind also nur an Videos interessiert, die einen **Indegree** von mindestens 2 haben (also mindestens zweimal kommentiert werden) und User:innen, die einen **Outdegree** von mindestens 2 haben (also mindestens zweimal kommentieren).
+Das wirkt noch etwas chaotisch. Außerdem sehen wir, dass wir zwei *Outlier* haben, die keine Verbindungen zu den restlichen Knoten zu besitzen scheinen. Da wir daran interessiert sind, welche User mehrere Videos kommentieren, können wir den Graph entsprechend filtern. Dazu machen wir uns den sogenannten **Degree** zunutze. Dieser zählt die Anzahl an Kanten (bzw. die addierten Gewichte bei gewichteten Graphen), die von einem Knoten ein- oder ausgehen. **Der Indegree zählt die eingehenden, der Outdegree die ausgehenden Verbindungen.** Wir sind beispielsweise nur an Videos interessiert, die einen **Indegree** von mindestens 3 haben (also mindestens dreimal kommentiert werden) und User:innen, die einen **Outdegree** von mindestens 3 haben (also mindestens dreimal kommentieren).
 
-Mit *tidygraph* können wir nicht nur den Degree berechnen, sondern auch `filter()` nutzen, um wie bei Dataframes zu filtern. Um den Degree zu berechnen, müssen wir jedoch zunächst die Nodes "aktivieren", damit *tidygraph* weiß, dass der folgende `mutate()` Befehl sich auf die Knoten und nicht die Kanten bezieht. Hinweis: da in unserem bipartiten Netzwerkgraphen User:innen immer nur einen Outdegree haben können (da nur sie kommentieren können) und Videos immer nur einen Indegree (da sie nur kommentiert werden können und nicht selbst kommentieren), reicht es den gesamten Degree - statt In- und Outdegree getrennt - zu berechnen.
+Mit *tidygraph* können wir nicht nur den Degree berechnen, sondern auch `filter()` nutzen, um wie bei Dataframes zu filtern. Wir erhalten dann einen sogenannten **Sugraph**, also einen "Unter-Graphen", welche nur einige der Knoten des ursprüngichen Graphen enthält. Um den Degree zu berechnen, müssen wir jedoch zunächst die Nodes "aktivieren", damit *tidygraph* weiß, dass der folgende `mutate()` Befehl sich auf die Knoten und nicht die Kanten bezieht.
+
+Hinweis: da in unserem bipartiten Netzwerkgraphen User:innen immer nur einen Outdegree haben können (da nur sie kommentieren können) und Videos immer nur einen Indegree (da sie nur kommentiert werden können und nicht selbst kommentieren), reicht es den gesamten Degree - statt In- und Outdegree getrennt - zu berechnen.
 
 ```{r}
 comments_subgraph <- comments_graph %>% 
   activate(nodes) %>% 
   mutate(degree = centrality_degree(mode = "total")) %>% 
-  filter(degree > 2)
+  filter(degree >= 3)
   
 ggraph(comments_subgraph, layout = "fr") +
   geom_edge_arc(color = "lightgrey") +
   geom_node_point()
 ```
 
-Schon besser! Wir würden nun gerne noch vermerken, welches Video von welcher Partei gepostet wurde. Diese Information können wir als sogenannten *Node Attribute*, also Knotenattribut, hinzufügen. Dazu müssen wir zunächst einen Datensatz erstellen, dessen Partei-Variable wir daraufhin unserem Graph mit `left_join()` hinzufügen. Diesen Datensatz erstellen wir quasi im vorübergehen, indem wir zunächst *video_id* und *party_label* aus dem ursprünglichen Kommentar-Datensatz auswählen. Diesem werden dann die Namen aller Autoren als Reihen hinzugefügt. Da diese keiner Partei angehören, setzen wir das *party_label* dort als *NA*, also fehlend. Da wir außerdem auf die *name* Variable des Graphen joinen, bennen wir *video_id* bzw. *authorDisplayName* entsprechend um. Vor dem letztendlichen *join* stellen wir noch mit `distinct()` sicher, dass jeder Autorenname und jede Video ID nur einmal vorkommt.
+Schon besser! Unser Graph ist jetzt schon deutlich übersichtlicher. Wenn ihr sehen wollt, wie wir diesen Graph noch weiter gestalten könnt, schaut am Ende dieses Dokuments nach. Dort findet ihr Code und Erklärungen dazu, wie ihr den Graphen aus der Fallstudie der Einführungspräsentation repliziert. Als letzten Schritt können wir hier jetzt noch festlegen, dass die Größe der Knoten ihrem **Degree** entsprechen soll. So können wir auf einen Blick sehen, welche Knoten die meisten Kommentare verfasst bzw. erhalten haben. Dazu können wir einfach festlegen, dass das Attribut "size" (also Größe) eines Knotens der Variable *degree* entsprechen soll, die wir eben berechnet haben. Genau wie bei *ggplot* geht dies über die Funktion `aes()`.
+
+```{r}
+ggraph(comments_subgraph, layout = "fr") +
+  geom_edge_arc(color = "lightgrey") +
+  geom_node_point(aes(size = degree))
+```
+
+### Vorgeschlagene Videos
+
+Um die vorgeschlagenen Videos als Netwzerk darzustellen, können wir ähnlich vorgehen. Zunächst erstellen wir ein Netzwerk zwischen den Videos, bei dem eine Verbindung darstellt, um ein Video von einem anderen vorgeschlagen wird - oder auch nicht. Da wir in diesem Netzwerk nur den Knotentyp "Video" haben, handelt es sich, im Gegensatz zu dem Video-Kommentar-Graphen oben, um ein **monopartites Netzwerk**. Auch hier wählen wir zunächst die relevanten Variablen und deren Reihenfolge mit `select()` aus, bevor wir mit `as_tbl_graph()` einen Netzwerkgraphen bilden. Hier also einen **gerichteten** Graphen von Video ID zur ID des vorgeschlagenen Videos.
+
+```{r}
+related_graph <- related_videos_january %>% 
+  select(video_id, rel_video_id) %>% 
+  as_tbl_graph(directed = TRUE)
+```
+
+Erneut können wir unseren Graphen einfach mit `ggraph()` visualisieren:
+
+```{r}
+ggraph(related_graph, layout = "fr") +
+  geom_edge_arc(color = "lightgrey") +
+  geom_node_point()
+```
+
+Außerdem möchten wir wissen, welche Knoten - also welche Videos - die höchste **Betweenness** aufweisen. Diese berechnet, wieviele kürzeste Pfade von einem beliebigen Knoten zu einem beliebigen anderen Knoten führen. Je mehr kürzeste Pfade durch einen Knoten führen, desto *zentraler* ist er im Netzwerk. Mit anderen Worten: An einem Knoten mit hoher **Betweenness** gibt es quasi kein Vorbeikommen. Wenn wir uns von einem Knoten zu einem anderen bewegen - etwa, wenn wir uns durch die vorgeschlagenen Videos klicken - werden wir früher oder später wahrscheinlich auf einen solchen Knoten stoßen.
+
+Ähnlich wie oben den Degree, können wir *tidygraph* verwenden, um die betweenness zu berechnen. Diesmal filtern wir jedoch nicht, da wir unser Netzwerk nicht verkleinern möchten.
+
+```{r}
+related_graph <- related_graph %>% 
+  activate(nodes) %>% 
+  mutate(betweenness = centrality_betweenness())
+```
+
+Nun können wir uns die Videos mit der höchsten Betweenness anzeigen lassen. Um den Titel des Videos zu erhalten, können wir erneut `join_by()` verwenden, um in aus unserem ursprünglichen Datensatz zu ziehen. Zunächst wandeln wir mittels `activate()` und `as_tibble()` jedoch den Graphen in eine Tibble um. Für den join benennen wir zunächt den Namen wieder in ID um und wählen aus unserem ursprünglichen Datensatz nur jene Variablen aus, die wir auch brauchen - nämlich ID und Titel des Videos sowie den Namen das Kanals, der das Video hochgeladen hat. Schlussendlich können wir noch `arrange()` verwenden, um den Datensatz mittels `desc()` nach absteigender Betweenness zu sortieren. So sehen wir schneller, welche Videos relevant sind.
+
+```{r}
+related_graph %>% 
+  activate(nodes) %>% 
+  as_tibble() %>% 
+  rename(video_id = name) %>% 
+  left_join(related_videos_january %>% select(video_id, title, channelTitle),
+            by = "video_id") %>% 
+  arrange(desc(betweenness))
+```
+
+Schlussendlich könnten wir auch diesen Graphen noch eimal hübscher darstellen. Den Code dafür findet ihr erneut am Ende des Dokument.
+
+# Übungen
+
+## Kommentare
+
+Stellt die Kommentare, die ihr für eure Videos gezogen habt, als ein Netzwerk dar. Ihr könnt den Code oben verwenden, um ein User-Video-Netzwerk zu erstellen. Berchnet wie oben den Degree der Knoten und filtert nach Knoten mit einem Degree von mindestens 2. Stellt das Ergebnis mit `ggraph()` grafisch dar.
+
+```{r}
+
+```
+
+## Vorgeschlagene Videos
+
+Stellt die vorgeschlagenen Videos, die ihr für eure Videos gezogen habt, als Netzwerk dar. Auch dazu könnt ihr den Code von oben verwenden. Stellt das Netzwerk grafisch mit `ggraph()` dar. Berechnet außerdem die Betweenness der Videos und untersucht, welche 10 Videos die höchste Betweenness haben. Achtet besonders auf deren Titel und den Kanal, von dem sie hochgeladen wurden. Hinweis: Falls ihr weitere Informationen zu diesen Videos braucht, könnt ihr euch auch deren *description*, also die Textbeschreibung des Videos, anzeigen lassen, indem ihr sie mit `select()` aus *related_videos_january* zieht.
+
+```{r}
+
+```
+
+# Replikation der Fallstudie
+
+## Kommentare zu Parteivideos
+
+Ausgehend von dem Kommentar-Graphen würden wir gerne noch vermerken, welches Video von welcher Partei gepostet wurde. Diese Information können wir als sogenanntes *Node Attribute*, also Knotenattribut, hinzufügen. Dazu müssen wir zunächst einen Datensatz erstellen, dessen Partei-Variable wir daraufhin unserem Graph mit `left_join()` hinzufügen. Diesen Datensatz erstellen wir quasi im vorübergehen, indem wir zunächst *video_id* und *party_label* aus dem ursprünglichen Kommentar-Datensatz auswählen. Diesem werden dann die Namen aller Autoren als Reihen hinzugefügt. Da diese keiner Partei angehören, setzen wir das *party_label* dort als *NA*, also fehlend. Da wir außerdem auf die *name* Variable des Graphen joinen, bennen wir *video_id* bzw. *authorDisplayName* entsprechend um. Vor dem letztendlichen *join* stellen wir noch mit `distinct()` sicher, dass jeder Autorenname und jede Video ID nur einmal vorkommt.
 
 ```{r}
 comments_subgraph <- comments_subgraph %>% 
@@ -135,51 +209,12 @@ ggraph(comments_subgraph, layout = "fr") +
   scale_color_manual(values = colors) +
   labs(color = "Partei", shape = "Typ", size = "Degree",
        title = "Kommentare auf Parteivideos", 
-       caption = "Begrenzt auf Nutzer*innen, die 2 oder mehr Kommentare verfasst haben")
-  
+       caption = "Begrenzt auf Nutzer*innen und Videos, die 3 oder mehr Kommentare verfasst bzw. erhalten haben")
 ```
 
-### Vorgeschlagene Videos
+## Vorgeschlagene Videos der Parteivideos
 
-Um die vorgeschlagenen Videos als Netwzerk darzustellen, können wir ähnlich vorgehen. Zunächst erstellen wir ein Netzwerk zwischen den Videos, bei dem eine Verbindung darstellt, um ein Video von einem anderen vorgeschlagen wird - oder auch nicht. Da wir in diesem Netzwerk nur den Knotentyp "Video" haben, handelt es sich, im Gegensatz zu dem Video-Kommentar-Graphen oben, um ein **monopartites Netzwerk**. Auch hier wählen wir zunächst die relevanten Variablen und deren Reihenfolge mit `select()` aus, bevor wir mit `as_tbl_graph()` einen Netzwerkgraphen bilden. Hier also einen **gerichteten** Graphen von Video ID zur ID des vorgeschlagenen Videos.
-
-```{r}
-related_graph <- related_videos_january %>% 
-  select(video_id, rel_video_id) %>% 
-  as_tbl_graph(directed = TRUE)
-```
-
-Erneut können wir unseren Graphen einfach mit `ggraph()` visualisieren:
-
-```{r}
-ggraph(related_graph, layout = "fr") +
-  geom_edge_arc(color = "lightgrey") +
-  geom_node_point()
-```
-
-Außerdem möchten wir wissen, welche Knoten - also welche Videos - die höchste **Betweenness** aufweisen. Diese berechnet, wieviele kürzeste Pfade von einem beliebigen Knoten zu einem beliebigen anderen Knoten führen. Je mehr kürzeste Pfade durch einen Knoten führen, desto *zentraler* ist er im Netzwerk. Mit anderen Worten: An einem Knoten mit hoher **Betweenness** gibt es quasi kein Vorbeikommen. Wenn wir uns von einem Knoten zu einem anderen bewegen - etwa, wenn wir uns durch die vorgeschlagenen Videos klicken - werden wir früher oder später wahrscheinlich auf einen solchen Knoten stoßen.
-
-Ähnlich wie oben den Degree, können wir *tidygraph* verwenden, um die betweenness zu berechnen. Diesmal filtern wir jedoch nicht, da wir unser Netzwerk nicht verkleinern möchten.
-
-```{r}
-related_graph <- related_graph %>% 
-  activate(nodes) %>% 
-  mutate(betweenness = centrality_betweenness())
-```
-
-Nun können wir uns die Videos mit der höchsten Betweenness anzeigen lassen. Um den Titel des Videos zu erhalten, können wir erneut `join_by()` verwenden, um in aus unserem ursprünglichen Datensatz zu ziehen. Zunächst wandeln wir mittels `activate()` und `as_tibble()` jedoch den Graphen in eine Tibble um. Für den join benennen wir zunächt den Namen wieder in ID um und wählen aus unserem ursprünglichen Datensatz nur jene Variablen aus, die wir auch brauchen - nämlich ID und Titel des Videos sowie den Namen das Kanals, der das Video hochgeladen hat. Schlussendlich können wir noch `arrange()` verwenden, um den Datensatz mittels `desc()` nach absteigender Betweenness zu sortieren. So sehen wir schneller, welche Videos relevant sind.
-
-```{r}
-related_graph %>% 
-  activate(nodes) %>% 
-  as_tibble() %>% 
-  rename(video_id = name) %>% 
-  left_join(related_videos_january %>% select(video_id, title, channelTitle),
-            by = "video_id") %>% 
-  arrange(desc(betweenness))
-```
-
-Schlussendlich können wir auch diesen Graphen noch eimal hübscher darstellen. Dafür verwenden wir wieder die Parteifarben, wobei wir die Partei analog zum Vorgehen oben zuerst als Knotenattribut anbringen müssen.
+Wenn wir den Graphen aus der Fallstudie replizieren möchten, müssen wir erneut die Farben der Knoten anpassen. Dafür verwenden wir wieder die Parteifarben, wobei wir die Partei analog zum Vorgehen oben zuerst als Knotenattribut anbringen müssen.
 
 ```{r}
 related_graph <- related_graph %>% 
@@ -198,3 +233,5 @@ ggraph(related_graph, layout = "fr") +
   labs(color = "Partei", size = "Betweenness",
        title = "Vorgeschlagene Videos zwischen Parteien")
 ```
+
+# 

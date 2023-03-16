@@ -1806,826 +1806,1229 @@ und uns mit dessen Funktionen vertraut machen. Dazu müssen wir es
 zunächst einmal installieren:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5zdGFsbC5wYWNrYWdlcyhcInRpZHl2ZXJzZVwiKVxuXG5gYGAifQ== -->
-<pre class="r"><code>install.packages(&quot;tidyverse&quot;)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuaW5zdGFsbC5wYWNrYWdlcyhcXHRpZHl2ZXJzZVxcKVxuXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+install.packages(\tidyverse\)
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Beachtet, dass ihr diesen Code Chunk nur einmal ausführen müsst. Ein
-einmal installiertes Package ist bei jedem Start von R wieder verfügbar.
-Einzige Ausnahme: Größere Updates von R (z.b. von 4.1 auf 4.2) machen
-eine Neuinstallation aller Packages nötig. Bei kleineren Updates (z.B.
-von R 4.1.1 auf 4.1.2) ist dies nicht nötig. Dennoch empfiehlt es sich,
-regelmäßig Package Updates durchzuführen. Wenn ein Package bereits
-installiert ist, führt <code>install.packages()</code> ein Update
-durch.</p>
-<p>Nachdem wir das Package installiert haben, müssen wir es in unsere
-aktuelle R Umgebung laden, um Zugriff auf dessen Funktionen zu haben.
-Dies geschieht mit folgendem Code:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
-<pre class="r"><code>library(tidyverse)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<div id="übung-1" class="section level3">
-<h3>Übung 1:</h3>
-<p>Neben dem tidyverse werden wir im Verlauf der Übung außerdem das
-package “lubridate” benötigen, mit dem wir Daten manipulieren können.
-Schreibt Code, welcher das Package installiert und lädt.</p>
-<p>Installiere das Package “lubridate”:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Lade das Package lubridate:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-<div id="daten-einlesen" class="section level2">
-<h2>2. Daten einlesen</h2>
-<p>Im Learnweb findet ihr den Datensatz “party_videos.RDS”. Darin finden
-sich Metadaten aller 13.512 Videos, die zum Zeitpunkt der Erhebung auf
-den YouTube Channels der großen deutschen Parteien verfügbar waren.
-Neben Metadaten wie der VideoID und dem Veröffentlichungsdatum findet
-sich dort auch ein Variable, welche angibt, von welcher Partei ein Video
-stammt.</p>
-<p>Legt auf eurem Computer einen Ordner an, in dem ihr alle für diese
-Übung relevanten Dateien speichert und speichert den Datensatz dort ab.
-Ihr könnt auch dieses Notebook mit <em>File-&gt;Save As</em> dort
-ablegen. Nur weil euer Notebook in diesem Ordner liegt, heißt das aber
-noch nicht, dass eure R-Umgebung diesen auch als aktuellen Ordner
-wahrnimmt! Folgender Code gibt euch euer aktuelles <em>Working
-Directory</em> aus:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2V0d2QoKVxuYGBgIn0= -->
-<pre class="r"><code>getwd()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Ihr sehr euer aktuelles Working Director auch über dem
-Console-Fenster - neben der aktuell verwendeten R-Version. Zwar könnt
-ihr auch auf Dateien außerhalb eures Working Directory zugreifen. Dazu
-müsst ihr jedoch immer den gesamten Pfad der Daten mit angeben - was
-sehr mühselig sein kann. Deshalb macht es Sinn, euer Working Directory
-zu ändern. Das geht mit der <code>setwd()</code>-Funktion:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0d2QoXCJDOi9tZWluZV9SX1Byb2pla3RlL1lvdVR1YmVfU2VtaW5hci9VZWJ1bmdfMVwiKVxuYGBgIn0= -->
-<pre class="r"><code>setwd(&quot;C:/meine_R_Projekte/YouTube_Seminar/Uebung_1&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Beachtet, dass ihr der hier angegeben Ordnerpfad bei euch
-wahrscheinlich nicht existiert. Ihr müsst ihn also entsprechend so
-anpassen, dass er auf euren Ordner zeigt, in den ihr den Datensatz
-geladen habt. Wichtig ist, dass ihr euren Pfad in Anführungszeichen
-(“…”) setzt und Schrägstriche ( / ), keine Backslashes ( \ ), verwendet,
-um den Pfad zu schreiben. Beachtet, dass das Working Director bei jedem
-Start von R idR. neu gesetzt werden muss.</p>
-<p>Wenn wir unser Working Directory gesetzt haben, können wir die Daten
-in unsere aktuelle Umgebung laden. Die <code>readRDS()</code>-Funktion
-lädt .RDS-Dateien und ordnet sie einem Objekt zu:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zIDwtIHJlYWRSRFMoXCJwYXJ0eV92aWRlb3MuUkRTXCIpXG5gYGAifQ== -->
-<pre class="r"><code>party_videos &lt;- readRDS(&quot;party_videos.RDS&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Beachtet, dass es sich bei dem RDS-Format um ein R-eigenes Format
-handelt, welches häufig nicht mit anderen Programmen wie Python
-kompatibel ist. R ist allerdings auch in der Lage, andere Dateitypen
-einzulesen, etwa das unisverselle .csv. Das Tidyverse bietet dazu die
-<code>read_csv</code>-Funktion an. Sie bietet einige zusätzliche
-Funktionen, etwa die Spezifizierung der Variablen-Typen für einzelne
-Spalten, funktioniert im Prinzip aber analog zu <code>readRDS()</code>.
-Die <em>party_videos.csv</em>-Datei lässt sich so ebenfalls einlesen.
-Sie ist inhaltlich identisch mit der .RDS-Datei.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2NzdiA8LSByZWFkX2NzdihcInBhcnR5X3ZpZGVvcy5jc3ZcIilcbmBgYCJ9 -->
-<pre class="r"><code>party_videos_csv &lt;- read_csv(&quot;party_videos.csv&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p><strong>Tipp:</strong> Wenn ihr einen Dateipfad oder eine Datei mit R
-auswählen wollt, indem ihr den Pfad eintippt, (z.B.
-<code>setwd(&quot;C:/meine_R_Projekte/...&quot;)</code>, könnt ihr euch mit der
-TAB-Taste Dateien im aktuellen Pfad bzw. Vorschläge zur
-Autovervollständigung anzeigen lassen. Das spart besonders bei langen
-Pfaden Zeit und Nerven, da es Vertippern vorbeugt.</p>
-<div id="übung-2" class="section level3">
-<h3>Übung 2:</h3>
-<p>Legt euer Working Directory mit <code>setwd()</code> auf euren
-Projektordner fest. Überprüft mit <code>getwd()</code>, ob ihr im
-richtigen Ordner gelandet sein. Lest dann den
-<em>party_videos</em>-Datensatz ein: einmal als .RDS, einmal als
-.csv.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-<div id="daten-inspizieren" class="section level2">
-<h2>3. Daten inspizieren</h2>
-<p>Es gibt eine Reihe an Möglichkeiten, euch die eingelesenen Daten bzw.
-deren Struktur anzeigen zu lassen. Die einfachste ist, ein Objekt
-einfach “ausdrucken” zu lassen. Das geht via print() oder indem ihr den
-Objektnamen eingebt.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQocGFydHlfdmlkZW9zKVxuXG5wYXJ0eV92aWRlb3NcbmBgYCJ9 -->
-<pre class="r"><code>print(party_videos)
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Beachtet, dass ihr diesen Code Chunk nur einmal ausführen müsst. Ein einmal installiertes Package ist bei jedem Start von R wieder verfügbar. Einzige Ausnahme: Größere Updates von R (z.b. von 4.1 auf 4.2) machen eine Neuinstallation aller Packages nötig. Bei kleineren Updates (z.B. von R 4.1.1 auf 4.1.2) ist dies nicht nötig. Dennoch empfiehlt es sich, regelmäßig Package Updates durchzuführen. Wenn ein Package bereits installiert ist, führt `install.packages()` ein Update durch.
+
+Nachdem wir das Package installiert haben, müssen wir es in unsere aktuelle R Umgebung laden, um Zugriff auf dessen Funktionen zu haben. Dies geschieht mit folgendem Code:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+library(tidyverse)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+### Übung 1
+
+Neben dem tidyverse werden wir im Verlauf der Übung außerdem das package &quot;lubridate&quot; benötigen, mit dem wir Daten manipulieren können. Schreibt Code, welcher das Package installiert und lädt.
+
+Installiere das Package &quot;lubridate&quot;:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Lade das Package lubridate:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+## 2. Daten einlesen
+
+Im Learnweb findet ihr den Datensatz &quot;party_videos.RDS&quot;. Darin finden sich Metadaten aller 13.512 Videos, die zum Zeitpunkt der Erhebung auf den YouTube Channels der großen deutschen Parteien verfügbar waren. Neben Metadaten wie der VideoID und dem Veröffentlichungsdatum findet sich dort auch ein Variable, welche angibt, von welcher Partei ein Video stammt.
+
+Legt auf eurem Computer einen Ordner an, in dem ihr alle für diese Übung relevanten Dateien speichert und speichert den Datensatz dort ab. Ihr könnt auch dieses Notebook mit *File-\&gt;Save As* dort ablegen. Nur weil euer Notebook in diesem Ordner liegt, heißt das aber noch nicht, dass eure R-Umgebung diesen auch als aktuellen Ordner wahrnimmt! Folgender Code gibt euch euer aktuelles *Working Directory* aus:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZ2V0d2QoKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+getwd()</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Ihr sehr euer aktuelles Working Director auch über dem Console-Fenster - neben der aktuell verwendeten R-Version. Zwar könnt ihr auch auf Dateien außerhalb eures Working Directory zugreifen. Dazu müsst ihr jedoch immer den gesamten Pfad der Daten mit angeben - was sehr mühselig sein kann. Deshalb macht es Sinn, euer Working Directory zu ändern. Das geht mit der `setwd()`-Funktion:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc2V0d2QoXFxDOi9tZWluZV9SX1Byb2pla3RlL1lvdVR1YmVfU2VtaW5hci9VZWJ1bmdfMVxcKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+setwd(\C:/meine_R_Projekte/YouTube_Seminar/Uebung_1\)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Beachtet, dass ihr der hier angegeben Ordnerpfad bei euch wahrscheinlich nicht existiert. Ihr müsst ihn also entsprechend so anpassen, dass er auf euren Ordner zeigt, in den ihr den Datensatz geladen habt. Wichtig ist, dass ihr euren Pfad in Anführungszeichen (&quot;...&quot;) setzt und Schrägstriche ( / ), keine Backslashes ( \\ ), verwendet, um den Pfad zu schreiben. Beachtet, dass das Working Director bei jedem Start von R idR. neu gesetzt werden muss.
+
+Wenn wir unser Working Directory gesetzt haben, können wir die Daten in unsere aktuelle Umgebung laden. Die `readRDS()`-Funktion lädt .RDS-Dateien und ordnet sie einem Objekt zu:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zIDwtIHJlYWRSRFMoXFxwYXJ0eV92aWRlb3MuUkRTXFwpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_videos &lt;- readRDS(\party_videos.RDS\)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Beachtet, dass es sich bei dem RDS-Format um ein R-eigenes Format handelt, welches häufig nicht mit anderen Programmen wie Python kompatibel ist. R ist allerdings auch in der Lage, andere Dateitypen einzulesen, etwa das unisverselle .csv. Das Tidyverse bietet dazu die `read_csv`-Funktion an. Sie bietet einige zusätzliche Funktionen, etwa die Spezifizierung der Variablen-Typen für einzelne Spalten, funktioniert im Prinzip aber analog zu `readRDS()`. Die *party_videos.csv*-Datei lässt sich so ebenfalls einlesen. Sie ist inhaltlich identisch mit der .RDS-Datei.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2NzdiA8LSByZWFkX2NzdihcXHBhcnR5X3ZpZGVvcy5jc3ZcXClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos_csv &lt;- read_csv(\party_videos.csv\)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+**Tipp:** Wenn ihr einen Dateipfad oder eine Datei mit R auswählen wollt, indem ihr den Pfad eintippt, (z.B. `setwd(&quot;C:/meine_R_Projekte/...&quot;)`, könnt ihr euch mit der TAB-Taste Dateien im aktuellen Pfad bzw. Vorschläge zur Autovervollständigung anzeigen lassen. Das spart besonders bei langen Pfaden Zeit und Nerven, da es Vertippern vorbeugt.
+
+### Übung 2
+
+Legt euer Working Directory mit `setwd()` auf euren Projektordner fest. Überprüft mit `getwd()`, ob ihr im richtigen Ordner gelandet sein. Lest dann den *party_videos*-Datensatz ein: einmal als .RDS, einmal als .csv.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+## 3. Daten inspizieren
+
+Es gibt eine Reihe an Möglichkeiten, euch die eingelesenen Daten bzw. deren Struktur anzeigen zu lassen. Die einfachste ist, ein Objekt einfach &quot;ausdrucken&quot; zu lassen. Das geht via print() oder indem ihr den Objektnamen eingebt.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucHJpbnQocGFydHlfdmlkZW9zKVxuXG5wYXJ0eV92aWRlb3NcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+print(party_videos)
 
 party_videos</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Der Befehl <code>View()</code> ermöglicht es, sich ein Objekt in
-einem neuen Fenster anzeigen zu lassen. Dort ist es außerdem
-durchsuchbar, lässt sich leicht scrollen und mit einem Klick auf die
-Spalten sortieren:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVmlldyhwYXJ0eV92aWRlb3MpXG5gYGAifQ== -->
-<pre class="r"><code>View(party_videos)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>In dem “Environment”-Reiter von RStudio seht ihr außerdem alle
-Objekte, die in euer aktuellen Umgebung vorhanden sind. Ein Klick auf
-das Pfeil-Symbol links zeigt euch die Struktur innerhalb des Reiters an.
-Ein Klick auf den Objektnamen selbst öffnet das Objekt wie mit
-<code>View()</code>.</p>
-<p>Das <em>Tidyverse</em> bietet außerdem eine Reihe an Möglichkeiten,
-weitere Informationen aus unserem Datensatz zu erhalten. So wollen wir
-z.B. wissen, welche Parteien in unserem Datensatz vertreten sind. Die
-Funktion <code>distinct()</code> gibt euch alle einzigartigen
-Variablen-Kombinationen in einem Datensatz aus. Das ist praktisch, wenn
-wir Duplikate entfernen wollen. Wir können sie aber auch benutzen, um
-uns alle Werte einer einzigen Variable anzeigen zu lassen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBkaXN0aW5jdChwYXJ0eSlcbmBgYCJ9 -->
-<pre class="r"><code>party_videos %&gt;% distinct(party)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Die <code>pull()</code>-Funktion erlaubt es uns, die Vektoren
-einzelner Spalten aus einem Datensatz zu “ziehen”. Das ist u.a. dann
-praktisch, wenn wir einzelne Variablen weiterverarbeiten oder
-inspizieren wollen. So können wir die Werte einer Variable an Funktionen
-weitergeben, die einen Vektor erwarten. Wie etwa die Funktion
-<code>min()</code>, welche uns den niedrigsten Wert eines Vektors
-ausgibt. Beispielsweise den niedrigsten Wert der “publiziert”-Variable,
-also den Zeitpunkt des ersten Videos in unserem Datensatz:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBwdWxsKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpICU+JSBtaW4oKVxuYGBgIn0= -->
-<pre class="r"><code>party_videos %&gt;% pull(contentDetails.videoPublishedAt) %&gt;% min()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<div id="übung-3" class="section level3">
-<h3>Übung 3</h3>
-<p>Schaut euch das party_videos Objekt an. Verwendet dazu sowohl
-<code>View()</code> als auch den “Environmet”-Reiter. Sortiert den
-Datensatz nach unterschiedlichen Variablen (Spalten).</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5WaWV3KClcblxuIyBNaXQgXCIjXCIga8O2bm50IGlociBLb21tZW50YXJlIGluIGV1cmVuIENvZGUgZWluZsO8Z2VuLiBBbGxlcywgd2FzIGhpbnRlciBkZW0gXCIjXCIgc3RlaHQsIHdpcmQgbmljaHQgYXVzZ2Vmw7xocnQuIERhcyBpc3QgcHJha3Rpc2NoLCB1bSBDb2RlIHp1IGtvbW1lbnRpZXJlbiwga2xlaW5lIEJlb2JhY2h0dW5nZW4sIEFud2Vpc3VuZ2VuIHVuZCBUaXBwcyB6dSB2ZXJtZXJrZW5cbmBgYCJ9 -->
-<pre class="r"><code>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Der Befehl `View()` ermöglicht es, sich ein Objekt in einem neuen Fenster anzeigen zu lassen. Dort ist es außerdem durchsuchbar, lässt sich leicht scrollen und mit einem Klick auf die Spalten sortieren:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuVmlldyhwYXJ0eV92aWRlb3MpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+View(party_videos)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+In dem &quot;Environment&quot;-Reiter von RStudio seht ihr außerdem alle Objekte, die in euer aktuellen Umgebung vorhanden sind. Ein Klick auf das Pfeil-Symbol links zeigt euch die Struktur innerhalb des Reiters an. Ein Klick auf den Objektnamen selbst öffnet das Objekt wie mit `View()`.
+
+Das *Tidyverse* bietet außerdem eine Reihe an Möglichkeiten, weitere Informationen aus unserem Datensatz zu erhalten. So wollen wir z.B. wissen, welche Parteien in unserem Datensatz vertreten sind. Die Funktion `distinct()` gibt euch alle einzigartigen Variablen-Kombinationen in einem Datensatz aus. Das ist praktisch, wenn wir Duplikate entfernen wollen. Wir können sie aber auch benutzen, um uns alle Werte einer einzigen Variable anzeigen zu lassen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBkaXN0aW5jdChwYXJ0eSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos %&gt;% distinct(party)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Die `pull()`-Funktion erlaubt es uns, die Vektoren einzelner Spalten aus einem Datensatz zu &quot;ziehen&quot;. Das ist u.a. dann praktisch, wenn wir einzelne Variablen weiterverarbeiten oder inspizieren wollen. So können wir die Werte einer Variable an Funktionen weitergeben, die einen Vektor erwarten. Wie etwa die Funktion `min()`, welche uns den niedrigsten Wert eines Vektors ausgibt. Beispielsweise den niedrigsten Wert der &quot;publiziert&quot;-Variable, also den Zeitpunkt des ersten Videos in unserem Datensatz:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBwdWxsKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpICU+JSBtaW4oKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos %&gt;% pull(contentDetails.videoPublishedAt) %&gt;% min()</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+### Übung 3
+
+Schaut euch das party_videos Objekt an. Verwendet dazu sowohl `View()` als auch den &quot;Environmet&quot;-Reiter. Sortiert den Datensatz nach unterschiedlichen Variablen (Spalten).
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuXG5WaWV3KClcblxuIyBNaXQgXFwjXFwga8O2bm50IGlociBLb21tZW50YXJlIGluIGV1cmVuIENvZGUgZWluZsO8Z2VuLiBBbGxlcywgd2FzIGhpbnRlciBkZW0gXFwjXFwgc3RlaHQsIHdpcmQgbmljaHQgYXVzZ2Vmw7xocnQuIERhcyBpc3QgcHJha3Rpc2NoLCB1bSBDb2RlIHp1IGtvbW1lbnRpZXJlbiwga2xlaW5lIEJlb2JhY2h0dW5nZW4sIEFud2Vpc3VuZ2VuIHVuZCBUaXBwcyB6dSB2ZXJtZXJrZW5cbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+
 View()
 
-# Mit &quot;#&quot; könnt ihr Kommentare in euren Code einfügen. Alles, was hinter dem &quot;#&quot; steht, wird nicht ausgeführt. Das ist praktisch, um Code zu kommentieren, kleine Beobachtungen, Anweisungen und Tipps zu vermerken</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Lasst euch mittels <code>distinct()</code> die distinkten Werte für
-die Variablen <em>party</em> und <em>party_label</em> ausgeben. Was
-fällt euch auf?</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Was passiert, wenn ihr euch mittels <code>distinct()</code> alle
-einzigartigen Kombinationen der Variablen <em>party</em> und <em>id</em>
-ausgeben lasst? Hinweis: <code>distinct()</code> lässt euch beliebig
-viele Variablenkombinationen angeben, wenn ihr diese mit einem Komma (,)
-trennt.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Zieht erneut die <em>contentDetails.videoPublishedAt</em>-Variable
-mittels <code>pull()</code> aus dem Datensatz. Wendet dieses Mal jedoch
-andere Funktionen darauf an, um weitere Informationen zu erhalten.
-Insbesondere folgende Funktionen sind sinnvoll: <code>max()</code>,
-<code>mean()</code>, <code>range()</code>. Welche Informationen erhaltet
-ihr jeweils? Wenn ihr euch unsicher seid, schaut mittels <code>?</code>
-in die Helpfiles, z.B. mit <code>?mean()</code>.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-<div id="daten-manipulieren" class="section level2">
-<h2>4. Daten manipulieren</h2>
-<div id="distinct" class="section level4">
-<h4><strong>distinct()</strong></h4>
-<p>Wie bereits erwähnt, lässt sich <code>distinct()</code> auch dazu
-verwenden, Duplikate zu entfernen, indem wir uns nur die eizigartigen
-Werte einer Variable (oder die einzigartigen Wertkombinationen mehrerer
-Variablen) ausgeben lassen. In unserem Datensatz befindet sich u.a. die
-<em>videoID</em>-Variable, welche einen einzigartigen Identifikator für
-alle Videos auf YouTube darstellt. Um sicherzugehen, dass sich keine
-Duplikate in unserem Datensatz befinden, können wir
-<code>distinct()</code> auf unsere Daten anwenden und den so
-entstandenen Datensatz einem neuen Objekt zuordnen. Beachtet, dass die
-Funktion standardmäßig nur die spezifizierten Variablen ausgibt und alle
-anderen entfernt. Um dies zu ändern, können wir die Option
-<code>.keep_all</code> spezifizieren. <code>TRUE</code> behält alle
-anderen Variablen, das standardmäßig eingestellte <code>FALSE</code>
-entfernt sie.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2Rpc3RpbmN0IDwtIHBhcnR5X3ZpZGVvcyAlPiUgZGlzdGluY3QoY29udGVudERldGFpbHMudmlkZW9JZCwgLmtlZXBfYWxsID0gVFJVRSlcbmBgYCJ9 -->
-<pre class="r"><code>party_videos_distinct &lt;- party_videos %&gt;% distinct(contentDetails.videoId, .keep_all = TRUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="filter" class="section level4">
-<h4><strong>filter()</strong></h4>
-<p>Die <code>filter()</code>-Funktion erlaubt es uns, Daten nach
-unterschiedlichen Bediungen zu filtern. So können wir uns z.B. nur die
-Videos einer einzigen Partei anzeigen lassen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2NkdSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBmaWx0ZXIocGFydHkgPT0gXCJjZHVcIilcblxucGFydHlfdmlkZW9zX2NkdVxuYGBgIn0= -->
-<pre class="r"><code>party_videos_cdu &lt;- party_videos %&gt;% 
-  filter(party == &quot;cdu&quot;)
+# Mit \#\ könnt ihr Kommentare in euren Code einfügen. Alles, was hinter dem \#\ steht, wird nicht ausgeführt. Das ist praktisch, um Code zu kommentieren, kleine Beobachtungen, Anweisungen und Tipps zu vermerken</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Lasst euch mittels `distinct()` die distinkten Werte für die Variablen *party* und *party_label* ausgeben. Was fällt euch auf?
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Was passiert, wenn ihr euch mittels `distinct()` alle einzigartigen Kombinationen der Variablen *party* und *id* ausgeben lasst? Hinweis: `distinct()` lässt euch beliebig viele Variablenkombinationen angeben, wenn ihr diese mit einem Komma (,) trennt.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Zieht erneut die *contentDetails.videoPublishedAt*-Variable mittels `pull()` aus dem Datensatz. Wendet dieses Mal jedoch andere Funktionen darauf an, um weitere Informationen zu erhalten. Insbesondere folgende Funktionen sind sinnvoll: `max()`, `mean()`, `range()`. Welche Informationen erhaltet ihr jeweils? Wenn ihr euch unsicher seid, schaut mittels `?` in die Helpfiles, z.B. mit `?mean()`.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+## 4. Daten manipulieren
+
+#### **distinct()**
+
+Wie bereits erwähnt, lässt sich `distinct()` auch dazu verwenden, Duplikate zu entfernen, indem wir uns nur die eizigartigen Werte einer Variable (oder die einzigartigen Wertkombinationen mehrerer Variablen) ausgeben lassen. In unserem Datensatz befindet sich u.a. die *videoID*-Variable, welche einen einzigartigen Identifikator für alle Videos auf YouTube darstellt. Um sicherzugehen, dass sich keine Duplikate in unserem Datensatz befinden, können wir `distinct()` auf unsere Daten anwenden und den so entstandenen Datensatz einem neuen Objekt zuordnen. Beachtet, dass die Funktion standardmäßig nur die spezifizierten Variablen ausgibt und alle anderen entfernt. Um dies zu ändern, können wir die Option `.keep_all` spezifizieren. `TRUE` behält alle anderen Variablen, das standardmäßig eingestellte `FALSE` entfernt sie.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2Rpc3RpbmN0IDwtIHBhcnR5X3ZpZGVvcyAlPiUgZGlzdGluY3QoY29udGVudERldGFpbHMudmlkZW9JZCwgLmtlZXBfYWxsID0gVFJVRSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos_distinct &lt;- party_videos %&gt;% distinct(contentDetails.videoId, .keep_all = TRUE)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### **filter()**
+
+Die `filter()`-Funktion erlaubt es uns, Daten nach unterschiedlichen Bediungen zu filtern. So können wir uns z.B. nur die Videos einer einzigen Partei anzeigen lassen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2NkdSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBmaWx0ZXIocGFydHkgPT0gXFxjZHVcXClcblxucGFydHlfdmlkZW9zX2NkdVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos_cdu &lt;- party_videos %&gt;% 
+  filter(party == \cdu\)
 
 party_videos_cdu</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Mit dem Operator <code>|</code> können wir mehrere Bedingungen
-kombinieren. <code>|</code> bedeutet dabei: “oder”. Also beispielsweise
-alle Videos der CDU <em>oder</em> der SPD:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2NkdV9zcGQgPC0gcGFydHlfdmlkZW9zICU+JSBcbiAgZmlsdGVyKHBhcnR5ID09IFwiY2R1XCIgfCBwYXJ0eSA9PSBcInNwZFwiKVxuXG5wYXJ0eV92aWRlb3NfY2R1X3NwZCAlPiUgZGlzdGluY3QocGFydHkpXG5gYGAifQ== -->
-<pre class="r"><code>party_videos_cdu_spd &lt;- party_videos %&gt;% 
-  filter(party == &quot;cdu&quot; | party == &quot;spd&quot;)
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Mit dem Operator `|` können wir mehrere Bedingungen kombinieren. `|` bedeutet dabei: &quot;oder&quot;. Also beispielsweise alle Videos der CDU *oder* der SPD:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2NkdV9zcGQgPC0gcGFydHlfdmlkZW9zICU+JSBcbiAgZmlsdGVyKHBhcnR5ID09IFxcY2R1XFwgfCBwYXJ0eSA9PSBcXHNwZFxcKVxuXG5wYXJ0eV92aWRlb3NfY2R1X3NwZCAlPiUgZGlzdGluY3QocGFydHkpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_videos_cdu_spd &lt;- party_videos %&gt;% 
+  filter(party == \cdu\ | party == \spd\)
 
 party_videos_cdu_spd %&gt;% distinct(party)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wir können uns Daten auch nur für einen bestimmten Zeitraum ausgeben
-lassen. Wir verwenden hier die <em>lubridate</em>-Funktion
-<code>dmy()</code> (für das Format
-<strong>D</strong>ay-<strong>M</strong>onth-<strong>Y</strong>ear) um
-sicherzustellen, dass unsere Angabe des Datums als String in das
-korrekte Datumsformat umgewandelt wird. <code>&gt;=</code> bedeutet
-dabei “größer gleich.” Der Wert der Variable muss also mindestens dem
-angegebenen Wert entsprechen, etwa mindestens dem 1. Januar 23, um alle
-Videos dieses Jahres zu erhalten:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zXzIzIDwtIHBhcnR5X3ZpZGVvcyAlPiVcbiAgZmlsdGVyKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPj0gZG15KFwiMS4xLjIwMjNcIikpXG5cbnBhcnR5X3ZpZGVvc18yMyBcbmBgYCJ9 -->
-<pre class="r"><code>party_videos_23 &lt;- party_videos %&gt;%
-  filter(contentDetails.videoPublishedAt &gt;= dmy(&quot;1.1.2023&quot;))
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wir können uns Daten auch nur für einen bestimmten Zeitraum ausgeben lassen. Wir verwenden hier die *lubridate*-Funktion `dmy()` (für das Format **D**ay-**M**onth-**Y**ear) um sicherzustellen, dass unsere Angabe des Datums als String in das korrekte Datumsformat umgewandelt wird. `&gt;=` bedeutet dabei &quot;größer gleich.&quot; Der Wert der Variable muss also mindestens dem angegebenen Wert entsprechen, etwa mindestens dem 1. Januar 23, um alle Videos dieses Jahres zu erhalten:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zXzIzIDwtIHBhcnR5X3ZpZGVvcyAlPiVcbiAgZmlsdGVyKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPj0gZG15KFxcMS4xLjIwMjNcXCkpXG5cbnBhcnR5X3ZpZGVvc18yMyBcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos_23 &lt;- party_videos %&gt;%
+  filter(contentDetails.videoPublishedAt &gt;= dmy(\1.1.2023\))
 
 party_videos_23 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wir können ebenso einen Zeitraum festlegen, indem wir neben einem
-Mindest- auch einen Höchstwert, also ein Start- und Enddatum angeben.
-Dazu nutzen wir <code>&lt;=</code> für “kleiner gleich” und den Operator
-<code>&amp;</code> für “und”, welche bestimmt, dass ein Datensatz beiden
-Konditionen entsprechen muss:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2phbl8yMyA8LSBwYXJ0eV92aWRlb3MgJT4lXG4gIGZpbHRlcihcbiAgICBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0ID49IGRteShcIjEuMS4yMDIzXCIpICZcbiAgICAgIGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPD0gZG15KFwiMzEuMS4yMDIzXCIpXG4gIClcblxucGFydHlfdmlkZW9zX2phbl8yM1xuYGBgIn0= -->
-<pre class="r"><code>party_videos_jan_23 &lt;- party_videos %&gt;%
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wir können ebenso einen Zeitraum festlegen, indem wir neben einem Mindest- auch einen Höchstwert, also ein Start- und Enddatum angeben. Dazu nutzen wir `&lt;=` für &quot;kleiner gleich&quot; und den Operator `&amp;` für &quot;und&quot;, welche bestimmt, dass ein Datensatz beiden Konditionen entsprechen muss:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2phbl8yMyA8LSBwYXJ0eV92aWRlb3MgJT4lXG4gIGZpbHRlcihcbiAgICBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0ID49IGRteShcXDEuMS4yMDIzXFwpICZcbiAgICAgIGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPD0gZG15KFxcMzEuMS4yMDIzXFwpXG4gIClcblxucGFydHlfdmlkZW9zX2phbl8yM1xuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos_jan_23 &lt;- party_videos %&gt;%
   filter(
-    contentDetails.videoPublishedAt &gt;= dmy(&quot;1.1.2023&quot;) &amp;
-      contentDetails.videoPublishedAt &lt;= dmy(&quot;31.1.2023&quot;)
+    contentDetails.videoPublishedAt &gt;= dmy(\1.1.2023\) &amp;
+      contentDetails.videoPublishedAt &lt;= dmy(\31.1.2023\)
   )
 
 party_videos_jan_23</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wir können die Operatoren von <code>filter()</code> beliebig
-kombinieren, um unseren Datensatz zu filtern. Zum Beispiel, um alle
-Videos der SPD aus dem Januar ’23 zu erhalten:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX3NwZF9qYW5fMjMgPC0gcGFydHlfdmlkZW9zICU+JVxuICBmaWx0ZXIoXG4gICAgcGFydHkgPT0gXCJzcGRcIiAmXG4gICAgICBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0ID49IGRteShcIjEuMS4yMDIzXCIpICZcbiAgICAgIGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPD0gZG15KFwiMzEuMS4yMDIzXCIpXG4gIClcblxucGFydHlfdmlkZW9zX3NwZF9qYW5fMjNcbmBgYCJ9 -->
-<pre class="r"><code>party_videos_spd_jan_23 &lt;- party_videos %&gt;%
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wir können die Operatoren von `filter()` beliebig kombinieren, um unseren Datensatz zu filtern. Zum Beispiel, um alle Videos der SPD aus dem Januar &#39;23 zu erhalten:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX3NwZF9qYW5fMjMgPC0gcGFydHlfdmlkZW9zICU+JVxuICBmaWx0ZXIoXG4gICAgcGFydHkgPT0gXFxzcGRcXCAmXG4gICAgICBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0ID49IGRteShcXDEuMS4yMDIzXFwpICZcbiAgICAgIGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPD0gZG15KFxcMzEuMS4yMDIzXFwpXG4gIClcblxucGFydHlfdmlkZW9zX3NwZF9qYW5fMjNcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos_spd_jan_23 &lt;- party_videos %&gt;%
   filter(
-    party == &quot;spd&quot; &amp;
-      contentDetails.videoPublishedAt &gt;= dmy(&quot;1.1.2023&quot;) &amp;
-      contentDetails.videoPublishedAt &lt;= dmy(&quot;31.1.2023&quot;)
+    party == \spd\ &amp;
+      contentDetails.videoPublishedAt &gt;= dmy(\1.1.2023\) &amp;
+      contentDetails.videoPublishedAt &lt;= dmy(\31.1.2023\)
   )
 
 party_videos_spd_jan_23</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="select" class="section level4">
-<h4>select()</h4>
-<p>Die <code>select()</code>-Funktion erlaubt es, nur bestimmte
-Variablen aus unserem Datensatz auszuwählen - und alle anderen zu
-entfernen. Dies ist praktisch, wenn wir nicht alle Variablen für eine
-Analyse benötigen. Falls wir beispielsweise nur die VideoID und das
-Veröffentlichungsdatum aus unserem Datensatz benötigen, können wir
-<code>select()</code> verwenden, um alle anderen Variablen zu
-entfernen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvcyAlPiUgXG4gIHNlbGVjdChjb250ZW50RGV0YWlscy52aWRlb0lkLCBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KVxuXG5wYXJ0eV92aWRlb3Nfc21hbGxcbmBgYCJ9 -->
-<pre class="r"><code>party_videos_small &lt;- party_videos %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### select()
+
+Die `select()`-Funktion erlaubt es, nur bestimmte Variablen aus unserem Datensatz auszuwählen - und alle anderen zu entfernen. Dies ist praktisch, wenn wir nicht alle Variablen für eine Analyse benötigen. Falls wir beispielsweise nur die VideoID und das Veröffentlichungsdatum aus unserem Datensatz benötigen, können wir `select()` verwenden, um alle anderen Variablen zu entfernen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvcyAlPiUgXG4gIHNlbGVjdChjb250ZW50RGV0YWlscy52aWRlb0lkLCBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KVxuXG5wYXJ0eV92aWRlb3Nfc21hbGxcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos_small &lt;- party_videos %&gt;% 
   select(contentDetails.videoId, contentDetails.videoPublishedAt)
 
 party_videos_small</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="rename" class="section level4">
-<h4><strong>rename()</strong></h4>
-<p>Mittels <code>rename()</code> können wir außedem Variablen in unserem
-Datensatz umbenennen. Dies ist praktisch, wenn einzelne Variablen lange,
-wenig informative Namen haben. So können wir beispielsweise die
-Variablennamen in unserem verkleinerten Datensatz kürzen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvc19zbWFsbCAlPiUgXG4gIHJlbmFtZSh2aWRlb19pZCA9IGNvbnRlbnREZXRhaWxzLnZpZGVvSWQsXG4gICAgICAgICBwdWJsaXNoZWRfYXQgPSBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KVxuXG5wYXJ0eV92aWRlb3Nfc21hbGxcbmBgYCJ9 -->
-<pre class="r"><code>party_videos_small &lt;- party_videos_small %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### **rename()**
+
+Mittels `rename()` können wir außedem Variablen in unserem Datensatz umbenennen. Dies ist praktisch, wenn einzelne Variablen lange, wenig informative Namen haben. So können wir beispielsweise die Variablennamen in unserem verkleinerten Datensatz kürzen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvc19zbWFsbCAlPiUgXG4gIHJlbmFtZSh2aWRlb19pZCA9IGNvbnRlbnREZXRhaWxzLnZpZGVvSWQsXG4gICAgICAgICBwdWJsaXNoZWRfYXQgPSBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KVxuXG5wYXJ0eV92aWRlb3Nfc21hbGxcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos_small &lt;- party_videos_small %&gt;% 
   rename(video_id = contentDetails.videoId,
          published_at = contentDetails.videoPublishedAt)
 
 party_videos_small</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="mutate" class="section level4">
-<h4><strong>mutate()</strong></h4>
-<p>Die <code>mutate()</code>-Funktion erlaubt es, Variablen zu
-“mutieren”, also zu verändern. Dazu muss bestimmt werden, welche
-Variable verändert werden soll, und auf welche Art und Weise dies
-geschehen soll. Beispielsweise können wir mit der Funktion
-<code>as_date()</code> den Publikationszeitpunkt auf das Datum, also den
-Publikationstag, kürzen. Wenn wir eine Funktion verwenden, um Daten zu
-verändern, wird diese immer auf jede Reihe in unseren Daten angewendet.
-Das heißt, <code>as_date()</code> nimmt jeden einzelnen Wert in der
-<em>published_at</em>-Spalte und “mutiert” ihn mittels der Funktion zu
-einem Datum. Beachtet, dass <code>as_date()</code> eine Funktion des
-packages lubridate ist, ihr dieses also geladen haben müsst.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvc19zbWFsbCAlPiUgXG4gIG11dGF0ZShwdWJsaXNoZWRfYXQgPSBhc19kYXRlKHB1Ymxpc2hlZF9hdCkpXG5cbnBhcnR5X3ZpZGVvc19zbWFsbFxuYGBgIn0= -->
-<pre class="r"><code>party_videos_small &lt;- party_videos_small %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### **mutate()**
+
+Die `mutate()`-Funktion erlaubt es, Variablen zu &quot;mutieren&quot;, also zu verändern. Dazu muss bestimmt werden, welche Variable verändert werden soll, und auf welche Art und Weise dies geschehen soll. Beispielsweise können wir mit der Funktion `as_date()` den Publikationszeitpunkt auf das Datum, also den Publikationstag, kürzen. Wenn wir eine Funktion verwenden, um Daten zu verändern, wird diese immer auf jede Reihe in unseren Daten angewendet. Das heißt, `as_date()` nimmt jeden einzelnen Wert in der *published_at*-Spalte und &quot;mutiert&quot; ihn mittels der Funktion zu einem Datum. Beachtet, dass `as_date()` eine Funktion des packages lubridate ist, ihr dieses also geladen haben müsst.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvc19zbWFsbCAlPiUgXG4gIG11dGF0ZShwdWJsaXNoZWRfYXQgPSBhc19kYXRlKHB1Ymxpc2hlZF9hdCkpXG5cbnBhcnR5X3ZpZGVvc19zbWFsbFxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos_small &lt;- party_videos_small %&gt;% 
   mutate(published_at = as_date(published_at))
 
 party_videos_small</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wir können mit <code>mutate()</code> aber auch neue Variablen
-hinzufügen. Außerdem müssen wir nicht unbedingt eine Funktion verwenden,
-um Werte zu manipulieren. Wir können ebensogut einen festen Wert setzen,
-beispielsweise einen Character String. Das ist praktisch, wenn wir
-beispielweise einen fixen Indikator setzen wollen, etwa um zu vermerken,
-woher die Daten Stammen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvc19zbWFsbCAlPiUgXG4gIG11dGF0ZShzb3VyY2UgPSBcImxlYXJud2ViXCIpXG5cbnBhcnR5X3ZpZGVvc19zbWFsbFxuYGBgIn0= -->
-<pre class="r"><code>party_videos_small &lt;- party_videos_small %&gt;% 
-  mutate(source = &quot;learnweb&quot;)
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wir können mit `mutate()` aber auch neue Variablen hinzufügen. Außerdem müssen wir nicht unbedingt eine Funktion verwenden, um Werte zu manipulieren. Wir können ebensogut einen festen Wert setzen, beispielsweise einen Character String. Das ist praktisch, wenn wir beispielweise einen fixen Indikator setzen wollen, etwa um zu vermerken, woher die Daten Stammen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvc19zbWFsbCAlPiUgXG4gIG11dGF0ZShzb3VyY2UgPSBcXGxlYXJud2ViXFwpXG5cbnBhcnR5X3ZpZGVvc19zbWFsbFxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos_small &lt;- party_videos_small %&gt;% 
+  mutate(source = \learnweb\)
 
 party_videos_small</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="summarise" class="section level4">
-<h4><strong>summarise()</strong></h4>
-<p>Mittels der Funktion <code>summarise()</code> können wir einen
-Datensatz zusammenfassen lassen. Dazu legen wir fest, welche neuen
-Variablen wir wie definieren möchten und erhalten einen Datensatz,
-welcher nur diese (idR. transformierten) Variablen enthält. So können
-wir beispielsweise den Mittelwert der Publikations-Variable ermitteln.
-Beachtet, dass wir das Ergebnis keinem Objekt zuweisen, sondern uns
-lediglich ausdrucken lassen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBzdW1tYXJpc2UobWVhbl9kYXRlID0gbWVhbihjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSlcbmBgYCJ9 -->
-<pre class="r"><code>party_videos %&gt;% summarise(mean_date = mean(contentDetails.videoPublishedAt))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>In diesem Sinne ist <code>summarise()</code> trivial, da es eine
-ähnliche Funktion wie oben bereits <code>pull()</code> erfüllt.
-Interessanter wird es, wenn wir die Daten vorher gruppieren. Dazu bietet
-das <em>Tidyverse</em> die Funktion <code>group_by()</code> bzw. (seit
-Version 1.1.0) die Option <code>.by</code>. Darüber können wir Variablen
-festlegen, für deren einzelne Ausprägungen die folgenden Operationen
-(bzw. bei <code>.by</code> die aktuelle Operation) getrennt durchgeführt
-wird. So können wir uns beispielsweise für jede Partei den Mittelwert
-des Publikationszeitpunkts anzeigen lassen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgZ3JvdXBfYnkocGFydHlfbGFiZWwpICU+JSBcbiAgc3VtbWFyaXNlKG1lYW5fZGF0ZSA9IG1lYW4oY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkpXG5gYGAifQ== -->
-<pre class="r"><code>party_videos %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### **summarise()**
+
+Mittels der Funktion `summarise()` können wir einen Datensatz zusammenfassen lassen. Dazu legen wir fest, welche neuen Variablen wir wie definieren möchten und erhalten einen Datensatz, welcher nur diese (idR. transformierten) Variablen enthält. So können wir beispielsweise den Mittelwert der Publikations-Variable ermitteln. Beachtet, dass wir das Ergebnis keinem Objekt zuweisen, sondern uns lediglich ausdrucken lassen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBzdW1tYXJpc2UobWVhbl9kYXRlID0gbWVhbihjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos %&gt;% summarise(mean_date = mean(contentDetails.videoPublishedAt))</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+In diesem Sinne ist `summarise()` trivial, da es eine ähnliche Funktion wie oben bereits `pull()` erfüllt. Interessanter wird es, wenn wir die Daten vorher gruppieren. Dazu bietet das *Tidyverse* die Funktion `group_by()` bzw. (seit Version 1.1.0) die Option `.by`. Darüber können wir Variablen festlegen, für deren einzelne Ausprägungen die folgenden Operationen (bzw. bei `.by` die aktuelle Operation) getrennt durchgeführt wird. So können wir uns beispielsweise für jede Partei den Mittelwert des Publikationszeitpunkts anzeigen lassen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgZ3JvdXBfYnkocGFydHlfbGFiZWwpICU+JSBcbiAgc3VtbWFyaXNlKG1lYW5fZGF0ZSA9IG1lYW4oY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_videos %&gt;% 
   group_by(party_label) %&gt;% 
   summarise(mean_date = mean(contentDetails.videoPublishedAt))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Die Funktion <code>n()</code> gibt uns in Kombination mit
-<code>summarise()</code> die Gesamtzahl an Beobachtungen (also Reihen)
-eines Datensatzes aus. Wenn wir die Daten vorher gruppieren, auch für
-alle Ausprägungen einer Variable, bspws. die Parteien:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfc3VtbWFyeSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBncm91cF9ieShwYXJ0eV9sYWJlbCkgJT4lIFxuICBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gbigpKVxuXG5wYXJ0eV9zdW1tYXJ5XG5gYGAifQ== -->
-<pre class="r"><code>party_summary &lt;- party_videos %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Die Funktion `n()` gibt uns in Kombination mit `summarise()` die Gesamtzahl an Beobachtungen (also Reihen) eines Datensatzes aus. Wenn wir die Daten vorher gruppieren, auch für alle Ausprägungen einer Variable, bspws. die Parteien:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfc3VtbWFyeSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBncm91cF9ieShwYXJ0eV9sYWJlbCkgJT4lIFxuICBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gbigpKVxuXG5wYXJ0eV9zdW1tYXJ5XG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_summary &lt;- party_videos %&gt;% 
   group_by(party_label) %&gt;% 
   summarise(total_videos = n())
 
 party_summary</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="group_by" class="section level4">
-<h4><strong>group_by()</strong></h4>
-<p>Ebenso können wir <code>group_by()</code> zum gruppenweisen
-“mutieren” vorhandener Variablen nutzen. So können wir beispielsweise
-zuerst eine neue Variable erstellen, welche uns den Tag der Publikation
-anzeigt, und dann für jeden Tag die Gesamtzahl an Videos zu dem
-vorhandenen Datensatz hinzufügen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2RheSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIFxuICBncm91cF9ieShkYXkpICU+JSBcbiAgbXV0YXRlKGRhaWx5X3ZpZGVvcyA9IG4oKSlcblxucGFydHlfdmlkZW9zX2RheVxuYGBgIn0= -->
-<pre class="r"><code>party_videos_day &lt;- party_videos %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### **group_by()**
+
+Ebenso können wir `group_by()` zum gruppenweisen &quot;mutieren&quot; vorhandener Variablen nutzen. So können wir beispielsweise zuerst eine neue Variable erstellen, welche uns den Tag der Publikation anzeigt, und dann für jeden Tag die Gesamtzahl an Videos zu dem vorhandenen Datensatz hinzufügen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2RheSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIFxuICBncm91cF9ieShkYXkpICU+JSBcbiAgbXV0YXRlKGRhaWx5X3ZpZGVvcyA9IG4oKSlcblxucGFydHlfdmlkZW9zX2RheVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos_day &lt;- party_videos %&gt;% 
   mutate(day = as_date(contentDetails.videoPublishedAt)) %&gt;% 
   group_by(day) %&gt;% 
   mutate(daily_videos = n())
 
 party_videos_day</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Beachtet, dass bei Verwendung von <code>group_by()</code>
-<strong><em>alle</em></strong> folgenden Operationen auf den gruppierten
-Daten stattfinden, was zu unerwarteten Ergebnissen führen kann. Wenn wir
-jetzt beispielsweise die Summe der Videos anzeigen lassen wollen,
-erhalten wir ein unerwartetes Ergebnis:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2RheSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKVxuYGBgIn0= -->
-<pre class="r"><code>party_videos_day %&gt;% summarise(total_videos = sum(daily_videos))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Anstatt uns die Gesamtzahl der Videos zu zeigen, gibt uns die
-Funktion die Summe der Videos für jede Ausprägung der gruppierenden
-Variable aus. Um dies zu ändern, müssen wir die Funktion
-<code>ungroup()</code> verwenden, welche alle Gruppierungen in einem
-Objekt aufhebt:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2RheSAlPiUgdW5ncm91cCgpICU+JSBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gc3VtKGRhaWx5X3ZpZGVvcykpXG5gYGAifQ== -->
-<pre class="r"><code>party_videos_day %&gt;% ungroup() %&gt;% summarise(total_videos = sum(daily_videos))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Darum ist es sinnvoll, nach jeder <code>group_by()</code> Operation
-die Gruppierung aufzuheben, wenn wir das Ergebnis einem Objekt zuordnen.
-So vermeiden wir zu vergessen, dass ein Objekt gruppiert ist. Sonst kann
-es mitunter zu Fehlern in den folgenden Berechnungen kommen!</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2RheSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIFxuICBncm91cF9ieShkYXkpICU+JSBcbiAgbXV0YXRlKGRhaWx5X3ZpZGVvcyA9IG4oKSkgJT4lIFxuICB1bmdyb3VwKClcbmBgYCJ9 -->
-<pre class="r"><code>party_videos_day &lt;- party_videos %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Beachtet, dass bei Verwendung von `group_by()` ***alle*** folgenden Operationen auf den gruppierten Daten stattfinden, was zu unerwarteten Ergebnissen führen kann. Wenn wir jetzt beispielsweise die Summe der Videos anzeigen lassen wollen, erhalten wir ein unerwartetes Ergebnis:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2RheSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos_day %&gt;% summarise(total_videos = sum(daily_videos))</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Anstatt uns die Gesamtzahl der Videos zu zeigen, gibt uns die Funktion die Summe der Videos für jede Ausprägung der gruppierenden Variable aus. Um dies zu ändern, müssen wir die Funktion `ungroup()` verwenden, welche alle Gruppierungen in einem Objekt aufhebt:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2RheSAlPiUgdW5ncm91cCgpICU+JSBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gc3VtKGRhaWx5X3ZpZGVvcykpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_videos_day %&gt;% ungroup() %&gt;% summarise(total_videos = sum(daily_videos))</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Darum ist es sinnvoll, nach jeder `group_by()` Operation die Gruppierung aufzuheben, wenn wir das Ergebnis einem Objekt zuordnen. So vermeiden wir zu vergessen, dass ein Objekt gruppiert ist. Sonst kann es mitunter zu Fehlern in den folgenden Berechnungen kommen!
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2RheSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIFxuICBncm91cF9ieShkYXkpICU+JSBcbiAgbXV0YXRlKGRhaWx5X3ZpZGVvcyA9IG4oKSkgJT4lIFxuICB1bmdyb3VwKClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos_day &lt;- party_videos %&gt;% 
   mutate(day = as_date(contentDetails.videoPublishedAt)) %&gt;% 
   group_by(day) %&gt;% 
   mutate(daily_videos = n()) %&gt;% 
   ungroup()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wenn wir dplyr 1.1.0 oder neuer installier haben, können wir auch die
-Option <code>.by</code> verwenden, die genau diese Problematik beheben
-soll. Anstatt den Datensatz insgesamt zu gruppieren, erlaubt sie es ihn
-für eine einzelne Operation temporär zu gruppieren.
-<code>group_by()</code> ist also nützlicher, wenn wir mehrere
-Operationen auf ein und derselben Gruppierung durchführen wollen,
-während <code>.by</code> für einzelne gruppierte Operationen geeignet
-und weniger fehleranfällig ist.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2RheSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIFxuICBtdXRhdGUoZGFpbHlfdmlkZW9zID0gbigpLCAuYnkgPSBkYXkpXG5cbnBhcnR5X3ZpZGVvc19kYXlcblxucGFydHlfdmlkZW9zX2RheSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKVxuYGBgIn0= -->
-<pre class="r"><code>party_videos_day &lt;- party_videos %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wenn wir dplyr 1.1.0 oder neuer installier haben, können wir auch die Option `.by` verwenden, die genau diese Problematik beheben soll. Anstatt den Datensatz insgesamt zu gruppieren, erlaubt sie es ihn für eine einzelne Operation temporär zu gruppieren. `group_by()` ist also nützlicher, wenn wir mehrere Operationen auf ein und derselben Gruppierung durchführen wollen, während `.by` für einzelne gruppierte Operationen geeignet und weniger fehleranfällig ist.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2RheSA8LSBwYXJ0eV92aWRlb3MgJT4lIFxuICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIFxuICBtdXRhdGUoZGFpbHlfdmlkZW9zID0gbigpLCAuYnkgPSBkYXkpXG5cbnBhcnR5X3ZpZGVvc19kYXlcblxucGFydHlfdmlkZW9zX2RheSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos_day &lt;- party_videos %&gt;% 
   mutate(day = as_date(contentDetails.videoPublishedAt)) %&gt;% 
   mutate(daily_videos = n(), .by = day)
 
 party_videos_day
 
 party_videos_day %&gt;% summarise(total_videos = sum(daily_videos))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="mutate-vs.-summarise" class="section level4">
-<h4><strong>mutate()</strong> vs. <strong>summarise()</strong></h4>
-<p>Was fällt in dem letzten Ergebnis auf? Genau, die Summe der täglichen
-Videos ist deutlich höher als die Anzahl an Beobachtungen in unserem
-ursprünglichen Dataframe. Das liegt daran, dass wir <strong><em>für
-jedes Video</em></strong> einen Eintrag gemacht haben, welcher die
-Anzahl aller Videos an diesem Tag enthält. Mit anderen Worten: wir haben
-die Gesamtzahl täglicher Videos quadriert, da wir die Anzahl der
-täglichen Videos für jedes Video einzeln aufaddiert haben. Wenn es an
-einem Tag 3 Videos gab also (3 + 3 + 3). Je nachdem, was wir vorhaben,
-kann es trotzdem sinnvoll sein, eine solche Kontrollvariable wie die
-gesamten täglichen Videos vorzuhalten. Wenn wir die Summe der Videos
-brauchen, ist sie aber nicht geeignet. Hätten wir
-<code>summarise()</code> verwendet, wäre dieses Problem nicht
-aufgetreten, da <code>summarise()</code> nur eine Reihe pro
-Gruppenvariable ausgibt:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zX2RheV9zdW0gPC0gcGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKGRheSA9IGFzX2RhdGUoY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkpICU+JSBcbiAgc3VtbWFyaXNlKGRhaWx5X3ZpZGVvcyA9IG4oKSwgLmJ5ID0gZGF5KVxuXG5wYXJ0eV92aWRlb3NfZGF5X3N1bVxuXG5wYXJ0eV92aWRlb3NfZGF5X3N1bSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKVxuYGBgIn0= -->
-<pre class="r"><code>party_videos_day_sum &lt;- party_videos %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### **mutate()** vs. **summarise()**
+
+Was fällt in dem letzten Ergebnis auf? Genau, die Summe der täglichen Videos ist deutlich höher als die Anzahl an Beobachtungen in unserem ursprünglichen Dataframe. Das liegt daran, dass wir ***für jedes Video*** einen Eintrag gemacht haben, welcher die Anzahl aller Videos an diesem Tag enthält. Mit anderen Worten: wir haben die Gesamtzahl täglicher Videos quadriert, da wir die Anzahl der täglichen Videos für jedes Video einzeln aufaddiert haben. Wenn es an einem Tag 3 Videos gab also (3 + 3 + 3). Je nachdem, was wir vorhaben, kann es trotzdem sinnvoll sein, eine solche Kontrollvariable wie die gesamten täglichen Videos vorzuhalten. Wenn wir die Summe der Videos brauchen, ist sie aber nicht geeignet. Hätten wir `summarise()` verwendet, wäre dieses Problem nicht aufgetreten, da `summarise()` nur eine Reihe pro Gruppenvariable ausgibt:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zX2RheV9zdW0gPC0gcGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKGRheSA9IGFzX2RhdGUoY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkpICU+JSBcbiAgc3VtbWFyaXNlKGRhaWx5X3ZpZGVvcyA9IG4oKSwgLmJ5ID0gZGF5KVxuXG5wYXJ0eV92aWRlb3NfZGF5X3N1bVxuXG5wYXJ0eV92aWRlb3NfZGF5X3N1bSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos_day_sum &lt;- party_videos %&gt;% 
   mutate(day = as_date(contentDetails.videoPublishedAt)) %&gt;% 
   summarise(daily_videos = n(), .by = day)
 
 party_videos_day_sum
 
 party_videos_day_sum %&gt;% summarise(total_videos = sum(daily_videos))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wären wir nur an der Gesamtzahl an Beobachtungen interessiert
-gewesen, hätten wir diese sogar noch einfacher mit <code>n()</code> oder
-<code>nrow()</code> erhalten können. <code>nrow()</code> gibt uns
-lediglich die Anzahl Reihen in einem Dataframe aus, während
-<code>n()</code> und <code>summarise()</code> ein neues,
-zusammengefasstes Dataframe (bzw. eine Tidyverse <em>Tibble</em>)
-produzieren:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gbigpKVxuXG5wYXJ0eV92aWRlb3MgJT4lIG5yb3coKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5gYGAifQ== -->
-<pre class="r"><code>party_videos %&gt;% summarise(total_videos = n())
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wären wir nur an der Gesamtzahl an Beobachtungen interessiert gewesen, hätten wir diese sogar noch einfacher mit `n()` oder `nrow()` erhalten können. `nrow()` gibt uns lediglich die Anzahl Reihen in einem Dataframe aus, während `n()` und `summarise()` ein neues, zusammengefasstes Dataframe (bzw. eine Tidyverse *Tibble*) produzieren:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gbigpKVxuXG5wYXJ0eV92aWRlb3MgJT4lIG5yb3coKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_videos %&gt;% summarise(total_videos = n())
 
 party_videos %&gt;% nrow()
                            </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="übungen-4" class="section level3">
-<h3>Übungen 4</h3>
-<p>Überprüfe, ob es einen Unterschied zwischen <code>party_videos</code>
-und <code>party_videos_distinct</code> gibt. Hinweis: da
-<code>distinct()</code> duplizierte Reihen (in diesem Fall identische
-IDs) entfernt, sollte sich, falls ein Unterschied besteht, die Anzahl
-Reihen unterscheiden. Dies könnt ihr mit <code>nrow()</code> oder
-<code>summarise()</code> und <code>n()</code> prüfen. Außerdem erlaubt
-es <code>identical()</code>, zu prüfen, ob zwei Objekte vollkommen
-identisch sind. Lest dazu auch die Helpfiles von
-<code>identical()</code>.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Filtert den Datensatz, um euch:<br />
-a) alle Videos der FDP anzeigen zu lassen,<br />
-b) alle Videos ab August 2022 anzeigen zu lassen,<br />
-c) alle Videos der AfD im September 2021 anzeigen zu lassen.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Prüft, welche Variablen in <code>party_videos</code> möglicherweise
-keine relevanten Informationen enthalten. Dazu könnt ihr u.a. die
-Funktion <code>distinct()</code> verwenden. Hinweis: Denkt daran, dass,
-wenn ihr mehrere Variablen an <code>distinct()</code> gebt, einzigartige
-Kombinationen dieser Variablen ausgegeben werden, bei einer Variable
-alle distinkten Werte dieser einen Variable. Verwendet dann
-<code>select()</code>, um diese Variablen zu entfernen und speichert das
-Ergebnis als ein neues Objekt. Benennt außerdem mindestens eine der
-übrigen Variablen mittels <code>rename()</code> um.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Verwendet <code>mutate()</code>, um eurem Datensatz eine neue
-Variable hinzuzufügen, die den Monat ausgibt, in der das Video
-veröffentlich wurde. Dazu könnt ihr die <em>lubridate</em>-Funktion
-<code>floor_date(x, unit = &quot;month&quot;)</code> verwenden, um den
-Veröffentlichungszeitpunkt in den ersten des Monats umzuwandeln (wobei
-<em>x</em> die zu modifizierende Variable darstellt).</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Fasst euren Datensatz zusammen, indem ihr euch mit
-<code>summarise()</code> die Anzahl an Videos pro Woche und Partei
-ausgeben lasst. Speichert diese Zusammenfassung als neues Objekt ab.
-Hinweis: <code>group_by()</code> und <code>.by</code> nehmen mehrere
-Variablen an, indem ihr sie mit einem Komma trennt bzw. zu einem Vektor
-zusammenfasst (<code>group_by(x, y)</code> bzw.
-<code>summarise(..., .by = c(x, y))</code>).</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-<div id="daten-visualisieren" class="section level2">
-<h2>5. Daten visualisieren</h2>
-<p>Mit <strong>ggplot</strong> können wir innerhalb des
-<em>Tidyverse</em> Daten visualisieren. Dazu können wir verschiedene
-Arten von Graphen wählen sowie bestimmen, welche <em>aesthetics</em>,
-also welche Axen bzw. weitere Visualisierungsmöglichkeiten, durch welche
-Variablen dargestellt werden sollen. Beispielsweise können wir uns
-mittels eines Bar-Diagramms anzeigen lassen, wieviele Beobachtungen
-einer Variable im Datensatz vorhanden sind. <code>geom_bar()</code>
-zählt dabei automatisch die Beobachtungen und ordnet diesen
-<em>count</em> der Y-Achse zu. Beachtet, dass <strong>ggplot</strong>
-ein <strong><code>+</code></strong> statt der <em>pipe</em>
-<code>&amp;&gt;&amp;</code> verwendet.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dwbG90KHBhcnR5X3ZpZGVvcywgYWVzKHggPSBwYXJ0eV9sYWJlbCkpICtcbiAgZ2VvbV9iYXIoKVxuYGBgIn0= -->
-<pre class="r"><code>ggplot(party_videos, aes(x = party_label)) +
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+### Übung 4
+
+Überprüfe, ob es einen Unterschied zwischen `party_videos` und `party_videos_distinct` gibt. Hinweis: da `distinct()` duplizierte Reihen (in diesem Fall identische IDs) entfernt, sollte sich, falls ein Unterschied besteht, die Anzahl Reihen unterscheiden. Dies könnt ihr mit `nrow()` oder `summarise()` und `n()` prüfen. Außerdem erlaubt es `identical(objekt1, objekt2)`, zu prüfen, ob zwei Objekte (z.B. zwei Datensätze) vollkommen identisch sind.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Filtert den Datensatz, um euch:\
+a) alle Videos der FDP anzeigen zu lassen,\
+b) alle Videos ab August 2022 anzeigen zu lassen,\
+c) alle Videos der AfD im September 2021 anzeigen zu lassen.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Prüft, welche Variablen in `party_videos` möglicherweise keine relevanten Informationen enthalten. Dazu könnt ihr u.a. die Funktion `distinct()` verwenden. Hinweis: Denkt daran, dass, wenn ihr mehrere Variablen an `distinct()` gebt, einzigartige Kombinationen dieser Variablen ausgegeben werden, bei einer Variable alle distinkten Werte dieser einen Variable. Verwendet dann `select()`, um diese Variablen zu entfernen und speichert das Ergebnis als ein neues Objekt. Benennt außerdem mindestens eine der übrigen Variablen mittels `rename()` um.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Verwendet `mutate()`, um eurem Datensatz eine neue Variable hinzuzufügen, die den Monat ausgibt, in der das Video veröffentlich wurde. Dazu könnt ihr die *lubridate*-Funktion `floor_date(x, unit = &quot;month&quot;)` verwenden, um den Veröffentlichungszeitpunkt in den ersten des Monats umzuwandeln (wobei *x* die zu modifizierende Variable darstellt).
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Fasst euren Datensatz zusammen, indem ihr euch mit `summarise()` die Anzahl an Videos pro Woche und Partei ausgeben lasst. Speichert diese Zusammenfassung als neues Objekt ab. Hinweis: `group_by()` und `.by` nehmen mehrere Variablen an, indem ihr sie mit einem Komma trennt bzw. zu einem Vektor zusammenfasst (`group_by(x, y)` bzw. `summarise(..., .by = c(x, y))`).
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+## 5. Daten visualisieren
+
+Mit **ggplot** können wir innerhalb des *Tidyverse* Daten visualisieren. Dazu können wir verschiedene Arten von Graphen wählen sowie bestimmen, welche *aesthetics*, also welche Axen bzw. weitere Visualisierungsmöglichkeiten, durch welche Variablen dargestellt werden sollen. Beispielsweise können wir uns mittels eines Bar-Diagramms anzeigen lassen, wieviele Beobachtungen einer Variable im Datensatz vorhanden sind. `geom_bar()` zählt dabei automatisch die Beobachtungen und ordnet diesen *count* der Y-Achse zu. Beachtet, dass **ggplot** ein **`+`** statt der *pipe* `&amp;&gt;&amp;` verwendet.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZ2dwbG90KHBhcnR5X3ZpZGVvcywgYWVzKHggPSBwYXJ0eV9sYWJlbCkpICtcbiAgZ2VvbV9iYXIoKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+ggplot(party_videos, aes(x = party_label)) +
   geom_bar()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wir können aber auch die Anzahl Videos im Zeitverlauf darstellen.
-Dazu müssen wir neben der X-Achse als Zeitpunkt auch die Y-Achse als
-Anzahl Videos angeben. Da wir die Anzahl der Videos zu einem Zeitpunkt
-nicht in unseren Daten haben, müssen wir diese zunächst berechnen. Dazu
-können wir erneut <code>summary()</code> nutzen, um die Anzahl an Videos
-zusammenzufassen. Das Ergebnis können wir mittels der <em>pipe</em>
-direkt an <code>ggplot()</code> geben:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkgJT4lIFxuICBnZ3Bsb3QoYWVzKHggPSBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB5ID0gdmlkZW9zKSkgK1xuICBnZW9tX2xpbmUoKVxuYGBgIn0= -->
-<pre class="r"><code>party_videos %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wir können aber auch die Anzahl Videos im Zeitverlauf darstellen. Dazu müssen wir neben der X-Achse als Zeitpunkt auch die Y-Achse als Anzahl Videos angeben. Da wir die Anzahl der Videos zu einem Zeitpunkt nicht in unseren Daten haben, müssen wir diese zunächst berechnen. Dazu können wir erneut `summary()` nutzen, um die Anzahl an Videos zusammenzufassen. Das Ergebnis können wir mittels der *pipe* direkt an `ggplot()` geben:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkgJT4lIFxuICBnZ3Bsb3QoYWVzKHggPSBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB5ID0gdmlkZW9zKSkgK1xuICBnZW9tX2xpbmUoKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos %&gt;% 
   summarise(videos = n(), .by = contentDetails.videoPublishedAt) %&gt;% 
   ggplot(aes(x = contentDetails.videoPublishedAt, y = videos)) +
   geom_line()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wie wir sehen, ist eine Darstellung nach Publikationszeitpunkt
-ungeeignet. Das liegt daran, dass so nur diejenigen Videos denselben
-Punkt auf der Y-Achse belegen, die zum exakt selben Zeitpunkt publiziert
-wurden. Mit anderen Worten: wir müssen unsere Daten aggregieren, um eine
-bessere Darstellung zu erzielen. Dies können wir erneut mit
-<code>mutate()</code> und <code>summarise()</code> erzielen, indem wir
-die Videos nach Publikationsmonat aggregieren:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXCJtb250aFwiKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBtb250aCkgJT4lIFxuICBnZ3Bsb3QoYWVzKHggPSBtb250aCwgeSA9IHZpZGVvcykpICtcbiAgZ2VvbV9saW5lKClcbmBgYCJ9 -->
-<pre class="r"><code>party_videos %&gt;% 
-  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = &quot;month&quot;)) %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wie wir sehen, ist eine Darstellung nach Publikationszeitpunkt ungeeignet. Das liegt daran, dass so nur diejenigen Videos denselben Punkt auf der Y-Achse belegen, die zum exakt selben Zeitpunkt publiziert wurden. Mit anderen Worten: wir müssen unsere Daten aggregieren, um eine bessere Darstellung zu erzielen. Dies können wir erneut mit `mutate()` und `summarise()` erzielen, indem wir die Videos nach Publikationsmonat aggregieren:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXFxtb250aFxcKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBtb250aCkgJT4lIFxuICBnZ3Bsb3QoYWVzKHggPSBtb250aCwgeSA9IHZpZGVvcykpICtcbiAgZ2VvbV9saW5lKClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+party_videos %&gt;% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = \month\)) %&gt;% 
   summarise(videos = n(), .by = month) %&gt;% 
   ggplot(aes(x = month, y = videos)) +
   geom_line()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wir können die publizierten Videos ebenso nach Parteien aufteilen,
-indem wir die Daten entsprechend aufbereiten und der Variable
-<em>Partei</em> das Attribut <em>Farbe</em> zuordnen:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXCJtb250aFwiKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpXG5gYGAifQ== -->
-<pre class="r"><code>party_videos %&gt;% 
-  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = &quot;month&quot;)) %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wir können die publizierten Videos ebenso nach Parteien aufteilen, indem wir die Daten entsprechend aufbereiten und der Variable *Partei* das Attribut *Farbe* zuordnen:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXFxtb250aFxcKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_videos %&gt;% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = \month\)) %&gt;% 
   summarise(videos = n(), .by = c(month, party_label)) %&gt;% 
   ggplot(aes(x = month, y = videos, color = party_label)) +
   geom_line()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Diese Darstellung ist jedoch etwas unübersichtlich, da sich teilweise
-nur schwer erkennen lässt, welche Partei zu welchem Zeitpunkt wieviele
-Videos veröffentlicht hat. Das lässt sich mit der Funktion
-<code>facet_wrap()</code> besser darstellen. Damit wird jede Ausprägung
-der spezifizierten Variable in einem eigenen Graphen dargestellt.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXCJtb250aFwiKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpICtcbiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpXG5gYGAifQ== -->
-<pre class="r"><code>party_videos %&gt;% 
-  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = &quot;month&quot;)) %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Diese Darstellung ist jedoch etwas unübersichtlich, da sich teilweise nur schwer erkennen lässt, welche Partei zu welchem Zeitpunkt wieviele Videos veröffentlicht hat. Das lässt sich mit der Funktion `facet_wrap()` besser darstellen. Damit wird jede Ausprägung der spezifizierten Variable in einem eigenen Graphen dargestellt.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXFxtb250aFxcKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpICtcbiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_videos %&gt;% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = \month\)) %&gt;% 
   summarise(videos = n(), .by = c(month, party_label)) %&gt;% 
   ggplot(aes(x = month, y = videos, color = party_label)) +
   geom_line() +
   facet_wrap( ~ party_label, ncol = 3)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Wir können die Darstellung noch weiter verbessern und verschönern.
-Beispielsweise ist die Unterteilung der Graphlinien nach Farbe nicht
-mehr nötig, da wir dieselben Informationen bereits in den Facetten des
-Graphs darstellen. Wir könnten einfach das Attribut
-<code>color = party_label</code> aus <code>aes()</code> entfernen. Wir
-finden aber, dass die unterschiedlichen Farben unsere Grafik
-ansrprechender machen. Dennoch nimmt die Legende auf der rechten Seite
-zu viel Platz ein und bietet keine zusätzlichen Informationen. Wir
-können sie entfernen, indem wir die sogenannten <em>guides</em>, also
-die Legenden, bearbeiten:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXCJtb250aFwiKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpICtcbiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICtcbiAgZ3VpZGVzKGNvbG9yID0gXCJub25lXCIpXG5gYGAifQ== -->
-<pre class="r"><code>party_videos %&gt;% 
-  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = &quot;month&quot;)) %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Wir können die Darstellung noch weiter verbessern und verschönern. Beispielsweise ist die Unterteilung der Graphlinien nach Farbe nicht mehr nötig, da wir dieselben Informationen bereits in den Facetten des Graphs darstellen. Wir könnten einfach das Attribut `color = party_label` aus `aes()` entfernen. Wir finden aber, dass die unterschiedlichen Farben unsere Grafik ansrprechender machen. Dennoch nimmt die Legende auf der rechten Seite zu viel Platz ein und bietet keine zusätzlichen Informationen. Wir können sie entfernen, indem wir die sogenannten *guides*, also die Legenden, bearbeiten:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXFxtb250aFxcKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpICtcbiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICtcbiAgZ3VpZGVzKGNvbG9yID0gXFxub25lXFwpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+party_videos %&gt;% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = \month\)) %&gt;% 
   summarise(videos = n(), .by = c(month, party_label)) %&gt;% 
   ggplot(aes(x = month, y = videos, color = party_label)) +
   geom_line() +
   facet_wrap( ~ party_label, ncol = 3) +
-  guides(color = &quot;none&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Schon besser. Wir hätten allerdings gerne, dass die Farben der Linien
-für jede Partei den ihrer klassischen Parteifarbe (also rot für die SPD,
-schwarz für die CDU, etc.) entspricht. Dazu müssen wir zunächst ein
-Objekt mit den Namen und RGB-Werten der Parteien erstellen, dass wir
-daraufhin mittels <code>scale_color_manual()</code> unserem Graphen
-hinzugeben. Beachtet, dass die Objektwerte den Werten in der Variable
-entsprechen müssen, der sie zugeordnet werden sollen. In unserem Falle
-also den korrekten Parteinamen. Der zweite Wert muss ein RGB- oder
-anderer Farbwert sein. Ansonsten weiß die Funktion nicht, welche Farbe
-sie welchem Wert zuordnen soll.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29sb3JzIDwtXG4gIGMoXG4gICAgXCJBZkRcIiA9IHJnYigwLCA2MCwgMTQ1LCBtYXhDb2xvclZhbHVlID0gMjU1KSxcbiAgICBcIkNEVVwiID0gcmdiKDUwLCA0OCwgNDYsIG1heENvbG9yVmFsdWUgPSAyNTUpLFxuICAgIFwiRElFIExJTktFXCIgPSByZ2IoMTgyLCAyOCwgNjIsIG1heENvbG9yVmFsdWUgPSAyNTUpLFxuICAgIFwiRkRQXCIgPSByZ2IoMjU1LCAyMzcsIDAsIG1heENvbG9yVmFsdWUgPSAyNTUpLFxuICAgIFwiQsO8bmRuaXMgOTAvRGllIEdyw7xuZW5cIiA9IHJnYig3MCwgMTUwLCA0MywgbWF4Q29sb3JWYWx1ZSA9IDI1NSksXG4gICAgXCJTUERcIiA9IHJnYigyMjcsIDAsIDE1LCBtYXhDb2xvclZhbHVlID0gMjU1KVxuICApXG5cbnBhcnR5X3ZpZGVvcyAlPiUgXG4gIG11dGF0ZShtb250aCA9IGZsb29yX2RhdGUoY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCwgdW5pdCA9IFwibW9udGhcIikpICU+JSBcbiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gYyhtb250aCwgcGFydHlfbGFiZWwpKSAlPiUgXG4gIGdncGxvdChhZXMoeCA9IG1vbnRoLCB5ID0gdmlkZW9zLCBjb2xvciA9IHBhcnR5X2xhYmVsKSkgK1xuICBnZW9tX2xpbmUoKSArXG4gIGZhY2V0X3dyYXAoIH4gcGFydHlfbGFiZWwsIG5jb2wgPSAzKSArXG4gIGd1aWRlcyhjb2xvciA9IFwibm9uZVwiKSArXG4gIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjb2xvcnMpXG5gYGAifQ== -->
-<pre class="r"><code>colors &lt;-
+  guides(color = \none\)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Schon besser. Wir hätten allerdings gerne, dass die Farben der Linien für jede Partei den ihrer klassischen Parteifarbe (also rot für die SPD, schwarz für die CDU, etc.) entspricht. Dazu müssen wir zunächst ein Objekt mit den Namen und RGB-Werten der Parteien erstellen, dass wir daraufhin mittels `scale_color_manual()` unserem Graphen hinzugeben. Beachtet, dass die Objektwerte den Werten in der Variable entsprechen müssen, der sie zugeordnet werden sollen. In unserem Falle also den korrekten Parteinamen. Der zweite Wert muss ein RGB- oder anderer Farbwert sein. Ansonsten weiß die Funktion nicht, welche Farbe sie welchem Wert zuordnen soll.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY29sb3JzIDwtXG4gIGMoXG4gICAgXFxBZkRcXCA9IHJnYigwLCA2MCwgMTQ1LCBtYXhDb2xvclZhbHVlID0gMjU1KSxcbiAgICBcXENEVVxcID0gcmdiKDUwLCA0OCwgNDYsIG1heENvbG9yVmFsdWUgPSAyNTUpLFxuICAgIFxcRElFIExJTktFXFwgPSByZ2IoMTgyLCAyOCwgNjIsIG1heENvbG9yVmFsdWUgPSAyNTUpLFxuICAgIFxcRkRQXFwgPSByZ2IoMjU1LCAyMzcsIDAsIG1heENvbG9yVmFsdWUgPSAyNTUpLFxuICAgIFxcQsO8bmRuaXMgOTAvRGllIEdyw7xuZW5cXCA9IHJnYig3MCwgMTUwLCA0MywgbWF4Q29sb3JWYWx1ZSA9IDI1NSksXG4gICAgXFxTUERcXCA9IHJnYigyMjcsIDAsIDE1LCBtYXhDb2xvclZhbHVlID0gMjU1KVxuICApXG5cbnBhcnR5X3ZpZGVvcyAlPiUgXG4gIG11dGF0ZShtb250aCA9IGZsb29yX2RhdGUoY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCwgdW5pdCA9IFxcbW9udGhcXCkpICU+JSBcbiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gYyhtb250aCwgcGFydHlfbGFiZWwpKSAlPiUgXG4gIGdncGxvdChhZXMoeCA9IG1vbnRoLCB5ID0gdmlkZW9zLCBjb2xvciA9IHBhcnR5X2xhYmVsKSkgK1xuICBnZW9tX2xpbmUoKSArXG4gIGZhY2V0X3dyYXAoIH4gcGFydHlfbGFiZWwsIG5jb2wgPSAzKSArXG4gIGd1aWRlcyhjb2xvciA9IFxcbm9uZVxcKSArXG4gIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjb2xvcnMpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+colors &lt;-
   c(
-    &quot;AfD&quot; = rgb(0, 60, 145, maxColorValue = 255),
-    &quot;CDU&quot; = rgb(50, 48, 46, maxColorValue = 255),
-    &quot;DIE LINKE&quot; = rgb(182, 28, 62, maxColorValue = 255),
-    &quot;FDP&quot; = rgb(255, 237, 0, maxColorValue = 255),
-    &quot;Bündnis 90/Die Grünen&quot; = rgb(70, 150, 43, maxColorValue = 255),
-    &quot;SPD&quot; = rgb(227, 0, 15, maxColorValue = 255)
+    \AfD\ = rgb(0, 60, 145, maxColorValue = 255),
+    \CDU\ = rgb(50, 48, 46, maxColorValue = 255),
+    \DIE LINKE\ = rgb(182, 28, 62, maxColorValue = 255),
+    \FDP\ = rgb(255, 237, 0, maxColorValue = 255),
+    \Bündnis 90/Die Grünen\ = rgb(70, 150, 43, maxColorValue = 255),
+    \SPD\ = rgb(227, 0, 15, maxColorValue = 255)
   )
 
 party_videos %&gt;% 
-  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = &quot;month&quot;)) %&gt;% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = \month\)) %&gt;% 
   summarise(videos = n(), .by = c(month, party_label)) %&gt;% 
   ggplot(aes(x = month, y = videos, color = party_label)) +
   geom_line() +
   facet_wrap( ~ party_label, ncol = 3) +
-  guides(color = &quot;none&quot;) +
+  guides(color = \none\) +
   scale_color_manual(values = colors)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Nun wollen wir noch unsere Axen umbenennen und dem Graphen einen
-informativen Titel geben, der beschreibt, was wir hier sehen und
-berechnet haben. Das geht einfach mit der
-<code>labs()</code>-Funktion:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXCJtb250aFwiKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpICtcbiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICtcbiAgZ3VpZGVzKGNvbG9yID0gXCJub25lXCIpICtcbiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGNvbG9ycykgK1xuICBsYWJzKFxuICAgIHggPSBcIk1vbmF0XCIsXG4gICAgeSA9IFwiVmVyw7ZmZmVudGxpY2h0ZSBWaWRlb3NcIixcbiAgICBjb2xvciA9IFwiUGFydGVpXCIsXG4gICAgdGl0bGUgPSBcIlZpZGVvcyDDvGJlciBaZWl0IG5hY2ggUGFydGVpLCBHZXNhbXR6ZWl0cmF1bVwiXG4gICkgXG5gYGAifQ== -->
-<pre class="r"><code>party_videos %&gt;% 
-  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = &quot;month&quot;)) %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Nun wollen wir noch unsere Axen umbenennen und dem Graphen einen informativen Titel geben, der beschreibt, was wir hier sehen und berechnet haben. Das geht einfach mit der `labs()`-Funktion:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXFxtb250aFxcKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpICtcbiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICtcbiAgZ3VpZGVzKGNvbG9yID0gXFxub25lXFwpICtcbiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGNvbG9ycykgK1xuICBsYWJzKFxuICAgIHggPSBcXE1vbmF0XFwsXG4gICAgeSA9IFxcVmVyw7ZmZmVudGxpY2h0ZSBWaWRlb3NcXCxcbiAgICBjb2xvciA9IFxcUGFydGVpXFwsXG4gICAgdGl0bGUgPSBcXFZpZGVvcyDDvGJlciBaZWl0IG5hY2ggUGFydGVpXG5gYGAifQ== --&gt;
+
+```r
+```r
+party_videos %&gt;% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = \month\)) %&gt;% 
   summarise(videos = n(), .by = c(month, party_label)) %&gt;% 
   ggplot(aes(x = month, y = videos, color = party_label)) +
   geom_line() +
   facet_wrap( ~ party_label, ncol = 3) +
-  guides(color = &quot;none&quot;) +
+  guides(color = \none\) +
   scale_color_manual(values = colors) +
   labs(
-    x = &quot;Monat&quot;,
-    y = &quot;Veröffentlichte Videos&quot;,
-    color = &quot;Partei&quot;,
-    title = &quot;Videos über Zeit nach Partei, Gesamtzeitraum&quot;
-  ) </code></pre>
+    x = \Monat\,
+    y = \Veröffentlichte Videos\,
+    color = \Partei\,
+    title = \Videos über Zeit nach Partei</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2636,27 +3039,26 @@ schlichtes schwarz-weiß Thema, welches die Farben in unserem Graphen gut
 zur Geltung bringt:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXCJtb250aFwiKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpICtcbiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICtcbiAgZ3VpZGVzKGNvbG9yID0gXCJub25lXCIpICtcbiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGNvbG9ycykgK1xuICBsYWJzKFxuICAgIHggPSBcIk1vbmF0XCIsXG4gICAgeSA9IFwiVmVyw7ZmZmVudGxpY2h0ZSBWaWRlb3NcIixcbiAgICBjb2xvciA9IFwiUGFydGVpXCIsXG4gICAgdGl0bGUgPSBcIlZpZGVvcyDDvGJlciBaZWl0IG5hY2ggUGFydGVpLCBHZXNhbXR6ZWl0cmF1bVwiXG4gICkgK1xuICB0aGVtZV9idygpXG5gYGAifQ== -->
-<pre class="r"><code>party_videos %&gt;% 
-  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = &quot;month&quot;)) %&gt;% 
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGFydHlfdmlkZW9zICU+JSBcbiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gXFxtb250aFxcKSkgJT4lIFxuICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSBcbiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArXG4gIGdlb21fbGluZSgpICtcbiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICtcbiAgZ3VpZGVzKGNvbG9yID0gXFxub25lXFwpICtcbiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGNvbG9ycykgK1xuICBsYWJzKFxuICAgIHggPSBcXE1vbmF0XFwsXG4gICAgeSA9IFxcVmVyw7ZmZmVudGxpY2h0ZSBWaWRlb3NcXCxcbiAgICBjb2xvciA9IFxcUGFydGVpXFwsXG4gICAgdGl0bGUgPSBcXFZpZGVvcyDDvGJlciBaZWl0IG5hY2ggUGFydGVpXG5gYGAifQ== -->
+<pre class="r"><code>```r
+party_videos %&gt;% 
+  mutate(month = floor_date(contentDetails.videoPublishedAt, unit = \month\)) %&gt;% 
   summarise(videos = n(), .by = c(month, party_label)) %&gt;% 
   ggplot(aes(x = month, y = videos, color = party_label)) +
   geom_line() +
   facet_wrap( ~ party_label, ncol = 3) +
-  guides(color = &quot;none&quot;) +
+  guides(color = \none\) +
   scale_color_manual(values = colors) +
   labs(
-    x = &quot;Monat&quot;,
-    y = &quot;Veröffentlichte Videos&quot;,
-    color = &quot;Partei&quot;,
-    title = &quot;Videos über Zeit nach Partei, Gesamtzeitraum&quot;
-  ) +
-  theme_bw()</code></pre>
+    x = \Monat\,
+    y = \Veröffentlichte Videos\,
+    color = \Partei\,
+    title = \Videos über Zeit nach Partei</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<div id="übungen-5" class="section level3">
-<h3>Übungen 5</h3>
+<div id="übung-5" class="section level3">
+<h3>Übung 5</h3>
 <p>Probiert weitere Visualisierungsmöglichkeiten aus. Verwendet dazu
 zunächst das <code>party_summary</code>-Objekt, welches wir in einer der
 vorherigen Abschnitte erstellt haben. Zur Erinnerung:
@@ -2710,34 +3112,56 @@ lassen.</p>
 abspeichern:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2F2ZVJEUyhwYXJ0eV9zdW1tYXJ5LCBcInBhcnR5X3N1bW1hcnkuUkRTXCIpXG5gYGAifQ== -->
-<pre class="r"><code>saveRDS(party_summary, &quot;party_summary.RDS&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Ebensogut können wir sie als .csv exportieren, indem wir die
-<em>Tidyverse</em> Funktion <code>write_csv()</code> verwenden:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfY3N2KHBhcnR5X3N1bW1hcnksIFwicGFydHlfc3VtbWFyeS5jc3ZcIilcbmBgYCJ9 -->
-<pre class="r"><code>write_csv(party_summary, &quot;party_summary.csv&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Unser Grafiken können wir auf unterschiedliche Weise speichern. Zum
-wird euch die Grafik, die ihr erstellt, unter dem Reiter “Plots” in
-RStudio angezeigt, wenn ihr den Code direkt in der Konsole ausführt
-(wenn ihr den Code wie hier in einem Notebook ausführt, ist das nicht
-der Fall!). Dort findet ihr eine praktische “Export”-Funktion. Zum
-anderen bietet <em>ggplot</em> die Funktion <code>ggsave()</code>, mit
-der ihr den letzten ausgeführten Plot (oder ein Plot-Objekt eurer Wahl)
-exportieren könnt. Hinweis: <code>ggsave()</code> bietet zahlreiche
-Optionen zum Export, die ihr unter <code>?ggsave()</code> findet. Die
-Standardeinstellungen sind häufig aber ausreichend:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dzYXZlKFwicGFydHlfb3ZlcnZpZXcucG5nXCIpXG5gYGAifQ== -->
-<pre class="r"><code>ggsave(&quot;party_overview.png&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc2F2ZVJEUyhwYXJ0eV9zdW1tYXJ5LCBcXHBhcnR5X3N1bW1hcnkuUkRTXFwpXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+saveRDS(party_summary, \party_summary.RDS\)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Ebensogut können wir sie als .csv exportieren, indem wir die *Tidyverse* Funktion `write_csv()` verwenden:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxud3JpdGVfY3N2KHBhcnR5X3N1bW1hcnksIFxccGFydHlfc3VtbWFyeS5jc3ZcXClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+write_csv(party_summary, \party_summary.csv\)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Unser Grafiken können wir auf unterschiedliche Weise speichern. Zum wird euch die Grafik, die ihr erstellt, unter dem Reiter &quot;Plots&quot; in RStudio angezeigt, wenn ihr den Code direkt in der Konsole ausführt (wenn ihr den Code wie hier in einem Notebook ausführt, ist das nicht der Fall!). Dort findet ihr eine praktische &quot;Export&quot;-Funktion. Zum anderen bietet *ggplot* die Funktion `ggsave()`, mit der ihr den letzten ausgeführten Plot (oder ein Plot-Objekt eurer Wahl) exportieren könnt. Hinweis: `ggsave()` bietet zahlreiche Optionen zum Export, die ihr unter `?ggsave()` findet. Die Standardeinstellungen sind häufig aber ausreichend:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZ2dzYXZlKFxccGFydHlfb3ZlcnZpZXcucG5nXFwpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+ggsave(\party_overview.png\)</code></pre>
+<p>```</p>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2747,8 +3171,8 @@ klickt auf einen der “Knit”-Einträge. Hinweis: Der PDF-Export benötigt
 eine installierte LaTeX Distribution, der Word-Export eine
 Word-Installation. HTML lässt sich immer exportieren und kann mit einem
 Browser eurer Wahl geöffnet werden.</p>
-<div id="übungen-6" class="section level3">
-<h3>Übungen 6</h3>
+<div id="übung-6" class="section level3">
+<h3>Übung 6</h3>
 <p>Speichert die Objekte, die ihr in <strong>Übung 4</strong> erstellt
 habt als .csv und .RDS ab.</p>
 <!-- rnb-text-end -->
@@ -2820,7 +3244,7 @@ Kommentars angibt.</p>
 <!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgw5xidW5nZW4iDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQojIyBFaW5mw7xocnVuZw0KDQpEaWVzZXMgUk1hcmtkb3duIE5vdGVib29rIGVudGjDpGx0IGVpbmUgUmVpaGUgdm9uIMOcYnVuZ2VuLCBkaWUgZGFiZWkgaGVsZmVuIHNvbGxlbiwgZXVjaCBtaXQgUiB1bmQgUlN0dWRpbyB2ZXJ0cmF1dCB6dSBtYWNoZW4uIFdpciB3ZXJkZW4gZGFiZWkgdm9yIGFsbGVtIGRhcyAqVGlkeXZlcnNlKiB2ZXJ3ZW5kZW4uDQoNCk5vdGVib29rcyB2ZXJlaW5lbiBDb2RlIGbDvHIgZGllIEFuYWx5c2VuLCBkaWUgRXJnZWJuaXNzZSBkZXMgQ29kZXMgdW5kIGJlZ2xlaXRlbmRlIFRleHRlIHdpZSBkaWVzZW4gaGllciwgd2FzIHNpZSBpbnNiZXNvbmRlcmUgZsO8ciBkaWUgRG9rdW1lbnRhdGlvbiB2b24gUHJvamVrdGVuIGdlZWlnbmV0IG1hY2h0LiBJbiBkZXIgVG9vbGJhciBhbSBvYmVyZW4gUmFuZCBkZXMgTm90ZWJvb2tzIGvDtm5udCBpaHIgendpc2NoZW4gIlNvdXJjZSIgKGRlbSB2b2xsc3TDpG5kaWdlbiBDb2RlKSB1bmQgIlZpc3VhbCIgKGRlbSwgd2FzIGV1cmUgTGVzZXJcKmlubmVuIHNww6R0ZXIgc2VoZW4pIHdlY2hzZWxuLiAiU291cmNlIiBiaWV0ZXQgZWluaWdlIHp1c8OkdHpsaWNoZSBPcHRpb25lbiwgei5CLiBpbiBkZXIgQXJ0IHVuZCBXZWlzZSwgd2llIENvZGUgQ2h1bmtzIGRhcmdlc3RlbGx0IHdlcmRlbi4gRGllc2UgbGFzc2VuIHNpY2ggYWJlciBhdWNoIG1pdCBlaW5lbSBLbGljayBhdWYgZGFzIFphaG5yYWQgZWluZXMgQ29kZSBDaHVua3MgKHRlaWx3ZWlzZSkgZWluc3RlbGxlbi4gIlZpc3VhbCIgemVpZ3QgZXVjaCBpbnNiZXNvbmRlcmUsIHdpZSBkZXIgYmVnbGVpdGVuZGUgVGV4dCBzcMOkdGVyIGZvcm1hdGllcnQgd2lyZCB1bmQgYmlldGV0IGVpbmlnZSBwcmFrdGlzY2hlIEZvcm1hdGllcnVuZ3NvcHRpb25lbiBpbiBkZXIgVG9vbGJhciBzb3dpZSBlaW5mYWNoZSBNw7ZnbGljaGtlaXRlbiwgQ29kZSBDaHVua3MsIEJpbGRlciB1bmQgTGlua3MgZWluenVmw7xnZW4uIFdlY2hzZWx0IHp3aXNjaGVuIGRlbiBiZWlkZW4gQW5zaWNodGVuIHVuZCBpaHIgd2VyZGV0IHNlaGVuLCB3aWUgQ29kZSBpbiBkZXIgIlNvdXJjZSItQW5zaWNodCB1LmEuIGRlbiBUZXh0IGbDvHIgIlZpc3VhbCIgbWl0IE1hcmtkb3duIGZvcm1hdGllcnQuDQoNCkRpZSAiQ29kZSBDaHVua3MiIGJlZ2lubmVuZCBtaXQgIlxgXGBcYHtyfSIgc3RlbGxlbiBkYWJlaSBSLUNvZGUgZGFyLiBJaHIga8O2bm50IGlobiBlbnR3ZWRlciB6ZWlsZW53ZWlzZSBtaXQgZGVyIFRhc3RlbmtvbWJpbmF0aW9uIGBTdHJnK0VOVEVSYCBhdXNmw7xocmVuIG9kZXIgZGVuIGdlc2FtdGVuIENodW5rIG1pdCBkZW0gZ3LDvG5lbiBQZmVpbCBvYmVuIHJlY2h0cyBpbiBkZXIgRWNrZSBkZXMgQ2h1bmstRmVsZHMgYXVmIGVpbm1hbCBhdXNmw7xocmVuLiBEaWVzZSBBcnQgTm90ZWJvb2sgaXN0IGFsc28gdmVyZ2xlaWNoYmFyIG1pdCBkZW4gSnVweXRlciBOb3RlYm9va3MsIGRpZSBpaHIgYmVyZWl0cyBrZW5uZW5nZWxlcm50IGhhYnQuIElociBrw7ZubnQgQ29kZSBhYmVyIGF1Y2ggZGlyZWt0IGluIGRlciBSU3R1ZGlvIENvbnNvbGUgYXVzZsO8aHJlbiwgaW5kZW0gaWhyIGluIGRvcnRoaW4ga29waWVydCBvZGVyIGRpcmVrdCBkb3J0IGVpbnRpcHB0LiBEYXMgRXJnZWJuaXMgd2lyZCBkYW5uIG5pY2h0IGluIGRlbSBOb3RlYm9vaywgc29uZGVybiBpbiBkZXIgQ29uc29sZSBhbmdlemVpZ3QuIERhcyBpc3QgcHJha3Rpc2NoLCB3ZW5uIGlociBrdXJ6IGV0d2FzIGF1c3Byb2JpZXJlbiBvZGVyIGRpZSBIZWxwZmlsZXMgYXVmcnVmZW4gd29sbHQsIHouQi4gbWl0IGA/ZmlsdGVyYC4gV2ljaHRpZzogV2VkZXIgQ29kZSwgZGVuIGlociBpbiBkZXIgQ29uc29sZSBhdXNmw7xocnQsIG5vY2ggZGVzc2VuIEVyZ2Vibmlzc2Ugd2VyZGVuIGltIE5vdGVib29rIGdlc3BlaWNoZXJ0IQ0KDQpNaXQgYFN0cmcrQWx0K0lgIG9kZXIgKkluc2VydC1cPkNvZGUgQ2h1bmstXD5SKiBpbiBkZXIgVG9vbGJhciBrw7ZubnQgaWhyIG5ldWUgQ29kZSBDaHVua3MgaGluenVmw7xnZW4uIElociBrw7ZubnQgYXVjaCBhbmRlcmUgUHJvZ3JhbW1pZXJzcHJhY2hlbiBpbiBOb3RlYm9va3MgZWluYmluZGVuLCB6LkIuIFB5dGhvbi4gQmVhY2h0ZXQgYWJlciwgZGFzcyAqUiogdW5kICpQeXRob24qIG5pY2h0IGRpZXNlbGJlIFVtZ2VidW5nIGJlbnV0emVuLCBpaHIgRGF0ZW4gYWxzbyBqZXdlaWxzIHdpZWRlciBuZXUgZWlubGVzZW4gbcO8c3N0IC0gdW5kIGlociBtw7xzc3QgZGFyYXVmIGFjaHRlbiwgZGFzcyBkaWUgRGF0ZW5mb3JtYXRlIGtvbXBhdGliZWwgc2luZCENCg0KTWl0IGVpbmVtIEtsaWNrIGF1ZiAiUHJldmlldyIga8O2bm50IGlociBldWNoIGV1ZXIgYWt0dWVsbGVzIE5vdGVib29rIGFscyBIVE1MIGFuemVpZ2VuIGxhc3Nlbi4gU3RlbGx0IHNpY2hlciwgZGFzcyBpaHIgYWxsZSBDb2RlIENodW5rcywgZGllIGlociBpbiBldWVyZW0gRG9rdW1lbnQgc2VoZW4gd29sbHQsIGF1c2dlZsO8aHJ0IGhhdCAtIHNvbnN0IHdlcmRlbiBzaWUgaW4gIlByZXZpZXciIG5pY2h0IGFuZ2V6ZWlndC4gSWhyIGvDtm5udCBkYXMgTm90ZWJvb2sgYXVjaCBpbiBhbmRlcmUgRm9ybWF0ZSBleHBvcnRpZXJlbiwgei5CLiBQREYgKGJlbsO2dGlndCBlaW5lIExhVGVYIEluc3RhbGxhdGlvbiksIFdvcmQgKGJlbsO2dGlndCBlaW5lIFdvcmQgSW5zdGFsbGF0aW9uKSBvZGVyIEhUTUwgKGzDpHNzdCBzaWNoIG1pdCBqZWRlbSBCcm93c2VyIMO2ZmZuZW4pLiBHZWh0IGRhenUgYXVmIGRhcyBEcm9wLURvd24gTWVuw7wgbmViZW4gIlByZXZpZXciIChkZXIga2xlaW5lIFBmZWlsIG5hY2ggdW50ZW4pIHVuZCB3w6RobHQgZWluZSAiS25pdCItT3B0aW9uIGF1cy4gQmVhY2h0ZXQsIGRhc3MgIktuaXQiIGltbWVyIGFsbGUgQ29kZSBDaHVua3MgaW0gTm90ZWJvb2sgYXVzZsO8aHJ0Lg0KDQojIyAxLiBQYWNrYWdlcyBsYWRlbiAmIGluc3RhbGxpZXJlbg0KDQpXaXIgd29sbGVuIGluIGRpZXNlciDDnGJ1bmcgdm9yIGFsbGVtIGRhcyAqVGlkeXZlcnNlKiB2ZXJ3ZW5kZW4gdW5kIHVucyBtaXQgZGVzc2VuIEZ1bmt0aW9uZW4gdmVydHJhdXQgbWFjaGVuLiBEYXp1IG3DvHNzZW4gd2lyIGVzIHp1bsOkY2hzdCBlaW5tYWwgaW5zdGFsbGllcmVuOg0KDQpgYGB7cn0NCmluc3RhbGwucGFja2FnZXMoInRpZHl2ZXJzZSIpDQoNCmBgYA0KDQpCZWFjaHRldCwgZGFzcyBpaHIgZGllc2VuIENvZGUgQ2h1bmsgbnVyIGVpbm1hbCBhdXNmw7xocmVuIG3DvHNzdC4gRWluIGVpbm1hbCBpbnN0YWxsaWVydGVzIFBhY2thZ2UgaXN0IGJlaSBqZWRlbSBTdGFydCB2b24gUiB3aWVkZXIgdmVyZsO8Z2Jhci4gRWluemlnZSBBdXNuYWhtZTogR3LDtsOfZXJlIFVwZGF0ZXMgdm9uIFIgKHouYi4gdm9uIDQuMSBhdWYgNC4yKSBtYWNoZW4gZWluZSBOZXVpbnN0YWxsYXRpb24gYWxsZXIgUGFja2FnZXMgbsO2dGlnLiBCZWkga2xlaW5lcmVuIFVwZGF0ZXMgKHouQi4gdm9uIFIgNC4xLjEgYXVmIDQuMS4yKSBpc3QgZGllcyBuaWNodCBuw7Z0aWcuIERlbm5vY2ggZW1wZmllaGx0IGVzIHNpY2gsIHJlZ2VsbcOkw59pZyBQYWNrYWdlIFVwZGF0ZXMgZHVyY2h6dWbDvGhyZW4uIFdlbm4gZWluIFBhY2thZ2UgYmVyZWl0cyBpbnN0YWxsaWVydCBpc3QsIGbDvGhydCBgaW5zdGFsbC5wYWNrYWdlcygpYCBlaW4gVXBkYXRlIGR1cmNoLg0KDQpOYWNoZGVtIHdpciBkYXMgUGFja2FnZSBpbnN0YWxsaWVydCBoYWJlbiwgbcO8c3NlbiB3aXIgZXMgaW4gdW5zZXJlIGFrdHVlbGxlIFIgVW1nZWJ1bmcgbGFkZW4sIHVtIFp1Z3JpZmYgYXVmIGRlc3NlbiBGdW5rdGlvbmVuIHp1IGhhYmVuLiBEaWVzIGdlc2NoaWVodCBtaXQgZm9sZ2VuZGVtIENvZGU6DQoNCmBgYHtyfQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpgYGANCg0KIyMjIMOcYnVuZyAxOg0KDQpOZWJlbiBkZW0gdGlkeXZlcnNlIHdlcmRlbiB3aXIgaW0gVmVybGF1ZiBkZXIgw5xidW5nIGF1w59lcmRlbSBkYXMgcGFja2FnZSAibHVicmlkYXRlIiBiZW7DtnRpZ2VuLCBtaXQgZGVtIHdpciBEYXRlbiBtYW5pcHVsaWVyZW4ga8O2bm5lbi4gU2NocmVpYnQgQ29kZSwgd2VsY2hlciBkYXMgUGFja2FnZSBpbnN0YWxsaWVydCB1bmQgbMOkZHQuDQoNCkluc3RhbGxpZXJlIGRhcyBQYWNrYWdlICJsdWJyaWRhdGUiOg0KDQpgYGB7cn0NCg0KYGBgDQoNCkxhZGUgZGFzIFBhY2thZ2UgbHVicmlkYXRlOg0KDQpgYGB7cn0NCg0KYGBgDQoNCiMjIDIuIERhdGVuIGVpbmxlc2VuDQoNCkltIExlYXJud2ViIGZpbmRldCBpaHIgZGVuIERhdGVuc2F0eiAicGFydHlfdmlkZW9zLlJEUyIuIERhcmluIGZpbmRlbiBzaWNoIE1ldGFkYXRlbiBhbGxlciAxMy41MTIgVmlkZW9zLCBkaWUgenVtIFplaXRwdW5rdCBkZXIgRXJoZWJ1bmcgYXVmIGRlbiBZb3VUdWJlIENoYW5uZWxzIGRlciBncm/Dn2VuIGRldXRzY2hlbiBQYXJ0ZWllbiB2ZXJmw7xnYmFyIHdhcmVuLiBOZWJlbiBNZXRhZGF0ZW4gd2llIGRlciBWaWRlb0lEIHVuZCBkZW0gVmVyw7ZmZmVudGxpY2h1bmdzZGF0dW0gZmluZGV0IHNpY2ggZG9ydCBhdWNoIGVpbiBWYXJpYWJsZSwgd2VsY2hlIGFuZ2lidCwgdm9uIHdlbGNoZXIgUGFydGVpIGVpbiBWaWRlbyBzdGFtbXQuDQoNCkxlZ3QgYXVmIGV1cmVtIENvbXB1dGVyIGVpbmVuIE9yZG5lciBhbiwgaW4gZGVtIGlociBhbGxlIGbDvHIgZGllc2Ugw5xidW5nIHJlbGV2YW50ZW4gRGF0ZWllbiBzcGVpY2hlcnQgdW5kIHNwZWljaGVydCBkZW4gRGF0ZW5zYXR6IGRvcnQgYWIuIElociBrw7ZubnQgYXVjaCBkaWVzZXMgTm90ZWJvb2sgbWl0ICpGaWxlLVw+U2F2ZSBBcyogZG9ydCBhYmxlZ2VuLiBOdXIgd2VpbCBldWVyIE5vdGVib29rIGluIGRpZXNlbSBPcmRuZXIgbGllZ3QsIGhlacOfdCBkYXMgYWJlciBub2NoIG5pY2h0LCBkYXNzIGV1cmUgUi1VbWdlYnVuZyBkaWVzZW4gYXVjaCBhbHMgYWt0dWVsbGVuIE9yZG5lciB3YWhybmltbXQhIEZvbGdlbmRlciBDb2RlIGdpYnQgZXVjaCBldWVyIGFrdHVlbGxlcyAqV29ya2luZyBEaXJlY3RvcnkqIGF1czoNCg0KYGBge3J9DQpnZXR3ZCgpDQpgYGANCg0KSWhyIHNlaHIgZXVlciBha3R1ZWxsZXMgV29ya2luZyBEaXJlY3RvciBhdWNoIMO8YmVyIGRlbSBDb25zb2xlLUZlbnN0ZXIgLSBuZWJlbiBkZXIgYWt0dWVsbCB2ZXJ3ZW5kZXRlbiBSLVZlcnNpb24uIFp3YXIga8O2bm50IGlociBhdWNoIGF1ZiBEYXRlaWVuIGF1w59lcmhhbGIgZXVyZXMgV29ya2luZyBEaXJlY3RvcnkgenVncmVpZmVuLiBEYXp1IG3DvHNzdCBpaHIgamVkb2NoIGltbWVyIGRlbiBnZXNhbXRlbiBQZmFkIGRlciBEYXRlbiBtaXQgYW5nZWJlbiAtIHdhcyBzZWhyIG3DvGhzZWxpZyBzZWluIGthbm4uIERlc2hhbGIgbWFjaHQgZXMgU2lubiwgZXVlciBXb3JraW5nIERpcmVjdG9yeSB6dSDDpG5kZXJuLiBEYXMgZ2VodCBtaXQgZGVyIGBzZXR3ZCgpYC1GdW5rdGlvbjoNCg0KYGBge3J9DQpzZXR3ZCgiQzovbWVpbmVfUl9Qcm9qZWt0ZS9Zb3VUdWJlX1NlbWluYXIvVWVidW5nXzEiKQ0KYGBgDQoNCkJlYWNodGV0LCBkYXNzIGlociBkZXIgaGllciBhbmdlZ2ViZW4gT3JkbmVycGZhZCBiZWkgZXVjaCB3YWhyc2NoZWlubGljaCBuaWNodCBleGlzdGllcnQuIElociBtw7xzc3QgaWhuIGFsc28gZW50c3ByZWNoZW5kIHNvIGFucGFzc2VuLCBkYXNzIGVyIGF1ZiBldXJlbiBPcmRuZXIgemVpZ3QsIGluIGRlbiBpaHIgZGVuIERhdGVuc2F0eiBnZWxhZGVuIGhhYnQuIFdpY2h0aWcgaXN0LCBkYXNzIGlociBldXJlbiBQZmFkIGluIEFuZsO8aHJ1bmdzemVpY2hlbiAoIi4uLiIpIHNldHp0IHVuZCBTY2hyw6Rnc3RyaWNoZSAoIC8gKSwga2VpbmUgQmFja3NsYXNoZXMgKCBcXCApLCB2ZXJ3ZW5kZXQsIHVtIGRlbiBQZmFkIHp1IHNjaHJlaWJlbi4gQmVhY2h0ZXQsIGRhc3MgZGFzIFdvcmtpbmcgRGlyZWN0b3IgYmVpIGplZGVtIFN0YXJ0IHZvbiBSIGlkUi4gbmV1IGdlc2V0enQgd2VyZGVuIG11c3MuDQoNCldlbm4gd2lyIHVuc2VyIFdvcmtpbmcgRGlyZWN0b3J5IGdlc2V0enQgaGFiZW4sIGvDtm5uZW4gd2lyIGRpZSBEYXRlbiBpbiB1bnNlcmUgYWt0dWVsbGUgVW1nZWJ1bmcgbGFkZW4uIERpZSBgcmVhZFJEUygpYC1GdW5rdGlvbiBsw6RkdCAuUkRTLURhdGVpZW4gdW5kIG9yZG5ldCBzaWUgZWluZW0gT2JqZWt0IHp1Og0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvcyA8LSByZWFkUkRTKCJwYXJ0eV92aWRlb3MuUkRTIikNCmBgYA0KDQpCZWFjaHRldCwgZGFzcyBlcyBzaWNoIGJlaSBkZW0gUkRTLUZvcm1hdCB1bSBlaW4gUi1laWdlbmVzIEZvcm1hdCBoYW5kZWx0LCB3ZWxjaGVzIGjDpHVmaWcgbmljaHQgbWl0IGFuZGVyZW4gUHJvZ3JhbW1lbiB3aWUgUHl0aG9uIGtvbXBhdGliZWwgaXN0LiBSIGlzdCBhbGxlcmRpbmdzIGF1Y2ggaW4gZGVyIExhZ2UsIGFuZGVyZSBEYXRlaXR5cGVuIGVpbnp1bGVzZW4sIGV0d2EgZGFzIHVuaXN2ZXJzZWxsZSAuY3N2LiBEYXMgVGlkeXZlcnNlIGJpZXRldCBkYXp1IGRpZSBgcmVhZF9jc3ZgLUZ1bmt0aW9uIGFuLiBTaWUgYmlldGV0IGVpbmlnZSB6dXPDpHR6bGljaGUgRnVua3Rpb25lbiwgZXR3YSBkaWUgU3BlemlmaXppZXJ1bmcgZGVyIFZhcmlhYmxlbi1UeXBlbiBmw7xyIGVpbnplbG5lIFNwYWx0ZW4sIGZ1bmt0aW9uaWVydCBpbSBQcmluemlwIGFiZXIgYW5hbG9nIHp1IGByZWFkUkRTKClgLiBEaWUgKnBhcnR5X3ZpZGVvcy5jc3YqLURhdGVpIGzDpHNzdCBzaWNoIHNvIGViZW5mYWxscyBlaW5sZXNlbi4gU2llIGlzdCBpbmhhbHRsaWNoIGlkZW50aXNjaCBtaXQgZGVyIC5SRFMtRGF0ZWkuDQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX2NzdiA8LSByZWFkX2NzdigicGFydHlfdmlkZW9zLmNzdiIpDQpgYGANCg0KKipUaXBwOioqIFdlbm4gaWhyIGVpbmVuIERhdGVpcGZhZCBvZGVyIGVpbmUgRGF0ZWkgbWl0IFIgYXVzd8OkaGxlbiB3b2xsdCwgaW5kZW0gaWhyIGRlbiBQZmFkIGVpbnRpcHB0LCAoei5CLiBgc2V0d2QoIkM6L21laW5lX1JfUHJvamVrdGUvLi4uIilgLCBrw7ZubnQgaWhyIGV1Y2ggbWl0IGRlciBUQUItVGFzdGUgRGF0ZWllbiBpbSBha3R1ZWxsZW4gUGZhZCBiencuIFZvcnNjaGzDpGdlIHp1ciBBdXRvdmVydm9sbHN0w6RuZGlndW5nIGFuemVpZ2VuIGxhc3Nlbi4gRGFzIHNwYXJ0IGJlc29uZGVycyBiZWkgbGFuZ2VuIFBmYWRlbiBaZWl0IHVuZCBOZXJ2ZW4sIGRhIGVzIFZlcnRpcHBlcm4gdm9yYmV1Z3QuDQoNCiMjIyDDnGJ1bmcgMjoNCg0KTGVndCBldWVyIFdvcmtpbmcgRGlyZWN0b3J5IG1pdCBgc2V0d2QoKWAgYXVmIGV1cmVuIFByb2pla3RvcmRuZXIgZmVzdC4gw5xiZXJwcsO8ZnQgbWl0IGBnZXR3ZCgpYCwgb2IgaWhyIGltIHJpY2h0aWdlbiBPcmRuZXIgZ2VsYW5kZXQgc2Vpbi4gTGVzdCBkYW5uIGRlbiAqcGFydHlfdmlkZW9zKi1EYXRlbnNhdHogZWluOiBlaW5tYWwgYWxzIC5SRFMsIGVpbm1hbCBhbHMgLmNzdi4NCg0KYGBge3J9DQoNCmBgYA0KDQojIyAzLiBEYXRlbiBpbnNwaXppZXJlbg0KDQpFcyBnaWJ0IGVpbmUgUmVpaGUgYW4gTcO2Z2xpY2hrZWl0ZW4sIGV1Y2ggZGllIGVpbmdlbGVzZW5lbiBEYXRlbiBiencuIGRlcmVuIFN0cnVrdHVyIGFuemVpZ2VuIHp1IGxhc3Nlbi4gRGllIGVpbmZhY2hzdGUgaXN0LCBlaW4gT2JqZWt0IGVpbmZhY2ggImF1c2RydWNrZW4iIHp1IGxhc3Nlbi4gRGFzIGdlaHQgdmlhIHByaW50KCkgb2RlciBpbmRlbSBpaHIgZGVuIE9iamVrdG5hbWVuIGVpbmdlYnQuDQoNCmBgYHtyfQ0KcHJpbnQocGFydHlfdmlkZW9zKQ0KDQpwYXJ0eV92aWRlb3MNCmBgYA0KDQpEZXIgQmVmZWhsIGBWaWV3KClgIGVybcO2Z2xpY2h0IGVzLCBzaWNoIGVpbiBPYmpla3QgaW4gZWluZW0gbmV1ZW4gRmVuc3RlciBhbnplaWdlbiB6dSBsYXNzZW4uIERvcnQgaXN0IGVzIGF1w59lcmRlbSBkdXJjaHN1Y2hiYXIsIGzDpHNzdCBzaWNoIGxlaWNodCBzY3JvbGxlbiB1bmQgbWl0IGVpbmVtIEtsaWNrIGF1ZiBkaWUgU3BhbHRlbiBzb3J0aWVyZW46DQoNCmBgYHtyfQ0KVmlldyhwYXJ0eV92aWRlb3MpDQpgYGANCg0KSW4gZGVtICJFbnZpcm9ubWVudCItUmVpdGVyIHZvbiBSU3R1ZGlvIHNlaHQgaWhyIGF1w59lcmRlbSBhbGxlIE9iamVrdGUsIGRpZSBpbiBldWVyIGFrdHVlbGxlbiBVbWdlYnVuZyB2b3JoYW5kZW4gc2luZC4gRWluIEtsaWNrIGF1ZiBkYXMgUGZlaWwtU3ltYm9sIGxpbmtzIHplaWd0IGV1Y2ggZGllIFN0cnVrdHVyIGlubmVyaGFsYiBkZXMgUmVpdGVycyBhbi4gRWluIEtsaWNrIGF1ZiBkZW4gT2JqZWt0bmFtZW4gc2VsYnN0IMO2ZmZuZXQgZGFzIE9iamVrdCB3aWUgbWl0IGBWaWV3KClgLg0KDQpEYXMgKlRpZHl2ZXJzZSogYmlldGV0IGF1w59lcmRlbSBlaW5lIFJlaWhlIGFuIE3DtmdsaWNoa2VpdGVuLCB3ZWl0ZXJlIEluZm9ybWF0aW9uZW4gYXVzIHVuc2VyZW0gRGF0ZW5zYXR6IHp1IGVyaGFsdGVuLiBTbyB3b2xsZW4gd2lyIHouQi4gd2lzc2VuLCB3ZWxjaGUgUGFydGVpZW4gaW4gdW5zZXJlbSBEYXRlbnNhdHogdmVydHJldGVuIHNpbmQuIERpZSBGdW5rdGlvbiBgZGlzdGluY3QoKWAgZ2lidCBldWNoIGFsbGUgZWluemlnYXJ0aWdlbiBWYXJpYWJsZW4tS29tYmluYXRpb25lbiBpbiBlaW5lbSBEYXRlbnNhdHogYXVzLiBEYXMgaXN0IHByYWt0aXNjaCwgd2VubiB3aXIgRHVwbGlrYXRlIGVudGZlcm5lbiB3b2xsZW4uIFdpciBrw7ZubmVuIHNpZSBhYmVyIGF1Y2ggYmVudXR6ZW4sIHVtIHVucyBhbGxlIFdlcnRlIGVpbmVyIGVpbnppZ2VuIFZhcmlhYmxlIGFuemVpZ2VuIHp1IGxhc3NlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIGRpc3RpbmN0KHBhcnR5KQ0KYGBgDQoNCkRpZSBgcHVsbCgpYC1GdW5rdGlvbiBlcmxhdWJ0IGVzIHVucywgZGllIFZla3RvcmVuIGVpbnplbG5lciBTcGFsdGVuIGF1cyBlaW5lbSBEYXRlbnNhdHogenUgInppZWhlbiIuIERhcyBpc3QgdS5hLiBkYW5uIHByYWt0aXNjaCwgd2VubiB3aXIgZWluemVsbmUgVmFyaWFibGVuIHdlaXRlcnZlcmFyYmVpdGVuIG9kZXIgaW5zcGl6aWVyZW4gd29sbGVuLiBTbyBrw7ZubmVuIHdpciBkaWUgV2VydGUgZWluZXIgVmFyaWFibGUgYW4gRnVua3Rpb25lbiB3ZWl0ZXJnZWJlbiwgZGllIGVpbmVuIFZla3RvciBlcndhcnRlbi4gV2llIGV0d2EgZGllIEZ1bmt0aW9uIGBtaW4oKWAsIHdlbGNoZSB1bnMgZGVuIG5pZWRyaWdzdGVuIFdlcnQgZWluZXMgVmVrdG9ycyBhdXNnaWJ0LiBCZWlzcGllbHN3ZWlzZSBkZW4gbmllZHJpZ3N0ZW4gV2VydCBkZXIgInB1YmxpemllcnQiLVZhcmlhYmxlLCBhbHNvIGRlbiBaZWl0cHVua3QgZGVzIGVyc3RlbiBWaWRlb3MgaW4gdW5zZXJlbSBEYXRlbnNhdHo6DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSBwdWxsKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpICU+JSBtaW4oKQ0KYGBgDQoNCiMjIyDDnGJ1bmcgMw0KDQpTY2hhdXQgZXVjaCBkYXMgcGFydHlfdmlkZW9zIE9iamVrdCBhbi4gVmVyd2VuZGV0IGRhenUgc293b2hsIGBWaWV3KClgIGFscyBhdWNoIGRlbiAiRW52aXJvbm1ldCItUmVpdGVyLiBTb3J0aWVydCBkZW4gRGF0ZW5zYXR6IG5hY2ggdW50ZXJzY2hpZWRsaWNoZW4gVmFyaWFibGVuIChTcGFsdGVuKS4NCg0KYGBge3J9DQoNClZpZXcoKQ0KDQojIE1pdCAiIyIga8O2bm50IGlociBLb21tZW50YXJlIGluIGV1cmVuIENvZGUgZWluZsO8Z2VuLiBBbGxlcywgd2FzIGhpbnRlciBkZW0gIiMiIHN0ZWh0LCB3aXJkIG5pY2h0IGF1c2dlZsO8aHJ0LiBEYXMgaXN0IHByYWt0aXNjaCwgdW0gQ29kZSB6dSBrb21tZW50aWVyZW4sIGtsZWluZSBCZW9iYWNodHVuZ2VuLCBBbndlaXN1bmdlbiB1bmQgVGlwcHMgenUgdmVybWVya2VuDQpgYGANCg0KTGFzc3QgZXVjaCBtaXR0ZWxzIGBkaXN0aW5jdCgpYCBkaWUgZGlzdGlua3RlbiBXZXJ0ZSBmw7xyIGRpZSBWYXJpYWJsZW4gKnBhcnR5KiB1bmQgKnBhcnR5X2xhYmVsKiBhdXNnZWJlbi4gV2FzIGbDpGxsdCBldWNoIGF1Zj8NCg0KYGBge3J9DQoNCmBgYA0KDQpXYXMgcGFzc2llcnQsIHdlbm4gaWhyIGV1Y2ggbWl0dGVscyBgZGlzdGluY3QoKWAgYWxsZSBlaW56aWdhcnRpZ2VuIEtvbWJpbmF0aW9uZW4gZGVyIFZhcmlhYmxlbiAqcGFydHkqIHVuZCAqaWQqIGF1c2dlYmVuIGxhc3N0PyBIaW53ZWlzOiBgZGlzdGluY3QoKWAgbMOkc3N0IGV1Y2ggYmVsaWViaWcgdmllbGUgVmFyaWFibGVua29tYmluYXRpb25lbiBhbmdlYmVuLCB3ZW5uIGlociBkaWVzZSBtaXQgZWluZW0gS29tbWEgKCwpIHRyZW5udC4NCg0KYGBge3J9DQoNCmBgYA0KDQpaaWVodCBlcm5ldXQgZGllICpjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0Ki1WYXJpYWJsZSBtaXR0ZWxzIGBwdWxsKClgIGF1cyBkZW0gRGF0ZW5zYXR6LiBXZW5kZXQgZGllc2VzIE1hbCBqZWRvY2ggYW5kZXJlIEZ1bmt0aW9uZW4gZGFyYXVmIGFuLCB1bSB3ZWl0ZXJlIEluZm9ybWF0aW9uZW4genUgZXJoYWx0ZW4uIEluc2Jlc29uZGVyZSBmb2xnZW5kZSBGdW5rdGlvbmVuIHNpbmQgc2lubnZvbGw6IGBtYXgoKWAsIGBtZWFuKClgLCBgcmFuZ2UoKWAuIFdlbGNoZSBJbmZvcm1hdGlvbmVuIGVyaGFsdGV0IGlociBqZXdlaWxzPyBXZW5uIGlociBldWNoIHVuc2ljaGVyIHNlaWQsIHNjaGF1dCBtaXR0ZWxzIGA/YCBpbiBkaWUgSGVscGZpbGVzLCB6LkIuIG1pdCBgP21lYW4oKWAuDQoNCmBgYHtyfQ0KDQpgYGANCg0KIyMgNC4gRGF0ZW4gbWFuaXB1bGllcmVuDQoNCiMjIyMgKipkaXN0aW5jdCgpKioNCg0KV2llIGJlcmVpdHMgZXJ3w6RobnQsIGzDpHNzdCBzaWNoIGBkaXN0aW5jdCgpYCBhdWNoIGRhenUgdmVyd2VuZGVuLCBEdXBsaWthdGUgenUgZW50ZmVybmVuLCBpbmRlbSB3aXIgdW5zIG51ciBkaWUgZWl6aWdhcnRpZ2VuIFdlcnRlIGVpbmVyIFZhcmlhYmxlIChvZGVyIGRpZSBlaW56aWdhcnRpZ2VuIFdlcnRrb21iaW5hdGlvbmVuIG1laHJlcmVyIFZhcmlhYmxlbikgYXVzZ2ViZW4gbGFzc2VuLiBJbiB1bnNlcmVtIERhdGVuc2F0eiBiZWZpbmRldCBzaWNoIHUuYS4gZGllICp2aWRlb0lEKi1WYXJpYWJsZSwgd2VsY2hlIGVpbmVuIGVpbnppZ2FydGlnZW4gSWRlbnRpZmlrYXRvciBmw7xyIGFsbGUgVmlkZW9zIGF1ZiBZb3VUdWJlIGRhcnN0ZWxsdC4gVW0gc2ljaGVyenVnZWhlbiwgZGFzcyBzaWNoIGtlaW5lIER1cGxpa2F0ZSBpbiB1bnNlcmVtIERhdGVuc2F0eiBiZWZpbmRlbiwga8O2bm5lbiB3aXIgYGRpc3RpbmN0KClgIGF1ZiB1bnNlcmUgRGF0ZW4gYW53ZW5kZW4gdW5kIGRlbiBzbyBlbnRzdGFuZGVuZW4gRGF0ZW5zYXR6IGVpbmVtIG5ldWVuIE9iamVrdCB6dW9yZG5lbi4gQmVhY2h0ZXQsIGRhc3MgZGllIEZ1bmt0aW9uIHN0YW5kYXJkbcOkw59pZyBudXIgZGllIHNwZXppZml6aWVydGVuIFZhcmlhYmxlbiBhdXNnaWJ0IHVuZCBhbGxlIGFuZGVyZW4gZW50ZmVybnQuIFVtIGRpZXMgenUgw6RuZGVybiwga8O2bm5lbiB3aXIgZGllIE9wdGlvbiBgLmtlZXBfYWxsYCBzcGV6aWZpemllcmVuLiBgVFJVRWAgYmVow6RsdCBhbGxlIGFuZGVyZW4gVmFyaWFibGVuLCBkYXMgc3RhbmRhcmRtw6TDn2lnIGVpbmdlc3RlbGx0ZSBgRkFMU0VgIGVudGZlcm50IHNpZS4NCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfZGlzdGluY3QgPC0gcGFydHlfdmlkZW9zICU+JSBkaXN0aW5jdChjb250ZW50RGV0YWlscy52aWRlb0lkLCAua2VlcF9hbGwgPSBUUlVFKQ0KYGBgDQoNCiMjIyMgKipmaWx0ZXIoKSoqDQoNCkRpZSBgZmlsdGVyKClgLUZ1bmt0aW9uIGVybGF1YnQgZXMgdW5zLCBEYXRlbiBuYWNoIHVudGVyc2NoaWVkbGljaGVuIEJlZGl1bmdlbiB6dSBmaWx0ZXJuLiBTbyBrw7ZubmVuIHdpciB1bnMgei5CLiBudXIgZGllIFZpZGVvcyBlaW5lciBlaW56aWdlbiBQYXJ0ZWkgYW56ZWlnZW4gbGFzc2VuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19jZHUgPC0gcGFydHlfdmlkZW9zICU+JSANCiAgZmlsdGVyKHBhcnR5ID09ICJjZHUiKQ0KDQpwYXJ0eV92aWRlb3NfY2R1DQpgYGANCg0KTWl0IGRlbSBPcGVyYXRvciBgfGAga8O2bm5lbiB3aXIgbWVocmVyZSBCZWRpbmd1bmdlbiBrb21iaW5pZXJlbi4gYHxgIGJlZGV1dGV0IGRhYmVpOiAib2RlciIuIEFsc28gYmVpc3BpZWxzd2Vpc2UgYWxsZSBWaWRlb3MgZGVyIENEVSAqb2RlciogZGVyIFNQRDoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfY2R1X3NwZCA8LSBwYXJ0eV92aWRlb3MgJT4lIA0KICBmaWx0ZXIocGFydHkgPT0gImNkdSIgfCBwYXJ0eSA9PSAic3BkIikNCg0KcGFydHlfdmlkZW9zX2NkdV9zcGQgJT4lIGRpc3RpbmN0KHBhcnR5KQ0KYGBgDQoNCldpciBrw7ZubmVuIHVucyBEYXRlbiBhdWNoIG51ciBmw7xyIGVpbmVuIGJlc3RpbW10ZW4gWmVpdHJhdW0gYXVzZ2ViZW4gbGFzc2VuLiBXaXIgdmVyd2VuZGVuIGhpZXIgZGllICpsdWJyaWRhdGUqLUZ1bmt0aW9uIGBkbXkoKWAgKGbDvHIgZGFzIEZvcm1hdCAqKkQqKmF5LSoqTSoqb250aC0qKlkqKmVhcikgdW0gc2ljaGVyenVzdGVsbGVuLCBkYXNzIHVuc2VyZSBBbmdhYmUgZGVzIERhdHVtcyBhbHMgU3RyaW5nIGluIGRhcyBrb3JyZWt0ZSBEYXR1bXNmb3JtYXQgdW1nZXdhbmRlbHQgd2lyZC4gYD49YCBiZWRldXRldCBkYWJlaSAiZ3LDtsOfZXIgZ2xlaWNoLiIgRGVyIFdlcnQgZGVyIFZhcmlhYmxlIG11c3MgYWxzbyBtaW5kZXN0ZW5zIGRlbSBhbmdlZ2ViZW5lbiBXZXJ0IGVudHNwcmVjaGVuLCBldHdhIG1pbmRlc3RlbnMgZGVtIDEuIEphbnVhciAyMywgdW0gYWxsZSBWaWRlb3MgZGllc2VzIEphaHJlcyB6dSBlcmhhbHRlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfMjMgPC0gcGFydHlfdmlkZW9zICU+JQ0KICBmaWx0ZXIoY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCA+PSBkbXkoIjEuMS4yMDIzIikpDQoNCnBhcnR5X3ZpZGVvc18yMyANCmBgYA0KDQpXaXIga8O2bm5lbiBlYmVuc28gZWluZW4gWmVpdHJhdW0gZmVzdGxlZ2VuLCBpbmRlbSB3aXIgbmViZW4gZWluZW0gTWluZGVzdC0gYXVjaCBlaW5lbiBIw7ZjaHN0d2VydCwgYWxzbyBlaW4gU3RhcnQtIHVuZCBFbmRkYXR1bSBhbmdlYmVuLiBEYXp1IG51dHplbiB3aXIgYDw9YCBmw7xyICJrbGVpbmVyIGdsZWljaCIgdW5kIGRlbiBPcGVyYXRvciBgJmAgZsO8ciAidW5kIiwgd2VsY2hlIGJlc3RpbW10LCBkYXNzIGVpbiBEYXRlbnNhdHogYmVpZGVuIEtvbmRpdGlvbmVuIGVudHNwcmVjaGVuIG11c3M6DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX2phbl8yMyA8LSBwYXJ0eV92aWRlb3MgJT4lDQogIGZpbHRlcigNCiAgICBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0ID49IGRteSgiMS4xLjIwMjMiKSAmDQogICAgICBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0IDw9IGRteSgiMzEuMS4yMDIzIikNCiAgKQ0KDQpwYXJ0eV92aWRlb3NfamFuXzIzDQpgYGANCg0KV2lyIGvDtm5uZW4gZGllIE9wZXJhdG9yZW4gdm9uIGBmaWx0ZXIoKWDCoGJlbGllYmlnIGtvbWJpbmllcmVuLCB1bSB1bnNlcmVuIERhdGVuc2F0eiB6dSBmaWx0ZXJuLiBadW0gQmVpc3BpZWwsIHVtIGFsbGUgVmlkZW9zIGRlciBTUEQgYXVzIGRlbSBKYW51YXIgJzIzIHp1IGVyaGFsdGVuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19zcGRfamFuXzIzIDwtIHBhcnR5X3ZpZGVvcyAlPiUNCiAgZmlsdGVyKA0KICAgIHBhcnR5ID09ICJzcGQiICYNCiAgICAgIGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPj0gZG15KCIxLjEuMjAyMyIpICYNCiAgICAgIGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPD0gZG15KCIzMS4xLjIwMjMiKQ0KICApDQoNCnBhcnR5X3ZpZGVvc19zcGRfamFuXzIzDQpgYGANCg0KIyMjIyBzZWxlY3QoKQ0KDQpEaWUgYHNlbGVjdCgpYC1GdW5rdGlvbiBlcmxhdWJ0IGVzLCBudXIgYmVzdGltbXRlIFZhcmlhYmxlbiBhdXMgdW5zZXJlbSBEYXRlbnNhdHogYXVzenV3w6RobGVuIC0gdW5kIGFsbGUgYW5kZXJlbiB6dSBlbnRmZXJuZW4uIERpZXMgaXN0IHByYWt0aXNjaCwgd2VubiB3aXIgbmljaHQgYWxsZSBWYXJpYWJsZW4gZsO8ciBlaW5lIEFuYWx5c2UgYmVuw7Z0aWdlbi4gRmFsbHMgd2lyIGJlaXNwaWVsc3dlaXNlIG51ciBkaWUgVmlkZW9JRCB1bmQgZGFzIFZlcsO2ZmZlbnRsaWNodW5nc2RhdHVtIGF1cyB1bnNlcmVtIERhdGVuc2F0eiBiZW7DtnRpZ2VuLCBrw7ZubmVuIHdpciBgc2VsZWN0KClgIHZlcndlbmRlbiwgdW0gYWxsZSBhbmRlcmVuIFZhcmlhYmxlbiB6dSBlbnRmZXJuZW46DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvcyAlPiUgDQogIHNlbGVjdChjb250ZW50RGV0YWlscy52aWRlb0lkLCBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KQ0KDQpwYXJ0eV92aWRlb3Nfc21hbGwNCmBgYA0KDQojIyMjICoqcmVuYW1lKCkqKg0KDQpNaXR0ZWxzIGByZW5hbWUoKWAga8O2bm5lbiB3aXIgYXXDn2VkZW0gVmFyaWFibGVuIGluIHVuc2VyZW0gRGF0ZW5zYXR6IHVtYmVuZW5uZW4uIERpZXMgaXN0IHByYWt0aXNjaCwgd2VubiBlaW56ZWxuZSBWYXJpYWJsZW4gbGFuZ2UsIHdlbmlnIGluZm9ybWF0aXZlIE5hbWVuIGhhYmVuLiBTbyBrw7ZubmVuIHdpciBiZWlzcGllbHN3ZWlzZSBkaWUgVmFyaWFibGVubmFtZW4gaW4gdW5zZXJlbSB2ZXJrbGVpbmVydGVuIERhdGVuc2F0eiBrw7xyemVuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19zbWFsbCA8LSBwYXJ0eV92aWRlb3Nfc21hbGwgJT4lIA0KICByZW5hbWUodmlkZW9faWQgPSBjb250ZW50RGV0YWlscy52aWRlb0lkLA0KICAgICAgICAgcHVibGlzaGVkX2F0ID0gY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkNCg0KcGFydHlfdmlkZW9zX3NtYWxsDQpgYGANCg0KIyMjIyAqKm11dGF0ZSgpKioNCg0KRGllIGBtdXRhdGUoKWAtRnVua3Rpb24gZXJsYXVidCBlcywgVmFyaWFibGVuIHp1ICJtdXRpZXJlbiIsIGFsc28genUgdmVyw6RuZGVybi4gRGF6dSBtdXNzIGJlc3RpbW10IHdlcmRlbiwgd2VsY2hlIFZhcmlhYmxlIHZlcsOkbmRlcnQgd2VyZGVuIHNvbGwsIHVuZCBhdWYgd2VsY2hlIEFydCB1bmQgV2Vpc2UgZGllcyBnZXNjaGVoZW4gc29sbC4gQmVpc3BpZWxzd2Vpc2Uga8O2bm5lbiB3aXIgbWl0IGRlciBGdW5rdGlvbiBgYXNfZGF0ZSgpYCBkZW4gUHVibGlrYXRpb25zemVpdHB1bmt0IGF1ZiBkYXMgRGF0dW0sIGFsc28gZGVuIFB1Ymxpa2F0aW9uc3RhZywga8O8cnplbi4gV2VubiB3aXIgZWluZSBGdW5rdGlvbiB2ZXJ3ZW5kZW4sIHVtIERhdGVuIHp1IHZlcsOkbmRlcm4sIHdpcmQgZGllc2UgaW1tZXIgYXVmIGplZGUgUmVpaGUgaW4gdW5zZXJlbiBEYXRlbiBhbmdld2VuZGV0LiBEYXMgaGVpw590LCBgYXNfZGF0ZSgpYCBuaW1tdCBqZWRlbiBlaW56ZWxuZW4gV2VydCBpbiBkZXIgKnB1Ymxpc2hlZF9hdCotU3BhbHRlIHVuZCAibXV0aWVydCIgaWhuIG1pdHRlbHMgZGVyIEZ1bmt0aW9uIHp1IGVpbmVtIERhdHVtLiBCZWFjaHRldCwgZGFzcyBgYXNfZGF0ZSgpYCBlaW5lIEZ1bmt0aW9uIGRlcyBwYWNrYWdlcyBsdWJyaWRhdGUgaXN0LCBpaHIgZGllc2VzIGFsc28gZ2VsYWRlbiBoYWJlbiBtw7xzc3QuDQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX3NtYWxsIDwtIHBhcnR5X3ZpZGVvc19zbWFsbCAlPiUgDQogIG11dGF0ZShwdWJsaXNoZWRfYXQgPSBhc19kYXRlKHB1Ymxpc2hlZF9hdCkpDQoNCnBhcnR5X3ZpZGVvc19zbWFsbA0KYGBgDQoNCldpciBrw7ZubmVuIG1pdCBgbXV0YXRlKClgIGFiZXIgYXVjaCBuZXVlIFZhcmlhYmxlbiBoaW56dWbDvGdlbi4gQXXDn2VyZGVtIG3DvHNzZW4gd2lyIG5pY2h0IHVuYmVkaW5ndCBlaW5lIEZ1bmt0aW9uIHZlcndlbmRlbiwgdW0gV2VydGUgenUgbWFuaXB1bGllcmVuLiBXaXIga8O2bm5lbiBlYmVuc29ndXQgZWluZW4gZmVzdGVuIFdlcnQgc2V0emVuLCBiZWlzcGllbHN3ZWlzZSBlaW5lbiBDaGFyYWN0ZXIgU3RyaW5nLiBEYXMgaXN0IHByYWt0aXNjaCwgd2VubiB3aXIgYmVpc3BpZWx3ZWlzZSBlaW5lbiBmaXhlbiBJbmRpa2F0b3Igc2V0emVuIHdvbGxlbiwgZXR3YSB1bSB6dSB2ZXJtZXJrZW4sIHdvaGVyIGRpZSBEYXRlbiBTdGFtbWVuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19zbWFsbCA8LSBwYXJ0eV92aWRlb3Nfc21hbGwgJT4lIA0KICBtdXRhdGUoc291cmNlID0gImxlYXJud2ViIikNCg0KcGFydHlfdmlkZW9zX3NtYWxsDQpgYGANCg0KIyMjIyAqKnN1bW1hcmlzZSgpKioNCg0KTWl0dGVscyBkZXIgRnVua3Rpb24gYHN1bW1hcmlzZSgpYCBrw7ZubmVuIHdpciBlaW5lbiBEYXRlbnNhdHogenVzYW1tZW5mYXNzZW4gbGFzc2VuLiBEYXp1IGxlZ2VuIHdpciBmZXN0LCB3ZWxjaGUgbmV1ZW4gVmFyaWFibGVuIHdpciB3aWUgZGVmaW5pZXJlbiBtw7ZjaHRlbiB1bmQgZXJoYWx0ZW4gZWluZW4gRGF0ZW5zYXR6LCB3ZWxjaGVyIG51ciBkaWVzZSAoaWRSLiB0cmFuc2Zvcm1pZXJ0ZW4pIFZhcmlhYmxlbiBlbnRow6RsdC4gU28ga8O2bm5lbiB3aXIgYmVpc3BpZWxzd2Vpc2UgZGVuIE1pdHRlbHdlcnQgZGVyIFB1Ymxpa2F0aW9ucy1WYXJpYWJsZSBlcm1pdHRlbG4uIEJlYWNodGV0LCBkYXNzIHdpciBkYXMgRXJnZWJuaXMga2VpbmVtIE9iamVrdCB6dXdlaXNlbiwgc29uZGVybiB1bnMgbGVkaWdsaWNoIGF1c2RydWNrZW4gbGFzc2VuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvcyAlPiUgc3VtbWFyaXNlKG1lYW5fZGF0ZSA9IG1lYW4oY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkpDQpgYGANCg0KSW4gZGllc2VtIFNpbm5lIGlzdCBgc3VtbWFyaXNlKClgIHRyaXZpYWwsIGRhIGVzIGVpbmUgw6RobmxpY2hlIEZ1bmt0aW9uIHdpZSBvYmVuIGJlcmVpdHMgYHB1bGwoKWAgZXJmw7xsbHQuIEludGVyZXNzYW50ZXIgd2lyZCBlcywgd2VubiB3aXIgZGllIERhdGVuIHZvcmhlciBncnVwcGllcmVuLiBEYXp1IGJpZXRldCBkYXMgKlRpZHl2ZXJzZSogZGllIEZ1bmt0aW9uIGBncm91cF9ieSgpYCBiencuIChzZWl0IFZlcnNpb24gMS4xLjApIGRpZSBPcHRpb24gYC5ieWAuIERhcsO8YmVyIGvDtm5uZW4gd2lyIFZhcmlhYmxlbiBmZXN0bGVnZW4sIGbDvHIgZGVyZW4gZWluemVsbmUgQXVzcHLDpGd1bmdlbiBkaWUgZm9sZ2VuZGVuIE9wZXJhdGlvbmVuIChiencuIGJlaSBgLmJ5YCBkaWUgYWt0dWVsbGUgT3BlcmF0aW9uKSBnZXRyZW5udCBkdXJjaGdlZsO8aHJ0IHdpcmQuIFNvIGvDtm5uZW4gd2lyIHVucyBiZWlzcGllbHN3ZWlzZSBmw7xyIGplZGUgUGFydGVpIGRlbiBNaXR0ZWx3ZXJ0IGRlcyBQdWJsaWthdGlvbnN6ZWl0cHVua3RzIGFuemVpZ2VuIGxhc3NlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIA0KICBncm91cF9ieShwYXJ0eV9sYWJlbCkgJT4lIA0KICBzdW1tYXJpc2UobWVhbl9kYXRlID0gbWVhbihjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkNCmBgYA0KDQpEaWUgRnVua3Rpb24gYG4oKWAgZ2lidCB1bnMgaW4gS29tYmluYXRpb24gbWl0IGBzdW1tYXJpc2UoKWAgZGllIEdlc2FtdHphaGwgYW4gQmVvYmFjaHR1bmdlbiAoYWxzbyBSZWloZW4pIGVpbmVzIERhdGVuc2F0emVzIGF1cy4gV2VubiB3aXIgZGllIERhdGVuIHZvcmhlciBncnVwcGllcmVuLCBhdWNoIGbDvHIgYWxsZSBBdXNwcsOkZ3VuZ2VuIGVpbmVyIFZhcmlhYmxlLCBic3B3cy4gZGllIFBhcnRlaWVuOg0KDQpgYGB7cn0NCnBhcnR5X3N1bW1hcnkgPC0gcGFydHlfdmlkZW9zICU+JSANCiAgZ3JvdXBfYnkocGFydHlfbGFiZWwpICU+JSANCiAgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IG4oKSkNCg0KcGFydHlfc3VtbWFyeQ0KYGBgDQoNCiMjIyMgKipncm91cF9ieSgpKioNCg0KRWJlbnNvIGvDtm5uZW4gd2lyIGBncm91cF9ieSgpYCB6dW0gZ3J1cHBlbndlaXNlbiAibXV0aWVyZW4iIHZvcmhhbmRlbmVyIFZhcmlhYmxlbiBudXR6ZW4uIFNvIGvDtm5uZW4gd2lyIGJlaXNwaWVsc3dlaXNlIHp1ZXJzdCBlaW5lIG5ldWUgVmFyaWFibGUgZXJzdGVsbGVuLCB3ZWxjaGUgdW5zIGRlbiBUYWcgZGVyIFB1Ymxpa2F0aW9uIGFuemVpZ3QsIHVuZCBkYW5uIGbDvHIgamVkZW4gVGFnIGRpZSBHZXNhbXR6YWhsIGFuIFZpZGVvcyB6dSBkZW0gdm9yaGFuZGVuZW4gRGF0ZW5zYXR6IGhpbnp1ZsO8Z2VuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19kYXkgPC0gcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKGRheSA9IGFzX2RhdGUoY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkpICU+JSANCiAgZ3JvdXBfYnkoZGF5KSAlPiUgDQogIG11dGF0ZShkYWlseV92aWRlb3MgPSBuKCkpDQoNCnBhcnR5X3ZpZGVvc19kYXkNCmBgYA0KDQpCZWFjaHRldCwgZGFzcyBiZWkgVmVyd2VuZHVuZyB2b24gYGdyb3VwX2J5KClgICoqKmFsbGUqKiogZm9sZ2VuZGVuIE9wZXJhdGlvbmVuIGF1ZiBkZW4gZ3J1cHBpZXJ0ZW4gRGF0ZW4gc3RhdHRmaW5kZW4sIHdhcyB6dSB1bmVyd2FydGV0ZW4gRXJnZWJuaXNzZW4gZsO8aHJlbiBrYW5uLiBXZW5uIHdpciBqZXR6dCBiZWlzcGllbHN3ZWlzZSBkaWUgU3VtbWUgZGVyIFZpZGVvcyBhbnplaWdlbiBsYXNzZW4gd29sbGVuLCBlcmhhbHRlbiB3aXIgZWluIHVuZXJ3YXJ0ZXRlcyBFcmdlYm5pczoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfZGF5ICU+JSBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gc3VtKGRhaWx5X3ZpZGVvcykpDQpgYGANCg0KQW5zdGF0dCB1bnMgZGllIEdlc2FtdHphaGwgZGVyIFZpZGVvcyB6dSB6ZWlnZW4sIGdpYnQgdW5zIGRpZSBGdW5rdGlvbiBkaWUgU3VtbWUgZGVyIFZpZGVvcyBmw7xyIGplZGUgQXVzcHLDpGd1bmcgZGVyIGdydXBwaWVyZW5kZW4gVmFyaWFibGUgYXVzLiBVbSBkaWVzIHp1IMOkbmRlcm4sIG3DvHNzZW4gd2lyIGRpZSBGdW5rdGlvbiBgdW5ncm91cCgpYCB2ZXJ3ZW5kZW4sIHdlbGNoZSBhbGxlIEdydXBwaWVydW5nZW4gaW4gZWluZW0gT2JqZWt0IGF1ZmhlYnQ6DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX2RheSAlPiUgdW5ncm91cCgpICU+JSBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gc3VtKGRhaWx5X3ZpZGVvcykpDQpgYGANCg0KRGFydW0gaXN0IGVzIHNpbm52b2xsLCBuYWNoIGplZGVyIGBncm91cF9ieSgpYCBPcGVyYXRpb24gZGllIEdydXBwaWVydW5nIGF1Znp1aGViZW4sIHdlbm4gd2lyIGRhcyBFcmdlYm5pcyBlaW5lbSBPYmpla3QgenVvcmRuZW4uIFNvIHZlcm1laWRlbiB3aXIgenUgdmVyZ2Vzc2VuLCBkYXNzIGVpbiBPYmpla3QgZ3J1cHBpZXJ0IGlzdC4gU29uc3Qga2FubiBlcyBtaXR1bnRlciB6dSBGZWhsZXJuIGluIGRlbiBmb2xnZW5kZW4gQmVyZWNobnVuZ2VuIGtvbW1lbiENCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfZGF5IDwtIHBhcnR5X3ZpZGVvcyAlPiUgDQogIG11dGF0ZShkYXkgPSBhc19kYXRlKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpKSAlPiUgDQogIGdyb3VwX2J5KGRheSkgJT4lIA0KICBtdXRhdGUoZGFpbHlfdmlkZW9zID0gbigpKSAlPiUgDQogIHVuZ3JvdXAoKQ0KYGBgDQoNCldlbm4gd2lyIGRwbHlyIDEuMS4wIG9kZXIgbmV1ZXIgaW5zdGFsbGllciBoYWJlbiwga8O2bm5lbiB3aXIgYXVjaCBkaWUgT3B0aW9uIGAuYnlgIHZlcndlbmRlbiwgZGllIGdlbmF1IGRpZXNlIFByb2JsZW1hdGlrIGJlaGViZW4gc29sbC4gQW5zdGF0dCBkZW4gRGF0ZW5zYXR6IGluc2dlc2FtdCB6dSBncnVwcGllcmVuLCBlcmxhdWJ0IHNpZSBlcyBpaG4gZsO8ciBlaW5lIGVpbnplbG5lIE9wZXJhdGlvbiB0ZW1wb3LDpHIgenUgZ3J1cHBpZXJlbi4gYGdyb3VwX2J5KClgIGlzdCBhbHNvIG7DvHR6bGljaGVyLCB3ZW5uIHdpciBtZWhyZXJlIE9wZXJhdGlvbmVuIGF1ZiBlaW4gdW5kIGRlcnNlbGJlbiBHcnVwcGllcnVuZyBkdXJjaGbDvGhyZW4gd29sbGVuLCB3w6RocmVuZCBgLmJ5YCBmw7xyIGVpbnplbG5lIGdydXBwaWVydGUgT3BlcmF0aW9uZW4gZ2VlaWduZXQgdW5kIHdlbmlnZXIgZmVobGVyYW5mw6RsbGlnIGlzdC4NCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfZGF5IDwtIHBhcnR5X3ZpZGVvcyAlPiUgDQogIG11dGF0ZShkYXkgPSBhc19kYXRlKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpKSAlPiUgDQogIG11dGF0ZShkYWlseV92aWRlb3MgPSBuKCksIC5ieSA9IGRheSkNCg0KcGFydHlfdmlkZW9zX2RheQ0KDQpwYXJ0eV92aWRlb3NfZGF5ICU+JSBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gc3VtKGRhaWx5X3ZpZGVvcykpDQpgYGANCg0KIyMjIyAqKm11dGF0ZSgpKiogdnMuICoqc3VtbWFyaXNlKCkqKg0KDQpXYXMgZsOkbGx0IGluIGRlbSBsZXR6dGVuIEVyZ2VibmlzIGF1Zj8gR2VuYXUsIGRpZSBTdW1tZSBkZXIgdMOkZ2xpY2hlbiBWaWRlb3MgaXN0IGRldXRsaWNoIGjDtmhlciBhbHMgZGllIEFuemFobCBhbiBCZW9iYWNodHVuZ2VuIGluIHVuc2VyZW0gdXJzcHLDvG5nbGljaGVuIERhdGFmcmFtZS4gRGFzIGxpZWd0IGRhcmFuLCBkYXNzIHdpciAqKipmw7xyIGplZGVzIFZpZGVvKioqIGVpbmVuIEVpbnRyYWcgZ2VtYWNodCBoYWJlbiwgd2VsY2hlciBkaWUgQW56YWhsIGFsbGVyIFZpZGVvcyBhbiBkaWVzZW0gVGFnIGVudGjDpGx0LiBNaXQgYW5kZXJlbiBXb3J0ZW46IHdpciBoYWJlbiBkaWUgR2VzYW10emFobCB0w6RnbGljaGVyIFZpZGVvcyBxdWFkcmllcnQsIGRhIHdpciBkaWUgQW56YWhsIGRlciB0w6RnbGljaGVuIFZpZGVvcyBmw7xyIGplZGVzIFZpZGVvIGVpbnplbG4gYXVmYWRkaWVydCBoYWJlbi4gV2VubiBlcyBhbiBlaW5lbSBUYWcgMyBWaWRlb3MgZ2FiIGFsc28gKDMgKyAzICsgMykuIEplIG5hY2hkZW0sIHdhcyB3aXIgdm9yaGFiZW4sIGthbm4gZXMgdHJvdHpkZW0gc2lubnZvbGwgc2VpbiwgZWluZSBzb2xjaGUgS29udHJvbGx2YXJpYWJsZSB3aWUgZGllIGdlc2FtdGVuIHTDpGdsaWNoZW4gVmlkZW9zIHZvcnp1aGFsdGVuLiBXZW5uIHdpciBkaWUgU3VtbWUgZGVyIFZpZGVvcyBicmF1Y2hlbiwgaXN0IHNpZSBhYmVyIG5pY2h0IGdlZWlnbmV0LiBIw6R0dGVuIHdpciBgc3VtbWFyaXNlKClgIHZlcndlbmRldCwgd8OkcmUgZGllc2VzIFByb2JsZW0gbmljaHQgYXVmZ2V0cmV0ZW4sIGRhIGBzdW1tYXJpc2UoKWAgbnVyIGVpbmUgUmVpaGUgcHJvIEdydXBwZW52YXJpYWJsZSBhdXNnaWJ0Og0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19kYXlfc3VtIDwtIHBhcnR5X3ZpZGVvcyAlPiUgDQogIG11dGF0ZShkYXkgPSBhc19kYXRlKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpKSAlPiUgDQogIHN1bW1hcmlzZShkYWlseV92aWRlb3MgPSBuKCksIC5ieSA9IGRheSkNCg0KcGFydHlfdmlkZW9zX2RheV9zdW0NCg0KcGFydHlfdmlkZW9zX2RheV9zdW0gJT4lIHN1bW1hcmlzZSh0b3RhbF92aWRlb3MgPSBzdW0oZGFpbHlfdmlkZW9zKSkNCmBgYA0KDQpXw6RyZW4gd2lyIG51ciBhbiBkZXIgR2VzYW10emFobCBhbiBCZW9iYWNodHVuZ2VuIGludGVyZXNzaWVydCBnZXdlc2VuLCBow6R0dGVuIHdpciBkaWVzZSBzb2dhciBub2NoIGVpbmZhY2hlciBtaXQgYG4oKWAgb2RlciBgbnJvdygpYCBlcmhhbHRlbiBrw7ZubmVuLiBgbnJvdygpYCBnaWJ0IHVucyBsZWRpZ2xpY2ggZGllIEFuemFobCBSZWloZW4gaW4gZWluZW0gRGF0YWZyYW1lIGF1cywgd8OkaHJlbmQgYG4oKWAgdW5kIGBzdW1tYXJpc2UoKWAgZWluIG5ldWVzLCB6dXNhbW1lbmdlZmFzc3RlcyBEYXRhZnJhbWUgKGJ6dy4gZWluZSBUaWR5dmVyc2UgKlRpYmJsZSopIHByb2R1emllcmVuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvcyAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IG4oKSkNCg0KcGFydHlfdmlkZW9zICU+JSBucm93KCkNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KYGBgDQoNCiMjIyDDnGJ1bmdlbiA0DQoNCsOcYmVycHLDvGZlLCBvYiBlcyBlaW5lbiBVbnRlcnNjaGllZCB6d2lzY2hlbiBgcGFydHlfdmlkZW9zYCB1bmQgYHBhcnR5X3ZpZGVvc19kaXN0aW5jdGAgZ2lidC4gSGlud2VpczogZGEgYGRpc3RpbmN0KClgIGR1cGxpemllcnRlIFJlaWhlbiAoaW4gZGllc2VtIEZhbGwgaWRlbnRpc2NoZSBJRHMpIGVudGZlcm50LCBzb2xsdGUgc2ljaCwgZmFsbHMgZWluIFVudGVyc2NoaWVkIGJlc3RlaHQsIGRpZSBBbnphaGwgUmVpaGVuIHVudGVyc2NoZWlkZW4uIERpZXMga8O2bm50IGlociBtaXQgYG5yb3coKWAgb2RlciBgc3VtbWFyaXNlKClgIHVuZCBgbigpYCBwcsO8ZmVuLiBBdcOfZXJkZW0gZXJsYXVidCBlcyBgaWRlbnRpY2FsKClgLCB6dSBwcsO8ZmVuLCBvYiB6d2VpIE9iamVrdGUgdm9sbGtvbW1lbiBpZGVudGlzY2ggc2luZC4gTGVzdCBkYXp1IGF1Y2ggZGllIEhlbHBmaWxlcyB2b24gYGlkZW50aWNhbCgpYC4NCg0KYGBge3J9DQoNCg0KDQoNCmBgYA0KDQpGaWx0ZXJ0IGRlbiBEYXRlbnNhdHosIHVtIGV1Y2g6XA0KYSkgYWxsZSBWaWRlb3MgZGVyIEZEUCBhbnplaWdlbiB6dSBsYXNzZW4sXA0KYikgYWxsZSBWaWRlb3MgYWIgQXVndXN0IDIwMjIgYW56ZWlnZW4genUgbGFzc2VuLFwNCmMpIGFsbGUgVmlkZW9zIGRlciBBZkQgaW0gU2VwdGVtYmVyIDIwMjEgYW56ZWlnZW4genUgbGFzc2VuLg0KDQpgYGB7cn0NCg0KYGBgDQoNClByw7xmdCwgd2VsY2hlIFZhcmlhYmxlbiBpbiBgcGFydHlfdmlkZW9zYCBtw7ZnbGljaGVyd2Vpc2Uga2VpbmUgcmVsZXZhbnRlbiBJbmZvcm1hdGlvbmVuIGVudGhhbHRlbi4gRGF6dSBrw7ZubnQgaWhyIHUuYS4gZGllIEZ1bmt0aW9uIGBkaXN0aW5jdCgpYCB2ZXJ3ZW5kZW4uIEhpbndlaXM6IERlbmt0IGRhcmFuLCBkYXNzLCB3ZW5uIGlociBtZWhyZXJlIFZhcmlhYmxlbiBhbiBgZGlzdGluY3QoKWAgZ2VidCwgZWluemlnYXJ0aWdlIEtvbWJpbmF0aW9uZW4gZGllc2VyIFZhcmlhYmxlbiBhdXNnZWdlYmVuIHdlcmRlbiwgYmVpIGVpbmVyIFZhcmlhYmxlIGFsbGUgZGlzdGlua3RlbiBXZXJ0ZSBkaWVzZXIgZWluZW4gVmFyaWFibGUuIFZlcndlbmRldCBkYW5uIGBzZWxlY3QoKWAsIHVtIGRpZXNlIFZhcmlhYmxlbiB6dSBlbnRmZXJuZW4gdW5kIHNwZWljaGVydCBkYXMgRXJnZWJuaXMgYWxzIGVpbiBuZXVlcyBPYmpla3QuIEJlbmVubnQgYXXDn2VyZGVtIG1pbmRlc3RlbnMgZWluZSBkZXIgw7xicmlnZW4gVmFyaWFibGVuIG1pdHRlbHMgYHJlbmFtZSgpYMKgdW0uDQoNCmBgYHtyfQ0KDQpgYGANCg0KVmVyd2VuZGV0IGBtdXRhdGUoKWAsIHVtIGV1cmVtIERhdGVuc2F0eiBlaW5lIG5ldWUgVmFyaWFibGUgaGluenV6dWbDvGdlbiwgZGllIGRlbiBNb25hdCBhdXNnaWJ0LCBpbiBkZXIgZGFzIFZpZGVvIHZlcsO2ZmZlbnRsaWNoIHd1cmRlLiBEYXp1IGvDtm5udCBpaHIgZGllICpsdWJyaWRhdGUqLUZ1bmt0aW9uIGBmbG9vcl9kYXRlKHgsIHVuaXQgPSAibW9udGgiKWAgdmVyd2VuZGVuLCB1bSBkZW4gVmVyw7ZmZmVudGxpY2h1bmdzemVpdHB1bmt0IGluIGRlbiBlcnN0ZW4gZGVzIE1vbmF0cyB1bXp1d2FuZGVsbiAod29iZWkgKngqIGRpZSB6dSBtb2RpZml6aWVyZW5kZSBWYXJpYWJsZSBkYXJzdGVsbHQpLg0KDQpgYGB7cn0NCg0KYGBgDQoNCkZhc3N0IGV1cmVuIERhdGVuc2F0eiB6dXNhbW1lbiwgaW5kZW0gaWhyIGV1Y2ggbWl0IGBzdW1tYXJpc2UoKWAgZGllIEFuemFobCBhbiBWaWRlb3MgcHJvIFdvY2hlIHVuZCBQYXJ0ZWkgYXVzZ2ViZW4gbGFzc3QuIFNwZWljaGVydCBkaWVzZSBadXNhbW1lbmZhc3N1bmcgYWxzIG5ldWVzIE9iamVrdCBhYi4gSGlud2VpczogYGdyb3VwX2J5KClgIHVuZCBgLmJ5YCBuZWhtZW4gbWVocmVyZSBWYXJpYWJsZW4gYW4sIGluZGVtIGlociBzaWUgbWl0IGVpbmVtIEtvbW1hIHRyZW5udCBiencuIHp1IGVpbmVtIFZla3RvciB6dXNhbW1lbmZhc3N0IChgZ3JvdXBfYnkoeCwgeSlgIGJ6dy4gYHN1bW1hcmlzZSguLi4sIC5ieSA9IGMoeCwgeSkpYCkuDQoNCmBgYHtyfQ0KDQpgYGANCg0KIyMgNS4gRGF0ZW4gdmlzdWFsaXNpZXJlbg0KDQpNaXQgKipnZ3Bsb3QqKiBrw7ZubmVuIHdpciBpbm5lcmhhbGIgZGVzICpUaWR5dmVyc2UqIERhdGVuIHZpc3VhbGlzaWVyZW4uIERhenUga8O2bm5lbiB3aXIgdmVyc2NoaWVkZW5lIEFydGVuIHZvbiBHcmFwaGVuIHfDpGhsZW4gc293aWUgYmVzdGltbWVuLCB3ZWxjaGUgKmFlc3RoZXRpY3MqLCBhbHNvIHdlbGNoZSBBeGVuIGJ6dy4gd2VpdGVyZSBWaXN1YWxpc2llcnVuZ3Ntw7ZnbGljaGtlaXRlbiwgZHVyY2ggd2VsY2hlIFZhcmlhYmxlbiBkYXJnZXN0ZWxsdCB3ZXJkZW4gc29sbGVuLiBCZWlzcGllbHN3ZWlzZSBrw7ZubmVuIHdpciB1bnMgbWl0dGVscyBlaW5lcyBCYXItRGlhZ3JhbW1zIGFuemVpZ2VuIGxhc3Nlbiwgd2lldmllbGUgQmVvYmFjaHR1bmdlbiBlaW5lciBWYXJpYWJsZSBpbSBEYXRlbnNhdHogdm9yaGFuZGVuIHNpbmQuIGBnZW9tX2JhcigpYCB6w6RobHQgZGFiZWkgYXV0b21hdGlzY2ggZGllIEJlb2JhY2h0dW5nZW4gdW5kIG9yZG5ldCBkaWVzZW4gKmNvdW50KiBkZXIgWS1BY2hzZSB6dS4gQmVhY2h0ZXQsIGRhc3MgKipnZ3Bsb3QqKiBlaW4gKipgK2AqKiBzdGF0dCBkZXIgKnBpcGUqIGAmPiZgIHZlcndlbmRldC4NCg0KYGBge3J9DQpnZ3Bsb3QocGFydHlfdmlkZW9zLCBhZXMoeCA9IHBhcnR5X2xhYmVsKSkgKw0KICBnZW9tX2JhcigpDQpgYGANCg0KV2lyIGvDtm5uZW4gYWJlciBhdWNoIGRpZSBBbnphaGwgVmlkZW9zIGltIFplaXR2ZXJsYXVmIGRhcnN0ZWxsZW4uIERhenUgbcO8c3NlbiB3aXIgbmViZW4gZGVyIFgtQWNoc2UgYWxzIFplaXRwdW5rdCBhdWNoIGRpZSBZLUFjaHNlIGFscyBBbnphaGwgVmlkZW9zIGFuZ2ViZW4uIERhIHdpciBkaWUgQW56YWhsIGRlciBWaWRlb3MgenUgZWluZW0gWmVpdHB1bmt0IG5pY2h0IGluIHVuc2VyZW4gRGF0ZW4gaGFiZW4sIG3DvHNzZW4gd2lyIGRpZXNlIHp1bsOkY2hzdCBiZXJlY2huZW4uIERhenUga8O2bm5lbiB3aXIgZXJuZXV0IGBzdW1tYXJ5KClgIG51dHplbiwgdW0gZGllIEFuemFobCBhbiBWaWRlb3MgenVzYW1tZW56dWZhc3Nlbi4gRGFzIEVyZ2VibmlzIGvDtm5uZW4gd2lyIG1pdHRlbHMgZGVyICpwaXBlKiBkaXJla3QgYW4gYGdncGxvdCgpYCBnZWJlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIA0KICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSAlPiUgDQogIGdncGxvdChhZXMoeCA9IGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQsIHkgPSB2aWRlb3MpKSArDQogIGdlb21fbGluZSgpDQpgYGANCg0KV2llIHdpciBzZWhlbiwgaXN0IGVpbmUgRGFyc3RlbGx1bmcgbmFjaCBQdWJsaWthdGlvbnN6ZWl0cHVua3QgdW5nZWVpZ25ldC4gRGFzIGxpZWd0IGRhcmFuLCBkYXNzIHNvIG51ciBkaWVqZW5pZ2VuIFZpZGVvcyBkZW5zZWxiZW4gUHVua3QgYXVmIGRlciBZLUFjaHNlIGJlbGVnZW4sIGRpZSB6dW0gZXhha3Qgc2VsYmVuIFplaXRwdW5rdCBwdWJsaXppZXJ0IHd1cmRlbi4gTWl0IGFuZGVyZW4gV29ydGVuOiB3aXIgbcO8c3NlbiB1bnNlcmUgRGF0ZW4gYWdncmVnaWVyZW4sIHVtIGVpbmUgYmVzc2VyZSBEYXJzdGVsbHVuZyB6dSBlcnppZWxlbi4gRGllcyBrw7ZubmVuIHdpciBlcm5ldXQgbWl0IGBtdXRhdGUoKWAgdW5kIGBzdW1tYXJpc2UoKWAgZXJ6aWVsZW4sIGluZGVtIHdpciBkaWUgVmlkZW9zIG5hY2ggUHVibGlrYXRpb25zbW9uYXQgYWdncmVnaWVyZW46DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gIm1vbnRoIikpICU+JSANCiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gbW9udGgpICU+JSANCiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MpKSArDQogIGdlb21fbGluZSgpDQpgYGANCg0KV2lyIGvDtm5uZW4gZGllIHB1YmxpemllcnRlbiBWaWRlb3MgZWJlbnNvIG5hY2ggUGFydGVpZW4gYXVmdGVpbGVuLCBpbmRlbSB3aXIgZGllIERhdGVuIGVudHNwcmVjaGVuZCBhdWZiZXJlaXRlbiB1bmQgZGVyIFZhcmlhYmxlICpQYXJ0ZWkqIGRhcyBBdHRyaWJ1dCAqRmFyYmUqIHp1b3JkbmVuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvcyAlPiUgDQogIG11dGF0ZShtb250aCA9IGZsb29yX2RhdGUoY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCwgdW5pdCA9ICJtb250aCIpKSAlPiUgDQogIHN1bW1hcmlzZSh2aWRlb3MgPSBuKCksIC5ieSA9IGMobW9udGgsIHBhcnR5X2xhYmVsKSkgJT4lIA0KICBnZ3Bsb3QoYWVzKHggPSBtb250aCwgeSA9IHZpZGVvcywgY29sb3IgPSBwYXJ0eV9sYWJlbCkpICsNCiAgZ2VvbV9saW5lKCkNCmBgYA0KDQpEaWVzZSBEYXJzdGVsbHVuZyBpc3QgamVkb2NoIGV0d2FzIHVuw7xiZXJzaWNodGxpY2gsIGRhIHNpY2ggdGVpbHdlaXNlIG51ciBzY2h3ZXIgZXJrZW5uZW4gbMOkc3N0LCB3ZWxjaGUgUGFydGVpIHp1IHdlbGNoZW0gWmVpdHB1bmt0IHdpZXZpZWxlIFZpZGVvcyB2ZXLDtmZmZW50bGljaHQgaGF0LiBEYXMgbMOkc3N0IHNpY2ggbWl0IGRlciBGdW5rdGlvbiBgZmFjZXRfd3JhcCgpYCBiZXNzZXIgZGFyc3RlbGxlbi4gRGFtaXQgd2lyZCBqZWRlIEF1c3Byw6RndW5nIGRlciBzcGV6aWZpemllcnRlbiBWYXJpYWJsZSBpbiBlaW5lbSBlaWdlbmVuIEdyYXBoZW4gZGFyZ2VzdGVsbHQuDQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gIm1vbnRoIikpICU+JSANCiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gYyhtb250aCwgcGFydHlfbGFiZWwpKSAlPiUgDQogIGdncGxvdChhZXMoeCA9IG1vbnRoLCB5ID0gdmlkZW9zLCBjb2xvciA9IHBhcnR5X2xhYmVsKSkgKw0KICBnZW9tX2xpbmUoKSArDQogIGZhY2V0X3dyYXAoIH4gcGFydHlfbGFiZWwsIG5jb2wgPSAzKQ0KYGBgDQoNCldpciBrw7ZubmVuIGRpZSBEYXJzdGVsbHVuZyBub2NoIHdlaXRlciB2ZXJiZXNzZXJuIHVuZCB2ZXJzY2jDtm5lcm4uIEJlaXNwaWVsc3dlaXNlIGlzdCBkaWUgVW50ZXJ0ZWlsdW5nIGRlciBHcmFwaGxpbmllbiBuYWNoIEZhcmJlIG5pY2h0IG1laHIgbsO2dGlnLCBkYSB3aXIgZGllc2VsYmVuIEluZm9ybWF0aW9uZW4gYmVyZWl0cyBpbiBkZW4gRmFjZXR0ZW4gZGVzIEdyYXBocyBkYXJzdGVsbGVuLiBXaXIga8O2bm50ZW4gZWluZmFjaCBkYXMgQXR0cmlidXQgYGNvbG9yID0gcGFydHlfbGFiZWxgIGF1cyBgYWVzKClgIGVudGZlcm5lbi4gV2lyIGZpbmRlbiBhYmVyLCBkYXNzIGRpZSB1bnRlcnNjaGllZGxpY2hlbiBGYXJiZW4gdW5zZXJlIEdyYWZpayBhbnNycHJlY2hlbmRlciBtYWNoZW4uIERlbm5vY2ggbmltbXQgZGllIExlZ2VuZGUgYXVmIGRlciByZWNodGVuIFNlaXRlIHp1IHZpZWwgUGxhdHogZWluIHVuZCBiaWV0ZXQga2VpbmUgenVzw6R0emxpY2hlbiBJbmZvcm1hdGlvbmVuLiBXaXIga8O2bm5lbiBzaWUgZW50ZmVybmVuLCBpbmRlbSB3aXIgZGllIHNvZ2VuYW5udGVuICpndWlkZXMqLCBhbHNvIGRpZSBMZWdlbmRlbiwgYmVhcmJlaXRlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIA0KICBtdXRhdGUobW9udGggPSBmbG9vcl9kYXRlKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQsIHVuaXQgPSAibW9udGgiKSkgJT4lIA0KICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSANCiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArDQogIGdlb21fbGluZSgpICsNCiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICsNCiAgZ3VpZGVzKGNvbG9yID0gIm5vbmUiKQ0KYGBgDQoNClNjaG9uIGJlc3Nlci4gV2lyIGjDpHR0ZW4gYWxsZXJkaW5ncyBnZXJuZSwgZGFzcyBkaWUgRmFyYmVuIGRlciBMaW5pZW4gZsO8ciBqZWRlIFBhcnRlaSBkZW4gaWhyZXIga2xhc3Npc2NoZW4gUGFydGVpZmFyYmUgKGFsc28gcm90IGbDvHIgZGllIFNQRCwgc2Nod2FyeiBmw7xyIGRpZSBDRFUsIGV0Yy4pIGVudHNwcmljaHQuIERhenUgbcO8c3NlbiB3aXIgenVuw6RjaHN0IGVpbiBPYmpla3QgbWl0IGRlbiBOYW1lbiB1bmQgUkdCLVdlcnRlbiBkZXIgUGFydGVpZW4gZXJzdGVsbGVuLCBkYXNzIHdpciBkYXJhdWZoaW4gbWl0dGVscyBgc2NhbGVfY29sb3JfbWFudWFsKClgIHVuc2VyZW0gR3JhcGhlbiBoaW56dWdlYmVuLiBCZWFjaHRldCwgZGFzcyBkaWUgT2JqZWt0d2VydGUgZGVuIFdlcnRlbiBpbiBkZXIgVmFyaWFibGUgZW50c3ByZWNoZW4gbcO8c3NlbiwgZGVyIHNpZSB6dWdlb3JkbmV0IHdlcmRlbiBzb2xsZW4uIEluIHVuc2VyZW0gRmFsbGUgYWxzbyBkZW4ga29ycmVrdGVuIFBhcnRlaW5hbWVuLiBEZXIgendlaXRlIFdlcnQgbXVzcyBlaW4gUkdCLSBvZGVyIGFuZGVyZXIgRmFyYndlcnQgc2Vpbi4gQW5zb25zdGVuIHdlacOfIGRpZSBGdW5rdGlvbiBuaWNodCwgd2VsY2hlIEZhcmJlIHNpZSB3ZWxjaGVtIFdlcnQgenVvcmRuZW4gc29sbC4NCg0KYGBge3J9DQpjb2xvcnMgPC0NCiAgYygNCiAgICAiQWZEIiA9IHJnYigwLCA2MCwgMTQ1LCBtYXhDb2xvclZhbHVlID0gMjU1KSwNCiAgICAiQ0RVIiA9IHJnYig1MCwgNDgsIDQ2LCBtYXhDb2xvclZhbHVlID0gMjU1KSwNCiAgICAiRElFIExJTktFIiA9IHJnYigxODIsIDI4LCA2MiwgbWF4Q29sb3JWYWx1ZSA9IDI1NSksDQogICAgIkZEUCIgPSByZ2IoMjU1LCAyMzcsIDAsIG1heENvbG9yVmFsdWUgPSAyNTUpLA0KICAgICJCw7xuZG5pcyA5MC9EaWUgR3LDvG5lbiIgPSByZ2IoNzAsIDE1MCwgNDMsIG1heENvbG9yVmFsdWUgPSAyNTUpLA0KICAgICJTUEQiID0gcmdiKDIyNywgMCwgMTUsIG1heENvbG9yVmFsdWUgPSAyNTUpDQogICkNCg0KcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gIm1vbnRoIikpICU+JSANCiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gYyhtb250aCwgcGFydHlfbGFiZWwpKSAlPiUgDQogIGdncGxvdChhZXMoeCA9IG1vbnRoLCB5ID0gdmlkZW9zLCBjb2xvciA9IHBhcnR5X2xhYmVsKSkgKw0KICBnZW9tX2xpbmUoKSArDQogIGZhY2V0X3dyYXAoIH4gcGFydHlfbGFiZWwsIG5jb2wgPSAzKSArDQogIGd1aWRlcyhjb2xvciA9ICJub25lIikgKw0KICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gY29sb3JzKQ0KYGBgDQoNCk51biB3b2xsZW4gd2lyIG5vY2ggdW5zZXJlIEF4ZW4gdW1iZW5lbm5lbiB1bmQgZGVtIEdyYXBoZW4gZWluZW4gaW5mb3JtYXRpdmVuIFRpdGVsIGdlYmVuLCBkZXIgYmVzY2hyZWlidCwgd2FzIHdpciBoaWVyIHNlaGVuIHVuZCBiZXJlY2huZXQgaGFiZW4uIERhcyBnZWh0IGVpbmZhY2ggbWl0IGRlciBgbGFicygpYC1GdW5rdGlvbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIA0KICBtdXRhdGUobW9udGggPSBmbG9vcl9kYXRlKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQsIHVuaXQgPSAibW9udGgiKSkgJT4lIA0KICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSANCiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArDQogIGdlb21fbGluZSgpICsNCiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICsNCiAgZ3VpZGVzKGNvbG9yID0gIm5vbmUiKSArDQogIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjb2xvcnMpICsNCiAgbGFicygNCiAgICB4ID0gIk1vbmF0IiwNCiAgICB5ID0gIlZlcsO2ZmZlbnRsaWNodGUgVmlkZW9zIiwNCiAgICBjb2xvciA9ICJQYXJ0ZWkiLA0KICAgIHRpdGxlID0gIlZpZGVvcyDDvGJlciBaZWl0IG5hY2ggUGFydGVpLCBHZXNhbXR6ZWl0cmF1bSINCiAgKSANCmBgYA0KDQpTY2hsdXNzZW5kbGljaCBrw7ZubmVuIHdpciBub2NoIGRhcyBzb2dlbmFubnRlICp0aGVtZSogYW5wYXNzZW4sIGFsc28gZGFzIEZhcmJ0aGVtYSwgZGFzIHZvcmdpYnQsIHdpZSBiZWlzcGllbHN3ZWlzZSBkZXIgSGludGVyZ3J1bmQgZGVyIEdyYXBoZW4gY29sb3JpZXJ0IGlzdC4gYHRoZW1lX2J3KClgIGlzdCBlaW4gc2NobGljaHRlcyBzY2h3YXJ6LXdlacOfIFRoZW1hLCB3ZWxjaGVzIGRpZSBGYXJiZW4gaW4gdW5zZXJlbSBHcmFwaGVuIGd1dCB6dXIgR2VsdHVuZyBicmluZ3Q6DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gIm1vbnRoIikpICU+JSANCiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gYyhtb250aCwgcGFydHlfbGFiZWwpKSAlPiUgDQogIGdncGxvdChhZXMoeCA9IG1vbnRoLCB5ID0gdmlkZW9zLCBjb2xvciA9IHBhcnR5X2xhYmVsKSkgKw0KICBnZW9tX2xpbmUoKSArDQogIGZhY2V0X3dyYXAoIH4gcGFydHlfbGFiZWwsIG5jb2wgPSAzKSArDQogIGd1aWRlcyhjb2xvciA9ICJub25lIikgKw0KICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gY29sb3JzKSArDQogIGxhYnMoDQogICAgeCA9ICJNb25hdCIsDQogICAgeSA9ICJWZXLDtmZmZW50bGljaHRlIFZpZGVvcyIsDQogICAgY29sb3IgPSAiUGFydGVpIiwNCiAgICB0aXRsZSA9ICJWaWRlb3Mgw7xiZXIgWmVpdCBuYWNoIFBhcnRlaSwgR2VzYW10emVpdHJhdW0iDQogICkgKw0KICB0aGVtZV9idygpDQpgYGANCg0KIyMjIMOcYnVuZ2VuIDUNCg0KUHJvYmllcnQgd2VpdGVyZSBWaXN1YWxpc2llcnVuZ3Ntw7ZnbGljaGtlaXRlbiBhdXMuIFZlcndlbmRldCBkYXp1IHp1bsOkY2hzdCBkYXMgYHBhcnR5X3N1bW1hcnlgLU9iamVrdCwgd2VsY2hlcyB3aXIgaW4gZWluZXIgZGVyIHZvcmhlcmlnZW4gQWJzY2huaXR0ZSBlcnN0ZWxsdCBoYWJlbi4gWnVyIEVyaW5uZXJ1bmc6IGBwYXJ0eV9zdW1tYXJ5YCBlbnRow6RsdCBlaW5lIG1pdCBgc3VtbWFyaXNlKClgIGVyc3RlbGx0ZSBadXNhbW1lbmZhc3N1bmcgZGVyIFZpZGVvcyBwcm8gUGFydGVpLiBOdXR6dCBgYWVzKClgLCB1bSBkaWUgVmFyaWFibGUgKnBhcnR5X2xhYmVsKiBhbHMgWC0sICp0b3RhbF92aWRlb3MqIGFscyBZLUFjaHNlIGZlc3R6dWxlZ2VuIHVuZCBkYW5uIGRpZSBGdW5rdGlvbiBgZ2VvbV9jb2woKWAsIHVtIGVpbiBCYWxrZW5kaWFncmFtbSB6dSBlcnN0ZWxsZW4uIFdhcyBmw6RsbHQgYXVmLCB3ZW5uIGlociBkYXMgRXJnZWJuaXMgbWl0IGRlbSBCYXItRGlhZ3JhbW0gdmVyZ2xlaWNodCwgZGFzIHdpciB6dSBCZWdpbm4gZGllc2VzIEFic2Nobml0dHMgZXJzdGVsbHQgaGFiZW4/DQoNCmBgYHtyfQ0KDQpgYGANCg0KVGF1c2NodCBudW4gZGllIFgtIHVuZCBkaWUgWS1BY2hzZSBldXJlciBCYWxrZW5kaWFncmFtbXMsIGluZGVtIGlociBkaWUgV2VydGUgaW4gYGFlcygpYCBlbnRzcHJlY2hlbmQgw6RuZGVydC4NCg0KYGBge3J9DQoNCmBgYA0KDQpGw7xndCB6dXPDpHR6bGljaCBkaWUgRmFyYmUgYWxzIEF0dHJpYnV0IGRlciBQYXJ0ZWkgaGluenUgKGVybmV1dCBtaXQgYGFlcygpYCkuIEVudGZlcm50IGF1w59lcmRlbSBkaWUgTGVnZW5kZSBkZXMgRmFyYmF0dHJpYnV0cyBtaXQgYGd1aWRlcygpYC4gSGlud2VpczogdW0gZGllIEJhbGtlbiB6dSAiZsO8bGxlbiIgKHVuZCBuaWNodCBudXIgZGVuIEF1w59lbnJhbmQgZWluenVmw6RyYmVuKSBtw7xzc3QgaWhyIGRhcyBBdHRyaWJ1dCAqZmlsbCogaW4gYGFlcygpYCB1bmQgYGd1aWRlcygpYCB2ZXJ3ZW5kZW4uDQoNCmBgYHtyfQ0KDQpgYGANCg0Kw4RuZGVydCBudW4gZGllIEZhcmJlbiB6dSBkZW4gb2ZmaXppZWxsZW4gUGFydGVpZmFyYmVuLCBpbmRlbSBpaHIgZGllIEZ1bmt0aW9uIGBzY2FsZV9maWxsX21hbnVhbCgpYCB2ZXJ3ZW5kZXQuIEhpbndlaXM6IGlociBrw7ZubnQgZGFzIGBjb2xvcnNgLU9iamVrdCB2ZXJ3ZW5kZW4sIGRhcyB3aXIgYmVyZWl0cyBlcnN0ZWxsdCBoYWJlbi4NCg0KYGBge3J9DQoNCmBgYA0KDQrDhG5kZXJ0IG1pdCBgbGFicygpYCBkaWUgTGFiZWwgZGVyIFgtIHVuZCBZLUFjaHNlIHVuZCBmw7xndCBlaW5lbiBUaXRlbCBlaW4uIMOEbmRlcnQgYXXDn2VyZGVtIGRhcyBGYXJidGhlbWEuIE1pdCBgP3RoZW1lX2J3KClgIGvDtm5udCBpaHIgZXVjaCBkaWUgdmVyZsO8Z2JhcmVuIFRoZW1lbiBhbnplaWdlbiBsYXNzZW4uDQoNCmBgYHtyfQ0KDQpgYGANCg0KIyMgNi4gRGF0ZW4gc3BlaWNoZXJuDQoNCldpciBrw7ZubmVuIHVuc2VyZSBFcmdlYm5pc3NlIHNwZWljaGVybiwgaW5kZW0gd2lyIERhdGVuc8OkdHplIGFscyAuUkRTIGFic3BlaWNoZXJuOg0KDQpgYGB7cn0NCnNhdmVSRFMocGFydHlfc3VtbWFyeSwgInBhcnR5X3N1bW1hcnkuUkRTIikNCmBgYA0KDQpFYmVuc29ndXQga8O2bm5lbiB3aXIgc2llIGFscyAuY3N2IGV4cG9ydGllcmVuLCBpbmRlbSB3aXIgZGllICpUaWR5dmVyc2UqIEZ1bmt0aW9uIGB3cml0ZV9jc3YoKWAgdmVyd2VuZGVuOg0KDQpgYGB7cn0NCndyaXRlX2NzdihwYXJ0eV9zdW1tYXJ5LCAicGFydHlfc3VtbWFyeS5jc3YiKQ0KYGBgDQoNClVuc2VyIEdyYWZpa2VuIGvDtm5uZW4gd2lyIGF1ZiB1bnRlcnNjaGllZGxpY2hlIFdlaXNlIHNwZWljaGVybi4gWnVtIHdpcmQgZXVjaCBkaWUgR3JhZmlrLCBkaWUgaWhyIGVyc3RlbGx0LCB1bnRlciBkZW0gUmVpdGVyICJQbG90cyIgaW4gUlN0dWRpbyBhbmdlemVpZ3QsIHdlbm4gaWhyIGRlbiBDb2RlIGRpcmVrdCBpbiBkZXIgS29uc29sZSBhdXNmw7xocnQgKHdlbm4gaWhyIGRlbiBDb2RlIHdpZSBoaWVyIGluIGVpbmVtIE5vdGVib29rIGF1c2bDvGhydCwgaXN0IGRhcyBuaWNodCBkZXIgRmFsbCEpLiBEb3J0IGZpbmRldCBpaHIgZWluZSBwcmFrdGlzY2hlICJFeHBvcnQiLUZ1bmt0aW9uLiBadW0gYW5kZXJlbiBiaWV0ZXQgKmdncGxvdCogZGllIEZ1bmt0aW9uIGBnZ3NhdmUoKWAsIG1pdCBkZXIgaWhyIGRlbiBsZXR6dGVuIGF1c2dlZsO8aHJ0ZW4gUGxvdCAob2RlciBlaW4gUGxvdC1PYmpla3QgZXVyZXIgV2FobCkgZXhwb3J0aWVyZW4ga8O2bm50LiBIaW53ZWlzOiBgZ2dzYXZlKClgIGJpZXRldCB6YWhscmVpY2hlIE9wdGlvbmVuIHp1bSBFeHBvcnQsIGRpZSBpaHIgdW50ZXIgYD9nZ3NhdmUoKWAgZmluZGV0LiBEaWUgU3RhbmRhcmRlaW5zdGVsbHVuZ2VuIHNpbmQgaMOkdWZpZyBhYmVyIGF1c3JlaWNoZW5kOg0KDQpgYGB7cn0NCmdnc2F2ZSgicGFydHlfb3ZlcnZpZXcucG5nIikNCmBgYA0KDQpTY2hsdXNzZW5kbGljaCBrw7ZubnQgaWhyIGRpZSBFcmdlYm5pc3NlIGV1cmVzIE5vdGVib29rcyBtaXRzYW10IGRlbSBUZXh0IGV4cG9ydGllcmVuLiBHZWh0IGRhenUgYXVmIGRlbiBrbGVpbmVuIFBmZWlsIG5lYmVuICJQcmV2aWV3IiB1bmQga2xpY2t0IGF1ZiBlaW5lbiBkZXIgIktuaXQiLUVpbnRyw6RnZS4gSGlud2VpczogRGVyIFBERi1FeHBvcnQgYmVuw7Z0aWd0IGVpbmUgaW5zdGFsbGllcnRlIExhVGVYIERpc3RyaWJ1dGlvbiwgZGVyIFdvcmQtRXhwb3J0IGVpbmUgV29yZC1JbnN0YWxsYXRpb24uIEhUTUwgbMOkc3N0IHNpY2ggaW1tZXIgZXhwb3J0aWVyZW4gdW5kIGthbm4gbWl0IGVpbmVtIEJyb3dzZXIgZXVyZXIgV2FobCBnZcO2ZmZuZXQgd2VyZGVuLg0KDQojIyMgw5xidW5nZW4gNg0KDQpTcGVpY2hlcnQgZGllIE9iamVrdGUsIGRpZSBpaHIgaW4gKirDnGJ1bmcgNCoqIGVyc3RlbGx0IGhhYnQgYWxzIC5jc3YgdW5kIC5SRFMgYWIuDQoNCmBgYHtyfQ0KDQpgYGANCg0KU3BlaWNoZXJ0IGRlbiBQbG90IGRlciBQYXJ0ZWl2aWRlb3Mgw7xiZXIgWmVpdCwgZGVuIHdpciBpbiDDnGJ1bmcgNSBnZW1laW5zYW0gZXJzdGVsbHQgaGFiZW4sIGFiLiBEZW5rdCBkYXJhbiwgZGFzcyBgZ2dzYXZlKClgIHN0YW5kYXJkbcOkw59pZyBpbW1lciBkZW4gbGV0enRlbiBQbG90IGV4cG9ydGllcnQuIEbDvGhydCBnZ2YuIGFsc28gbm9jaCBlaW5tYWwgZGVuIENvZGUgYXVzLCBkZXIgZGVuIFBsb3QgZXJzdGVsbHQgaGF0LCBiZXZvciBpaHIgYGdnc2F2ZSgpYCB2ZXJ3ZW5kZXQuDQoNCmBgYHtyfQ0KDQpgYGANCg0KRXhwb3J0aWVydCBkaWUgRXJnZWJuaXNzZSBkaWVzZXMgTm90ZWJvb2tzIGFscyBIVE1MLCBpbmRlbSBpaHIgIktuaXQgdG8gSFRNTCIgdmVyd2VuZGV0Lg0KDQojIyBadXPDpHR6bGljaGUgw5xidW5nZW4NCg0KSWhyIGZpbmRldCBpbSBMZWFybndlYiBhdcOfZXJkZW0gZGVuIERhdGVuc2F0eiAqcGFydHlfY29tbWVudHNfamFudWFyeS5jc3YqLCB3ZWxjaGVyIGFsbGUgS29tbWVudGFyZSB6dSBkZW4gUGFydGVpdmlkZW9zIGF1cyBkZW0gSmFudWFyIDIwMjIgZW50aMOkbHQuIExlc3QgZGllc2VuIGluIGV1cmUgUi1VbWdlYnVuZyBlaW46DQoNCmBgYHtyfQ0KDQpgYGANCg0KTGFzc3QgZXVjaCBtaXQgYHN1bW1hcmlzZSgpYCBhbnplaWdlbiwgd2lldmllbGUgS29tbWVudGFyZSBqZWRlIFBhcnRlaSBiZWtvbW1lbiBoYXQuDQoNCmBgYHtyfQ0KDQpgYGANCg0KVmVyd2VuZGV0IGBmaWx0ZXIoKWAsIHVtIGV1Y2ggZGllIEtvbW1lbnRhcmUgZsO8cjpcDQphKSBlaW5lbiBUYWcsXA0KYikgZWluZSBQYXJ0ZWksXA0KYykgZWluIGVpbnplbG5lcyBWaWRlbyxcDQpkKSBlaW5lbiBUYWcgZsO8ciB6d2VpIFBhcnRlaWVuXA0KYW56ZWlnZW4genUgbGFzc2VuLlwNCkhpbndlaXM6IEJlZGVua3QsIGRhc3MgaWhyIGdnZi4genVuw6RjaHN0IG1pdCBgbXV0YXRlKClgIGRhcyBEYXRlbmZvcm1hdCBhbnBhc3NlbiBtw7xzc3QsIHVtIGV1Y2ggZWluemVsbmUgVGFnZSBhbnplaWdlbiB6dSBsYXNzZW4uIEFsdGVybmF0aXYga8O2bm50IGlociBtaXQgYGRteV9obXMoKWAgKCoqRCoqYXktKipNKipvbnRoLSoqWSoqZWFyLSoqSCoqb3VyLSoqTSoqaW51dGUqKi1TKiplY29uZCkgbmFjaCBnZW5hdWVyZW4gWmVpdHB1bmt0ZW4sIGV0d2EgZGVtIEJlZ2lubiB1bmQgRW5kZSBlaW5lcyBUYWdlcywgZmlsdGVybi4gVW0gbWVocmVyZSBgZmlsdGVyKClgIEtvbWJpbmF0aW9uZW4genUga29tYmluaWVyZW4ga2FubiBlcyBhdcOfZXJkZW0gbsO8dHpsaWNoIHNlaW4sIEtsYW1tZXJuIHp1IHNldHplbiwgZGEgZGllc2UgZ2VtZWluc2FtIGV2YWx1aWVydCB3ZXJkZW4gKFRhZyBVTkQgKFBhcnR5IGEgb2RlciBiKSBvZGVyIG1laHJlcmUgYGZpbHRlcigpYC1CZWZlaGxlIG5hY2hlaW5hbmRlciBhdXN6dWbDvGhyZW4uDQoNCmBgYHtyfQ0KDQoNCmBgYA0KDQpWaXN1YWxpc2llcnQgZGllIERhdGVuIG1pdCBgZ2dwbG90KClgLiBMYXNzdCBldWNoIGRpZSBLb21tZW50YXJlIGluIHVudGVyc2NoaWVkbGljaGVuIEZvcm1hdGVuIGFuemVpZ2VuLCBldHdhIGFscyBCYWxrZW5kaWFncmFtbSBvZGVyIMO8YmVyIFplaXQgYWxzIExpbmllLiBQcm9iaWVydCBhdWNoIHdlaXRlcmUgVmlzdWFsaXNpZXJ1bmdzdHlwZW4sIGV0d2EgYGdlb21fcG9pbnQoKWDCoG9kZXIgYGdlb21fc21vb3RoKClgIGF1cy4gSWhyIGvDtm5udCBhdWNoIG1laHJlcmUgUGxvdC1UeXBlbiBrb21iaW5pZXJlbiwgaW5kZW0gaWhyIHNpZSBoaW50ZXJlaW5hbmRlciBoaW56dWbDvGd0LiBQYXNzdCBlYmVuZmFsbHMgZGllIExhYmVscywgVGhlbWVzIHVuZCBHdWlkZXMgZXVyZXIgUGxvdHMgYW4gdW5kIHByb2JpZXJ0LCBkaWUgRGF0ZW4gaW4gdW50ZXJzY2hpZWRsaWNoZSBGb3JtYXRlIHp1IGJyaW5nZW4sIGJldm9yIGlociBzaWUgcGxvdHRldCAtIGV0d2EgbWl0IGBzdW1tYXJpc2UoKWAuXA0KSGlud2VpczogQmVhY2h0ZXQsIGRhc3MgKnZpZGVvX1B1Ymxpc2hlZEF0KiBkZW4gWmVpdHB1bmt0IGRlciBWaWRlb3B1Ymxpa2F0aW9uLCAqY29tbWVudF9QdWJsaXNoZWRBdCogZGVuIFplaXRwdW5rdCBkZXMgS29tbWVudGFycyBhbmdpYnQuDQoNCmBgYHtyfQ0KDQpgYGANCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgw5xidW5nZW4iDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQojIyBFaW5mw7xocnVuZw0KDQpEaWVzZXMgUk1hcmtkb3duIE5vdGVib29rIGVudGjDpGx0IGVpbmUgUmVpaGUgdm9uIMOcYnVuZ2VuLCBkaWUgZGFiZWkgaGVsZmVuIHNvbGxlbiwgZXVjaCBtaXQgUiB1bmQgUlN0dWRpbyB2ZXJ0cmF1dCB6dSBtYWNoZW4uIFdpciB3ZXJkZW4gZGFiZWkgdm9yIGFsbGVtIGRhcyAqVGlkeXZlcnNlKiB2ZXJ3ZW5kZW4uDQoNCk5vdGVib29rcyB2ZXJlaW5lbiBDb2RlIGbDvHIgZGllIEFuYWx5c2VuLCBkaWUgRXJnZWJuaXNzZSBkZXMgQ29kZXMgdW5kIGJlZ2xlaXRlbmRlIFRleHRlIHdpZSBkaWVzZW4gaGllciwgd2FzIHNpZSBpbnNiZXNvbmRlcmUgZsO8ciBkaWUgRG9rdW1lbnRhdGlvbiB2b24gUHJvamVrdGVuIGdlZWlnbmV0IG1hY2h0LiBJbiBkZXIgVG9vbGJhciBhbSBvYmVyZW4gUmFuZCBkZXMgTm90ZWJvb2tzIGvDtm5udCBpaHIgendpc2NoZW4gIlNvdXJjZSIgKGRlbSB2b2xsc3TDpG5kaWdlbiBDb2RlKSB1bmQgIlZpc3VhbCIgKGRlbSwgd2FzIGV1cmUgTGVzZXJcKmlubmVuIHNww6R0ZXIgc2VoZW4pIHdlY2hzZWxuLiAiU291cmNlIiBiaWV0ZXQgZWluaWdlIHp1c8OkdHpsaWNoZSBPcHRpb25lbiwgei5CLiBpbiBkZXIgQXJ0IHVuZCBXZWlzZSwgd2llIENvZGUgQ2h1bmtzIGRhcmdlc3RlbGx0IHdlcmRlbi4gRGllc2UgbGFzc2VuIHNpY2ggYWJlciBhdWNoIG1pdCBlaW5lbSBLbGljayBhdWYgZGFzIFphaG5yYWQgZWluZXMgQ29kZSBDaHVua3MgKHRlaWx3ZWlzZSkgZWluc3RlbGxlbi4gIlZpc3VhbCIgemVpZ3QgZXVjaCBpbnNiZXNvbmRlcmUsIHdpZSBkZXIgYmVnbGVpdGVuZGUgVGV4dCBzcMOkdGVyIGZvcm1hdGllcnQgd2lyZCB1bmQgYmlldGV0IGVpbmlnZSBwcmFrdGlzY2hlIEZvcm1hdGllcnVuZ3NvcHRpb25lbiBpbiBkZXIgVG9vbGJhciBzb3dpZSBlaW5mYWNoZSBNw7ZnbGljaGtlaXRlbiwgQ29kZSBDaHVua3MsIEJpbGRlciB1bmQgTGlua3MgZWluenVmw7xnZW4uIFdlY2hzZWx0IHp3aXNjaGVuIGRlbiBiZWlkZW4gQW5zaWNodGVuIHVuZCBpaHIgd2VyZGV0IHNlaGVuLCB3aWUgQ29kZSBpbiBkZXIgIlNvdXJjZSItQW5zaWNodCB1LmEuIGRlbiBUZXh0IGbDvHIgIlZpc3VhbCIgbWl0IE1hcmtkb3duIGZvcm1hdGllcnQuDQoNCkRpZSAiQ29kZSBDaHVua3MiIGJlZ2lubmVuZCBtaXQgIlxgXGBcYHtyfSIgc3RlbGxlbiBkYWJlaSBSLUNvZGUgZGFyLiBJaHIga8O2bm50IGlobiBlbnR3ZWRlciB6ZWlsZW53ZWlzZSBtaXQgZGVyIFRhc3RlbmtvbWJpbmF0aW9uIGBTdHJnK0VOVEVSYCBhdXNmw7xocmVuIG9kZXIgZGVuIGdlc2FtdGVuIENodW5rIG1pdCBkZW0gZ3LDvG5lbiBQZmVpbCBvYmVuIHJlY2h0cyBpbiBkZXIgRWNrZSBkZXMgQ2h1bmstRmVsZHMgYXVmIGVpbm1hbCBhdXNmw7xocmVuLiBEaWVzZSBBcnQgTm90ZWJvb2sgaXN0IGFsc28gdmVyZ2xlaWNoYmFyIG1pdCBkZW4gSnVweXRlciBOb3RlYm9va3MsIGRpZSBpaHIgYmVyZWl0cyBrZW5uZW5nZWxlcm50IGhhYnQuIElociBrw7ZubnQgQ29kZSBhYmVyIGF1Y2ggZGlyZWt0IGluIGRlciBSU3R1ZGlvIENvbnNvbGUgYXVzZsO8aHJlbiwgaW5kZW0gaWhyIGluIGRvcnRoaW4ga29waWVydCBvZGVyIGRpcmVrdCBkb3J0IGVpbnRpcHB0LiBEYXMgRXJnZWJuaXMgd2lyZCBkYW5uIG5pY2h0IGluIGRlbSBOb3RlYm9vaywgc29uZGVybiBpbiBkZXIgQ29uc29sZSBhbmdlemVpZ3QuIERhcyBpc3QgcHJha3Rpc2NoLCB3ZW5uIGlociBrdXJ6IGV0d2FzIGF1c3Byb2JpZXJlbiBvZGVyIGRpZSBIZWxwZmlsZXMgYXVmcnVmZW4gd29sbHQsIHouQi4gbWl0IGA/ZmlsdGVyYC4gV2ljaHRpZzogV2VkZXIgQ29kZSwgZGVuIGlociBpbiBkZXIgQ29uc29sZSBhdXNmw7xocnQsIG5vY2ggZGVzc2VuIEVyZ2Vibmlzc2Ugd2VyZGVuIGltIE5vdGVib29rIGdlc3BlaWNoZXJ0IQ0KDQpNaXQgYFN0cmcrQWx0K0lgIG9kZXIgKkluc2VydC1cPkNvZGUgQ2h1bmstXD5SKiBpbiBkZXIgVG9vbGJhciBrw7ZubnQgaWhyIG5ldWUgQ29kZSBDaHVua3MgaGluenVmw7xnZW4uIElociBrw7ZubnQgYXVjaCBhbmRlcmUgUHJvZ3JhbW1pZXJzcHJhY2hlbiBpbiBOb3RlYm9va3MgZWluYmluZGVuLCB6LkIuIFB5dGhvbi4gQmVhY2h0ZXQgYWJlciwgZGFzcyAqUiogdW5kICpQeXRob24qIG5pY2h0IGRpZXNlbGJlIFVtZ2VidW5nIGJlbnV0emVuLCBpaHIgRGF0ZW4gYWxzbyBqZXdlaWxzIHdpZWRlciBuZXUgZWlubGVzZW4gbcO8c3N0IC0gdW5kIGlociBtw7xzc3QgZGFyYXVmIGFjaHRlbiwgZGFzcyBkaWUgRGF0ZW5mb3JtYXRlIGtvbXBhdGliZWwgc2luZCENCg0KTWl0IGVpbmVtIEtsaWNrIGF1ZiAiUHJldmlldyIga8O2bm50IGlociBldWNoIGV1ZXIgYWt0dWVsbGVzIE5vdGVib29rIGFscyBIVE1MIGFuemVpZ2VuIGxhc3Nlbi4gU3RlbGx0IHNpY2hlciwgZGFzcyBpaHIgYWxsZSBDb2RlIENodW5rcywgZGllIGlociBpbiBldWVyZW0gRG9rdW1lbnQgc2VoZW4gd29sbHQsIGF1c2dlZsO8aHJ0IGhhdCAtIHNvbnN0IHdlcmRlbiBzaWUgaW4gIlByZXZpZXciIG5pY2h0IGFuZ2V6ZWlndC4gSWhyIGvDtm5udCBkYXMgTm90ZWJvb2sgYXVjaCBpbiBhbmRlcmUgRm9ybWF0ZSBleHBvcnRpZXJlbiwgei5CLiBQREYgKGJlbsO2dGlndCBlaW5lIExhVGVYIEluc3RhbGxhdGlvbiksIFdvcmQgKGJlbsO2dGlndCBlaW5lIFdvcmQgSW5zdGFsbGF0aW9uKSBvZGVyIEhUTUwgKGzDpHNzdCBzaWNoIG1pdCBqZWRlbSBCcm93c2VyIMO2ZmZuZW4pLiBHZWh0IGRhenUgYXVmIGRhcyBEcm9wLURvd24gTWVuw7wgbmViZW4gIlByZXZpZXciIChkZXIga2xlaW5lIFBmZWlsIG5hY2ggdW50ZW4pIHVuZCB3w6RobHQgZWluZSAiS25pdCItT3B0aW9uIGF1cy4gQmVhY2h0ZXQsIGRhc3MgIktuaXQiIGltbWVyIGFsbGUgQ29kZSBDaHVua3MgaW0gTm90ZWJvb2sgYXVzZsO8aHJ0Lg0KDQojIyAxLiBQYWNrYWdlcyBsYWRlbiAmIGluc3RhbGxpZXJlbg0KDQpXaXIgd29sbGVuIGluIGRpZXNlciDDnGJ1bmcgdm9yIGFsbGVtIGRhcyAqVGlkeXZlcnNlKiB2ZXJ3ZW5kZW4gdW5kIHVucyBtaXQgZGVzc2VuIEZ1bmt0aW9uZW4gdmVydHJhdXQgbWFjaGVuLiBEYXp1IG3DvHNzZW4gd2lyIGVzIHp1bsOkY2hzdCBlaW5tYWwgaW5zdGFsbGllcmVuOg0KDQpgYGB7cn0NCmluc3RhbGwucGFja2FnZXMoInRpZHl2ZXJzZSIpDQoNCmBgYA0KDQpCZWFjaHRldCwgZGFzcyBpaHIgZGllc2VuIENvZGUgQ2h1bmsgbnVyIGVpbm1hbCBhdXNmw7xocmVuIG3DvHNzdC4gRWluIGVpbm1hbCBpbnN0YWxsaWVydGVzIFBhY2thZ2UgaXN0IGJlaSBqZWRlbSBTdGFydCB2b24gUiB3aWVkZXIgdmVyZsO8Z2Jhci4gRWluemlnZSBBdXNuYWhtZTogR3LDtsOfZXJlIFVwZGF0ZXMgdm9uIFIgKHouYi4gdm9uIDQuMSBhdWYgNC4yKSBtYWNoZW4gZWluZSBOZXVpbnN0YWxsYXRpb24gYWxsZXIgUGFja2FnZXMgbsO2dGlnLiBCZWkga2xlaW5lcmVuIFVwZGF0ZXMgKHouQi4gdm9uIFIgNC4xLjEgYXVmIDQuMS4yKSBpc3QgZGllcyBuaWNodCBuw7Z0aWcuIERlbm5vY2ggZW1wZmllaGx0IGVzIHNpY2gsIHJlZ2VsbcOkw59pZyBQYWNrYWdlIFVwZGF0ZXMgZHVyY2h6dWbDvGhyZW4uIFdlbm4gZWluIFBhY2thZ2UgYmVyZWl0cyBpbnN0YWxsaWVydCBpc3QsIGbDvGhydCBgaW5zdGFsbC5wYWNrYWdlcygpYCBlaW4gVXBkYXRlIGR1cmNoLg0KDQpOYWNoZGVtIHdpciBkYXMgUGFja2FnZSBpbnN0YWxsaWVydCBoYWJlbiwgbcO8c3NlbiB3aXIgZXMgaW4gdW5zZXJlIGFrdHVlbGxlIFIgVW1nZWJ1bmcgbGFkZW4sIHVtIFp1Z3JpZmYgYXVmIGRlc3NlbiBGdW5rdGlvbmVuIHp1IGhhYmVuLiBEaWVzIGdlc2NoaWVodCBtaXQgZm9sZ2VuZGVtIENvZGU6DQoNCmBgYHtyfQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpgYGANCg0KIyMjIMOcYnVuZyAxDQoNCk5lYmVuIGRlbSB0aWR5dmVyc2Ugd2VyZGVuIHdpciBpbSBWZXJsYXVmIGRlciDDnGJ1bmcgYXXDn2VyZGVtIGRhcyBwYWNrYWdlICJsdWJyaWRhdGUiIGJlbsO2dGlnZW4sIG1pdCBkZW0gd2lyIERhdGVuIG1hbmlwdWxpZXJlbiBrw7ZubmVuLiBTY2hyZWlidCBDb2RlLCB3ZWxjaGVyIGRhcyBQYWNrYWdlIGluc3RhbGxpZXJ0IHVuZCBsw6RkdC4NCg0KSW5zdGFsbGllcmUgZGFzIFBhY2thZ2UgImx1YnJpZGF0ZSI6DQoNCmBgYHtyfQ0KDQpgYGANCg0KTGFkZSBkYXMgUGFja2FnZSBsdWJyaWRhdGU6DQoNCmBgYHtyfQ0KDQpgYGANCg0KIyMgMi4gRGF0ZW4gZWlubGVzZW4NCg0KSW0gTGVhcm53ZWIgZmluZGV0IGlociBkZW4gRGF0ZW5zYXR6ICJwYXJ0eV92aWRlb3MuUkRTIi4gRGFyaW4gZmluZGVuIHNpY2ggTWV0YWRhdGVuIGFsbGVyIDEzLjUxMiBWaWRlb3MsIGRpZSB6dW0gWmVpdHB1bmt0IGRlciBFcmhlYnVuZyBhdWYgZGVuIFlvdVR1YmUgQ2hhbm5lbHMgZGVyIGdyb8OfZW4gZGV1dHNjaGVuIFBhcnRlaWVuIHZlcmbDvGdiYXIgd2FyZW4uIE5lYmVuIE1ldGFkYXRlbiB3aWUgZGVyIFZpZGVvSUQgdW5kIGRlbSBWZXLDtmZmZW50bGljaHVuZ3NkYXR1bSBmaW5kZXQgc2ljaCBkb3J0IGF1Y2ggZWluIFZhcmlhYmxlLCB3ZWxjaGUgYW5naWJ0LCB2b24gd2VsY2hlciBQYXJ0ZWkgZWluIFZpZGVvIHN0YW1tdC4NCg0KTGVndCBhdWYgZXVyZW0gQ29tcHV0ZXIgZWluZW4gT3JkbmVyIGFuLCBpbiBkZW0gaWhyIGFsbGUgZsO8ciBkaWVzZSDDnGJ1bmcgcmVsZXZhbnRlbiBEYXRlaWVuIHNwZWljaGVydCB1bmQgc3BlaWNoZXJ0IGRlbiBEYXRlbnNhdHogZG9ydCBhYi4gSWhyIGvDtm5udCBhdWNoIGRpZXNlcyBOb3RlYm9vayBtaXQgKkZpbGUtXD5TYXZlIEFzKiBkb3J0IGFibGVnZW4uIE51ciB3ZWlsIGV1ZXIgTm90ZWJvb2sgaW4gZGllc2VtIE9yZG5lciBsaWVndCwgaGVpw590IGRhcyBhYmVyIG5vY2ggbmljaHQsIGRhc3MgZXVyZSBSLVVtZ2VidW5nIGRpZXNlbiBhdWNoIGFscyBha3R1ZWxsZW4gT3JkbmVyIHdhaHJuaW1tdCEgRm9sZ2VuZGVyIENvZGUgZ2lidCBldWNoIGV1ZXIgYWt0dWVsbGVzICpXb3JraW5nIERpcmVjdG9yeSogYXVzOg0KDQpgYGB7cn0NCmdldHdkKCkNCmBgYA0KDQpJaHIgc2VociBldWVyIGFrdHVlbGxlcyBXb3JraW5nIERpcmVjdG9yIGF1Y2ggw7xiZXIgZGVtIENvbnNvbGUtRmVuc3RlciAtIG5lYmVuIGRlciBha3R1ZWxsIHZlcndlbmRldGVuIFItVmVyc2lvbi4gWndhciBrw7ZubnQgaWhyIGF1Y2ggYXVmIERhdGVpZW4gYXXDn2VyaGFsYiBldXJlcyBXb3JraW5nIERpcmVjdG9yeSB6dWdyZWlmZW4uIERhenUgbcO8c3N0IGlociBqZWRvY2ggaW1tZXIgZGVuIGdlc2FtdGVuIFBmYWQgZGVyIERhdGVuIG1pdCBhbmdlYmVuIC0gd2FzIHNlaHIgbcO8aHNlbGlnIHNlaW4ga2Fubi4gRGVzaGFsYiBtYWNodCBlcyBTaW5uLCBldWVyIFdvcmtpbmcgRGlyZWN0b3J5IHp1IMOkbmRlcm4uIERhcyBnZWh0IG1pdCBkZXIgYHNldHdkKClgLUZ1bmt0aW9uOg0KDQpgYGB7cn0NCnNldHdkKCJDOi9tZWluZV9SX1Byb2pla3RlL1lvdVR1YmVfU2VtaW5hci9VZWJ1bmdfMSIpDQpgYGANCg0KQmVhY2h0ZXQsIGRhc3MgaWhyIGRlciBoaWVyIGFuZ2VnZWJlbiBPcmRuZXJwZmFkIGJlaSBldWNoIHdhaHJzY2hlaW5saWNoIG5pY2h0IGV4aXN0aWVydC4gSWhyIG3DvHNzdCBpaG4gYWxzbyBlbnRzcHJlY2hlbmQgc28gYW5wYXNzZW4sIGRhc3MgZXIgYXVmIGV1cmVuIE9yZG5lciB6ZWlndCwgaW4gZGVuIGlociBkZW4gRGF0ZW5zYXR6IGdlbGFkZW4gaGFidC4gV2ljaHRpZyBpc3QsIGRhc3MgaWhyIGV1cmVuIFBmYWQgaW4gQW5mw7xocnVuZ3N6ZWljaGVuICgiLi4uIikgc2V0enQgdW5kIFNjaHLDpGdzdHJpY2hlICggLyApLCBrZWluZSBCYWNrc2xhc2hlcyAoIFxcICksIHZlcndlbmRldCwgdW0gZGVuIFBmYWQgenUgc2NocmVpYmVuLiBCZWFjaHRldCwgZGFzcyBkYXMgV29ya2luZyBEaXJlY3RvciBiZWkgamVkZW0gU3RhcnQgdm9uIFIgaWRSLiBuZXUgZ2VzZXR6dCB3ZXJkZW4gbXVzcy4NCg0KV2VubiB3aXIgdW5zZXIgV29ya2luZyBEaXJlY3RvcnkgZ2VzZXR6dCBoYWJlbiwga8O2bm5lbiB3aXIgZGllIERhdGVuIGluIHVuc2VyZSBha3R1ZWxsZSBVbWdlYnVuZyBsYWRlbi4gRGllIGByZWFkUkRTKClgLUZ1bmt0aW9uIGzDpGR0IC5SRFMtRGF0ZWllbiB1bmQgb3JkbmV0IHNpZSBlaW5lbSBPYmpla3QgenU6DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zIDwtIHJlYWRSRFMoInBhcnR5X3ZpZGVvcy5SRFMiKQ0KYGBgDQoNCkJlYWNodGV0LCBkYXNzIGVzIHNpY2ggYmVpIGRlbSBSRFMtRm9ybWF0IHVtIGVpbiBSLWVpZ2VuZXMgRm9ybWF0IGhhbmRlbHQsIHdlbGNoZXMgaMOkdWZpZyBuaWNodCBtaXQgYW5kZXJlbiBQcm9ncmFtbWVuIHdpZSBQeXRob24ga29tcGF0aWJlbCBpc3QuIFIgaXN0IGFsbGVyZGluZ3MgYXVjaCBpbiBkZXIgTGFnZSwgYW5kZXJlIERhdGVpdHlwZW4gZWluenVsZXNlbiwgZXR3YSBkYXMgdW5pc3ZlcnNlbGxlIC5jc3YuIERhcyBUaWR5dmVyc2UgYmlldGV0IGRhenUgZGllIGByZWFkX2NzdmAtRnVua3Rpb24gYW4uIFNpZSBiaWV0ZXQgZWluaWdlIHp1c8OkdHpsaWNoZSBGdW5rdGlvbmVuLCBldHdhIGRpZSBTcGV6aWZpemllcnVuZyBkZXIgVmFyaWFibGVuLVR5cGVuIGbDvHIgZWluemVsbmUgU3BhbHRlbiwgZnVua3Rpb25pZXJ0IGltIFByaW56aXAgYWJlciBhbmFsb2cgenUgYHJlYWRSRFMoKWAuIERpZSAqcGFydHlfdmlkZW9zLmNzdiotRGF0ZWkgbMOkc3N0IHNpY2ggc28gZWJlbmZhbGxzIGVpbmxlc2VuLiBTaWUgaXN0IGluaGFsdGxpY2ggaWRlbnRpc2NoIG1pdCBkZXIgLlJEUy1EYXRlaS4NCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfY3N2IDwtIHJlYWRfY3N2KCJwYXJ0eV92aWRlb3MuY3N2IikNCmBgYA0KDQoqKlRpcHA6KiogV2VubiBpaHIgZWluZW4gRGF0ZWlwZmFkIG9kZXIgZWluZSBEYXRlaSBtaXQgUiBhdXN3w6RobGVuIHdvbGx0LCBpbmRlbSBpaHIgZGVuIFBmYWQgZWludGlwcHQsICh6LkIuIGBzZXR3ZCgiQzovbWVpbmVfUl9Qcm9qZWt0ZS8uLi4iKWAsIGvDtm5udCBpaHIgZXVjaCBtaXQgZGVyIFRBQi1UYXN0ZSBEYXRlaWVuIGltIGFrdHVlbGxlbiBQZmFkIGJ6dy4gVm9yc2NobMOkZ2UgenVyIEF1dG92ZXJ2b2xsc3TDpG5kaWd1bmcgYW56ZWlnZW4gbGFzc2VuLiBEYXMgc3BhcnQgYmVzb25kZXJzIGJlaSBsYW5nZW4gUGZhZGVuIFplaXQgdW5kIE5lcnZlbiwgZGEgZXMgVmVydGlwcGVybiB2b3JiZXVndC4NCg0KIyMjIMOcYnVuZyAyDQoNCkxlZ3QgZXVlciBXb3JraW5nIERpcmVjdG9yeSBtaXQgYHNldHdkKClgIGF1ZiBldXJlbiBQcm9qZWt0b3JkbmVyIGZlc3QuIMOcYmVycHLDvGZ0IG1pdCBgZ2V0d2QoKWAsIG9iIGlociBpbSByaWNodGlnZW4gT3JkbmVyIGdlbGFuZGV0IHNlaW4uIExlc3QgZGFubiBkZW4gKnBhcnR5X3ZpZGVvcyotRGF0ZW5zYXR6IGVpbjogZWlubWFsIGFscyAuUkRTLCBlaW5tYWwgYWxzIC5jc3YuDQoNCmBgYHtyfQ0KDQpgYGANCg0KIyMgMy4gRGF0ZW4gaW5zcGl6aWVyZW4NCg0KRXMgZ2lidCBlaW5lIFJlaWhlIGFuIE3DtmdsaWNoa2VpdGVuLCBldWNoIGRpZSBlaW5nZWxlc2VuZW4gRGF0ZW4gYnp3LiBkZXJlbiBTdHJ1a3R1ciBhbnplaWdlbiB6dSBsYXNzZW4uIERpZSBlaW5mYWNoc3RlIGlzdCwgZWluIE9iamVrdCBlaW5mYWNoICJhdXNkcnVja2VuIiB6dSBsYXNzZW4uIERhcyBnZWh0IHZpYSBwcmludCgpIG9kZXIgaW5kZW0gaWhyIGRlbiBPYmpla3RuYW1lbiBlaW5nZWJ0Lg0KDQpgYGB7cn0NCnByaW50KHBhcnR5X3ZpZGVvcykNCg0KcGFydHlfdmlkZW9zDQpgYGANCg0KRGVyIEJlZmVobCBgVmlldygpYCBlcm3DtmdsaWNodCBlcywgc2ljaCBlaW4gT2JqZWt0IGluIGVpbmVtIG5ldWVuIEZlbnN0ZXIgYW56ZWlnZW4genUgbGFzc2VuLiBEb3J0IGlzdCBlcyBhdcOfZXJkZW0gZHVyY2hzdWNoYmFyLCBsw6Rzc3Qgc2ljaCBsZWljaHQgc2Nyb2xsZW4gdW5kIG1pdCBlaW5lbSBLbGljayBhdWYgZGllIFNwYWx0ZW4gc29ydGllcmVuOg0KDQpgYGB7cn0NClZpZXcocGFydHlfdmlkZW9zKQ0KYGBgDQoNCkluIGRlbSAiRW52aXJvbm1lbnQiLVJlaXRlciB2b24gUlN0dWRpbyBzZWh0IGlociBhdcOfZXJkZW0gYWxsZSBPYmpla3RlLCBkaWUgaW4gZXVlciBha3R1ZWxsZW4gVW1nZWJ1bmcgdm9yaGFuZGVuIHNpbmQuIEVpbiBLbGljayBhdWYgZGFzIFBmZWlsLVN5bWJvbCBsaW5rcyB6ZWlndCBldWNoIGRpZSBTdHJ1a3R1ciBpbm5lcmhhbGIgZGVzIFJlaXRlcnMgYW4uIEVpbiBLbGljayBhdWYgZGVuIE9iamVrdG5hbWVuIHNlbGJzdCDDtmZmbmV0IGRhcyBPYmpla3Qgd2llIG1pdCBgVmlldygpYC4NCg0KRGFzICpUaWR5dmVyc2UqIGJpZXRldCBhdcOfZXJkZW0gZWluZSBSZWloZSBhbiBNw7ZnbGljaGtlaXRlbiwgd2VpdGVyZSBJbmZvcm1hdGlvbmVuIGF1cyB1bnNlcmVtIERhdGVuc2F0eiB6dSBlcmhhbHRlbi4gU28gd29sbGVuIHdpciB6LkIuIHdpc3Nlbiwgd2VsY2hlIFBhcnRlaWVuIGluIHVuc2VyZW0gRGF0ZW5zYXR6IHZlcnRyZXRlbiBzaW5kLiBEaWUgRnVua3Rpb24gYGRpc3RpbmN0KClgIGdpYnQgZXVjaCBhbGxlIGVpbnppZ2FydGlnZW4gVmFyaWFibGVuLUtvbWJpbmF0aW9uZW4gaW4gZWluZW0gRGF0ZW5zYXR6IGF1cy4gRGFzIGlzdCBwcmFrdGlzY2gsIHdlbm4gd2lyIER1cGxpa2F0ZSBlbnRmZXJuZW4gd29sbGVuLiBXaXIga8O2bm5lbiBzaWUgYWJlciBhdWNoIGJlbnV0emVuLCB1bSB1bnMgYWxsZSBXZXJ0ZSBlaW5lciBlaW56aWdlbiBWYXJpYWJsZSBhbnplaWdlbiB6dSBsYXNzZW46DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSBkaXN0aW5jdChwYXJ0eSkNCmBgYA0KDQpEaWUgYHB1bGwoKWAtRnVua3Rpb24gZXJsYXVidCBlcyB1bnMsIGRpZSBWZWt0b3JlbiBlaW56ZWxuZXIgU3BhbHRlbiBhdXMgZWluZW0gRGF0ZW5zYXR6IHp1ICJ6aWVoZW4iLiBEYXMgaXN0IHUuYS4gZGFubiBwcmFrdGlzY2gsIHdlbm4gd2lyIGVpbnplbG5lIFZhcmlhYmxlbiB3ZWl0ZXJ2ZXJhcmJlaXRlbiBvZGVyIGluc3BpemllcmVuIHdvbGxlbi4gU28ga8O2bm5lbiB3aXIgZGllIFdlcnRlIGVpbmVyIFZhcmlhYmxlIGFuIEZ1bmt0aW9uZW4gd2VpdGVyZ2ViZW4sIGRpZSBlaW5lbiBWZWt0b3IgZXJ3YXJ0ZW4uIFdpZSBldHdhIGRpZSBGdW5rdGlvbiBgbWluKClgLCB3ZWxjaGUgdW5zIGRlbiBuaWVkcmlnc3RlbiBXZXJ0IGVpbmVzIFZla3RvcnMgYXVzZ2lidC4gQmVpc3BpZWxzd2Vpc2UgZGVuIG5pZWRyaWdzdGVuIFdlcnQgZGVyICJwdWJsaXppZXJ0Ii1WYXJpYWJsZSwgYWxzbyBkZW4gWmVpdHB1bmt0IGRlcyBlcnN0ZW4gVmlkZW9zIGluIHVuc2VyZW0gRGF0ZW5zYXR6Og0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvcyAlPiUgcHVsbChjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSAlPiUgbWluKCkNCmBgYA0KDQojIyMgw5xidW5nIDMNCg0KU2NoYXV0IGV1Y2ggZGFzIHBhcnR5X3ZpZGVvcyBPYmpla3QgYW4uIFZlcndlbmRldCBkYXp1IHNvd29obCBgVmlldygpYCBhbHMgYXVjaCBkZW4gIkVudmlyb25tZXQiLVJlaXRlci4gU29ydGllcnQgZGVuIERhdGVuc2F0eiBuYWNoIHVudGVyc2NoaWVkbGljaGVuIFZhcmlhYmxlbiAoU3BhbHRlbikuDQoNCmBgYHtyfQ0KDQpWaWV3KCkNCg0KIyBNaXQgIiMiIGvDtm5udCBpaHIgS29tbWVudGFyZSBpbiBldXJlbiBDb2RlIGVpbmbDvGdlbi4gQWxsZXMsIHdhcyBoaW50ZXIgZGVtICIjIiBzdGVodCwgd2lyZCBuaWNodCBhdXNnZWbDvGhydC4gRGFzIGlzdCBwcmFrdGlzY2gsIHVtIENvZGUgenUga29tbWVudGllcmVuLCBrbGVpbmUgQmVvYmFjaHR1bmdlbiwgQW53ZWlzdW5nZW4gdW5kIFRpcHBzIHp1IHZlcm1lcmtlbg0KYGBgDQoNCkxhc3N0IGV1Y2ggbWl0dGVscyBgZGlzdGluY3QoKWAgZGllIGRpc3Rpbmt0ZW4gV2VydGUgZsO8ciBkaWUgVmFyaWFibGVuICpwYXJ0eSogdW5kICpwYXJ0eV9sYWJlbCogYXVzZ2ViZW4uIFdhcyBmw6RsbHQgZXVjaCBhdWY/DQoNCmBgYHtyfQ0KDQpgYGANCg0KV2FzIHBhc3NpZXJ0LCB3ZW5uIGlociBldWNoIG1pdHRlbHMgYGRpc3RpbmN0KClgIGFsbGUgZWluemlnYXJ0aWdlbiBLb21iaW5hdGlvbmVuIGRlciBWYXJpYWJsZW4gKnBhcnR5KiB1bmQgKmlkKiBhdXNnZWJlbiBsYXNzdD8gSGlud2VpczogYGRpc3RpbmN0KClgIGzDpHNzdCBldWNoIGJlbGllYmlnIHZpZWxlIFZhcmlhYmxlbmtvbWJpbmF0aW9uZW4gYW5nZWJlbiwgd2VubiBpaHIgZGllc2UgbWl0IGVpbmVtIEtvbW1hICgsKSB0cmVubnQuDQoNCmBgYHtyfQ0KDQpgYGANCg0KWmllaHQgZXJuZXV0IGRpZSAqY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCotVmFyaWFibGUgbWl0dGVscyBgcHVsbCgpYCBhdXMgZGVtIERhdGVuc2F0ei4gV2VuZGV0IGRpZXNlcyBNYWwgamVkb2NoIGFuZGVyZSBGdW5rdGlvbmVuIGRhcmF1ZiBhbiwgdW0gd2VpdGVyZSBJbmZvcm1hdGlvbmVuIHp1IGVyaGFsdGVuLiBJbnNiZXNvbmRlcmUgZm9sZ2VuZGUgRnVua3Rpb25lbiBzaW5kIHNpbm52b2xsOiBgbWF4KClgLCBgbWVhbigpYCwgYHJhbmdlKClgLiBXZWxjaGUgSW5mb3JtYXRpb25lbiBlcmhhbHRldCBpaHIgamV3ZWlscz8gV2VubiBpaHIgZXVjaCB1bnNpY2hlciBzZWlkLCBzY2hhdXQgbWl0dGVscyBgP2AgaW4gZGllIEhlbHBmaWxlcywgei5CLiBtaXQgYD9tZWFuKClgLg0KDQpgYGB7cn0NCg0KYGBgDQoNCiMjIDQuIERhdGVuIG1hbmlwdWxpZXJlbg0KDQojIyMjICoqZGlzdGluY3QoKSoqDQoNCldpZSBiZXJlaXRzIGVyd8OkaG50LCBsw6Rzc3Qgc2ljaCBgZGlzdGluY3QoKWAgYXVjaCBkYXp1IHZlcndlbmRlbiwgRHVwbGlrYXRlIHp1IGVudGZlcm5lbiwgaW5kZW0gd2lyIHVucyBudXIgZGllIGVpemlnYXJ0aWdlbiBXZXJ0ZSBlaW5lciBWYXJpYWJsZSAob2RlciBkaWUgZWluemlnYXJ0aWdlbiBXZXJ0a29tYmluYXRpb25lbiBtZWhyZXJlciBWYXJpYWJsZW4pIGF1c2dlYmVuIGxhc3Nlbi4gSW4gdW5zZXJlbSBEYXRlbnNhdHogYmVmaW5kZXQgc2ljaCB1LmEuIGRpZSAqdmlkZW9JRCotVmFyaWFibGUsIHdlbGNoZSBlaW5lbiBlaW56aWdhcnRpZ2VuIElkZW50aWZpa2F0b3IgZsO8ciBhbGxlIFZpZGVvcyBhdWYgWW91VHViZSBkYXJzdGVsbHQuIFVtIHNpY2hlcnp1Z2VoZW4sIGRhc3Mgc2ljaCBrZWluZSBEdXBsaWthdGUgaW4gdW5zZXJlbSBEYXRlbnNhdHogYmVmaW5kZW4sIGvDtm5uZW4gd2lyIGBkaXN0aW5jdCgpYCBhdWYgdW5zZXJlIERhdGVuIGFud2VuZGVuIHVuZCBkZW4gc28gZW50c3RhbmRlbmVuIERhdGVuc2F0eiBlaW5lbSBuZXVlbiBPYmpla3QgenVvcmRuZW4uIEJlYWNodGV0LCBkYXNzIGRpZSBGdW5rdGlvbiBzdGFuZGFyZG3DpMOfaWcgbnVyIGRpZSBzcGV6aWZpemllcnRlbiBWYXJpYWJsZW4gYXVzZ2lidCB1bmQgYWxsZSBhbmRlcmVuIGVudGZlcm50LiBVbSBkaWVzIHp1IMOkbmRlcm4sIGvDtm5uZW4gd2lyIGRpZSBPcHRpb24gYC5rZWVwX2FsbGAgc3BlemlmaXppZXJlbi4gYFRSVUVgIGJlaMOkbHQgYWxsZSBhbmRlcmVuIFZhcmlhYmxlbiwgZGFzIHN0YW5kYXJkbcOkw59pZyBlaW5nZXN0ZWxsdGUgYEZBTFNFYCBlbnRmZXJudCBzaWUuDQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX2Rpc3RpbmN0IDwtIHBhcnR5X3ZpZGVvcyAlPiUgZGlzdGluY3QoY29udGVudERldGFpbHMudmlkZW9JZCwgLmtlZXBfYWxsID0gVFJVRSkNCmBgYA0KDQojIyMjICoqZmlsdGVyKCkqKg0KDQpEaWUgYGZpbHRlcigpYC1GdW5rdGlvbiBlcmxhdWJ0IGVzIHVucywgRGF0ZW4gbmFjaCB1bnRlcnNjaGllZGxpY2hlbiBCZWRpdW5nZW4genUgZmlsdGVybi4gU28ga8O2bm5lbiB3aXIgdW5zIHouQi4gbnVyIGRpZSBWaWRlb3MgZWluZXIgZWluemlnZW4gUGFydGVpIGFuemVpZ2VuIGxhc3NlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfY2R1IDwtIHBhcnR5X3ZpZGVvcyAlPiUgDQogIGZpbHRlcihwYXJ0eSA9PSAiY2R1IikNCg0KcGFydHlfdmlkZW9zX2NkdQ0KYGBgDQoNCk1pdCBkZW0gT3BlcmF0b3IgYHxgIGvDtm5uZW4gd2lyIG1laHJlcmUgQmVkaW5ndW5nZW4ga29tYmluaWVyZW4uIGB8YCBiZWRldXRldCBkYWJlaTogIm9kZXIiLiBBbHNvIGJlaXNwaWVsc3dlaXNlIGFsbGUgVmlkZW9zIGRlciBDRFUgKm9kZXIqIGRlciBTUEQ6DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX2NkdV9zcGQgPC0gcGFydHlfdmlkZW9zICU+JSANCiAgZmlsdGVyKHBhcnR5ID09ICJjZHUiIHwgcGFydHkgPT0gInNwZCIpDQoNCnBhcnR5X3ZpZGVvc19jZHVfc3BkICU+JSBkaXN0aW5jdChwYXJ0eSkNCmBgYA0KDQpXaXIga8O2bm5lbiB1bnMgRGF0ZW4gYXVjaCBudXIgZsO8ciBlaW5lbiBiZXN0aW1tdGVuIFplaXRyYXVtIGF1c2dlYmVuIGxhc3Nlbi4gV2lyIHZlcndlbmRlbiBoaWVyIGRpZSAqbHVicmlkYXRlKi1GdW5rdGlvbiBgZG15KClgIChmw7xyIGRhcyBGb3JtYXQgKipEKipheS0qKk0qKm9udGgtKipZKiplYXIpIHVtIHNpY2hlcnp1c3RlbGxlbiwgZGFzcyB1bnNlcmUgQW5nYWJlIGRlcyBEYXR1bXMgYWxzIFN0cmluZyBpbiBkYXMga29ycmVrdGUgRGF0dW1zZm9ybWF0IHVtZ2V3YW5kZWx0IHdpcmQuIGA+PWAgYmVkZXV0ZXQgZGFiZWkgImdyw7bDn2VyIGdsZWljaC4iIERlciBXZXJ0IGRlciBWYXJpYWJsZSBtdXNzIGFsc28gbWluZGVzdGVucyBkZW0gYW5nZWdlYmVuZW4gV2VydCBlbnRzcHJlY2hlbiwgZXR3YSBtaW5kZXN0ZW5zIGRlbSAxLiBKYW51YXIgMjMsIHVtIGFsbGUgVmlkZW9zIGRpZXNlcyBKYWhyZXMgenUgZXJoYWx0ZW46DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zXzIzIDwtIHBhcnR5X3ZpZGVvcyAlPiUNCiAgZmlsdGVyKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQgPj0gZG15KCIxLjEuMjAyMyIpKQ0KDQpwYXJ0eV92aWRlb3NfMjMgDQpgYGANCg0KV2lyIGvDtm5uZW4gZWJlbnNvIGVpbmVuIFplaXRyYXVtIGZlc3RsZWdlbiwgaW5kZW0gd2lyIG5lYmVuIGVpbmVtIE1pbmRlc3QtIGF1Y2ggZWluZW4gSMO2Y2hzdHdlcnQsIGFsc28gZWluIFN0YXJ0LSB1bmQgRW5kZGF0dW0gYW5nZWJlbi4gRGF6dSBudXR6ZW4gd2lyIGA8PWAgZsO8ciAia2xlaW5lciBnbGVpY2giIHVuZCBkZW4gT3BlcmF0b3IgYCZgIGbDvHIgInVuZCIsIHdlbGNoZSBiZXN0aW1tdCwgZGFzcyBlaW4gRGF0ZW5zYXR6IGJlaWRlbiBLb25kaXRpb25lbiBlbnRzcHJlY2hlbiBtdXNzOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19qYW5fMjMgPC0gcGFydHlfdmlkZW9zICU+JQ0KICBmaWx0ZXIoDQogICAgY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCA+PSBkbXkoIjEuMS4yMDIzIikgJg0KICAgICAgY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCA8PSBkbXkoIjMxLjEuMjAyMyIpDQogICkNCg0KcGFydHlfdmlkZW9zX2phbl8yMw0KYGBgDQoNCldpciBrw7ZubmVuIGRpZSBPcGVyYXRvcmVuIHZvbiBgZmlsdGVyKClgwqBiZWxpZWJpZyBrb21iaW5pZXJlbiwgdW0gdW5zZXJlbiBEYXRlbnNhdHogenUgZmlsdGVybi4gWnVtIEJlaXNwaWVsLCB1bSBhbGxlIFZpZGVvcyBkZXIgU1BEIGF1cyBkZW0gSmFudWFyICcyMyB6dSBlcmhhbHRlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3Nfc3BkX2phbl8yMyA8LSBwYXJ0eV92aWRlb3MgJT4lDQogIGZpbHRlcigNCiAgICBwYXJ0eSA9PSAic3BkIiAmDQogICAgICBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0ID49IGRteSgiMS4xLjIwMjMiKSAmDQogICAgICBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0IDw9IGRteSgiMzEuMS4yMDIzIikNCiAgKQ0KDQpwYXJ0eV92aWRlb3Nfc3BkX2phbl8yMw0KYGBgDQoNCiMjIyMgc2VsZWN0KCkNCg0KRGllIGBzZWxlY3QoKWAtRnVua3Rpb24gZXJsYXVidCBlcywgbnVyIGJlc3RpbW10ZSBWYXJpYWJsZW4gYXVzIHVuc2VyZW0gRGF0ZW5zYXR6IGF1c3p1d8OkaGxlbiAtIHVuZCBhbGxlIGFuZGVyZW4genUgZW50ZmVybmVuLiBEaWVzIGlzdCBwcmFrdGlzY2gsIHdlbm4gd2lyIG5pY2h0IGFsbGUgVmFyaWFibGVuIGbDvHIgZWluZSBBbmFseXNlIGJlbsO2dGlnZW4uIEZhbGxzIHdpciBiZWlzcGllbHN3ZWlzZSBudXIgZGllIFZpZGVvSUQgdW5kIGRhcyBWZXLDtmZmZW50bGljaHVuZ3NkYXR1bSBhdXMgdW5zZXJlbSBEYXRlbnNhdHogYmVuw7Z0aWdlbiwga8O2bm5lbiB3aXIgYHNlbGVjdCgpYCB2ZXJ3ZW5kZW4sIHVtIGFsbGUgYW5kZXJlbiBWYXJpYWJsZW4genUgZW50ZmVybmVuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19zbWFsbCA8LSBwYXJ0eV92aWRlb3MgJT4lIA0KICBzZWxlY3QoY29udGVudERldGFpbHMudmlkZW9JZCwgY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkNCg0KcGFydHlfdmlkZW9zX3NtYWxsDQpgYGANCg0KIyMjIyAqKnJlbmFtZSgpKioNCg0KTWl0dGVscyBgcmVuYW1lKClgIGvDtm5uZW4gd2lyIGF1w59lZGVtIFZhcmlhYmxlbiBpbiB1bnNlcmVtIERhdGVuc2F0eiB1bWJlbmVubmVuLiBEaWVzIGlzdCBwcmFrdGlzY2gsIHdlbm4gZWluemVsbmUgVmFyaWFibGVuIGxhbmdlLCB3ZW5pZyBpbmZvcm1hdGl2ZSBOYW1lbiBoYWJlbi4gU28ga8O2bm5lbiB3aXIgYmVpc3BpZWxzd2Vpc2UgZGllIFZhcmlhYmxlbm5hbWVuIGluIHVuc2VyZW0gdmVya2xlaW5lcnRlbiBEYXRlbnNhdHoga8O8cnplbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3Nfc21hbGwgPC0gcGFydHlfdmlkZW9zX3NtYWxsICU+JSANCiAgcmVuYW1lKHZpZGVvX2lkID0gY29udGVudERldGFpbHMudmlkZW9JZCwNCiAgICAgICAgIHB1Ymxpc2hlZF9hdCA9IGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpDQoNCnBhcnR5X3ZpZGVvc19zbWFsbA0KYGBgDQoNCiMjIyMgKiptdXRhdGUoKSoqDQoNCkRpZSBgbXV0YXRlKClgLUZ1bmt0aW9uIGVybGF1YnQgZXMsIFZhcmlhYmxlbiB6dSAibXV0aWVyZW4iLCBhbHNvIHp1IHZlcsOkbmRlcm4uIERhenUgbXVzcyBiZXN0aW1tdCB3ZXJkZW4sIHdlbGNoZSBWYXJpYWJsZSB2ZXLDpG5kZXJ0IHdlcmRlbiBzb2xsLCB1bmQgYXVmIHdlbGNoZSBBcnQgdW5kIFdlaXNlIGRpZXMgZ2VzY2hlaGVuIHNvbGwuIEJlaXNwaWVsc3dlaXNlIGvDtm5uZW4gd2lyIG1pdCBkZXIgRnVua3Rpb24gYGFzX2RhdGUoKWAgZGVuIFB1Ymxpa2F0aW9uc3plaXRwdW5rdCBhdWYgZGFzIERhdHVtLCBhbHNvIGRlbiBQdWJsaWthdGlvbnN0YWcsIGvDvHJ6ZW4uIFdlbm4gd2lyIGVpbmUgRnVua3Rpb24gdmVyd2VuZGVuLCB1bSBEYXRlbiB6dSB2ZXLDpG5kZXJuLCB3aXJkIGRpZXNlIGltbWVyIGF1ZiBqZWRlIFJlaWhlIGluIHVuc2VyZW4gRGF0ZW4gYW5nZXdlbmRldC4gRGFzIGhlacOfdCwgYGFzX2RhdGUoKWAgbmltbXQgamVkZW4gZWluemVsbmVuIFdlcnQgaW4gZGVyICpwdWJsaXNoZWRfYXQqLVNwYWx0ZSB1bmQgIm11dGllcnQiIGlobiBtaXR0ZWxzIGRlciBGdW5rdGlvbiB6dSBlaW5lbSBEYXR1bS4gQmVhY2h0ZXQsIGRhc3MgYGFzX2RhdGUoKWAgZWluZSBGdW5rdGlvbiBkZXMgcGFja2FnZXMgbHVicmlkYXRlIGlzdCwgaWhyIGRpZXNlcyBhbHNvIGdlbGFkZW4gaGFiZW4gbcO8c3N0Lg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19zbWFsbCA8LSBwYXJ0eV92aWRlb3Nfc21hbGwgJT4lIA0KICBtdXRhdGUocHVibGlzaGVkX2F0ID0gYXNfZGF0ZShwdWJsaXNoZWRfYXQpKQ0KDQpwYXJ0eV92aWRlb3Nfc21hbGwNCmBgYA0KDQpXaXIga8O2bm5lbiBtaXQgYG11dGF0ZSgpYCBhYmVyIGF1Y2ggbmV1ZSBWYXJpYWJsZW4gaGluenVmw7xnZW4uIEF1w59lcmRlbSBtw7xzc2VuIHdpciBuaWNodCB1bmJlZGluZ3QgZWluZSBGdW5rdGlvbiB2ZXJ3ZW5kZW4sIHVtIFdlcnRlIHp1IG1hbmlwdWxpZXJlbi4gV2lyIGvDtm5uZW4gZWJlbnNvZ3V0IGVpbmVuIGZlc3RlbiBXZXJ0IHNldHplbiwgYmVpc3BpZWxzd2Vpc2UgZWluZW4gQ2hhcmFjdGVyIFN0cmluZy4gRGFzIGlzdCBwcmFrdGlzY2gsIHdlbm4gd2lyIGJlaXNwaWVsd2Vpc2UgZWluZW4gZml4ZW4gSW5kaWthdG9yIHNldHplbiB3b2xsZW4sIGV0d2EgdW0genUgdmVybWVya2VuLCB3b2hlciBkaWUgRGF0ZW4gU3RhbW1lbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3Nfc21hbGwgPC0gcGFydHlfdmlkZW9zX3NtYWxsICU+JSANCiAgbXV0YXRlKHNvdXJjZSA9ICJsZWFybndlYiIpDQoNCnBhcnR5X3ZpZGVvc19zbWFsbA0KYGBgDQoNCiMjIyMgKipzdW1tYXJpc2UoKSoqDQoNCk1pdHRlbHMgZGVyIEZ1bmt0aW9uIGBzdW1tYXJpc2UoKWAga8O2bm5lbiB3aXIgZWluZW4gRGF0ZW5zYXR6IHp1c2FtbWVuZmFzc2VuIGxhc3Nlbi4gRGF6dSBsZWdlbiB3aXIgZmVzdCwgd2VsY2hlIG5ldWVuIFZhcmlhYmxlbiB3aXIgd2llIGRlZmluaWVyZW4gbcO2Y2h0ZW4gdW5kIGVyaGFsdGVuIGVpbmVuIERhdGVuc2F0eiwgd2VsY2hlciBudXIgZGllc2UgKGlkUi4gdHJhbnNmb3JtaWVydGVuKSBWYXJpYWJsZW4gZW50aMOkbHQuIFNvIGvDtm5uZW4gd2lyIGJlaXNwaWVsc3dlaXNlIGRlbiBNaXR0ZWx3ZXJ0IGRlciBQdWJsaWthdGlvbnMtVmFyaWFibGUgZXJtaXR0ZWxuLiBCZWFjaHRldCwgZGFzcyB3aXIgZGFzIEVyZ2VibmlzIGtlaW5lbSBPYmpla3QgenV3ZWlzZW4sIHNvbmRlcm4gdW5zIGxlZGlnbGljaCBhdXNkcnVja2VuIGxhc3NlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIHN1bW1hcmlzZShtZWFuX2RhdGUgPSBtZWFuKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpKQ0KYGBgDQoNCkluIGRpZXNlbSBTaW5uZSBpc3QgYHN1bW1hcmlzZSgpYCB0cml2aWFsLCBkYSBlcyBlaW5lIMOkaG5saWNoZSBGdW5rdGlvbiB3aWUgb2JlbiBiZXJlaXRzIGBwdWxsKClgIGVyZsO8bGx0LiBJbnRlcmVzc2FudGVyIHdpcmQgZXMsIHdlbm4gd2lyIGRpZSBEYXRlbiB2b3JoZXIgZ3J1cHBpZXJlbi4gRGF6dSBiaWV0ZXQgZGFzICpUaWR5dmVyc2UqIGRpZSBGdW5rdGlvbiBgZ3JvdXBfYnkoKWAgYnp3LiAoc2VpdCBWZXJzaW9uIDEuMS4wKSBkaWUgT3B0aW9uIGAuYnlgLiBEYXLDvGJlciBrw7ZubmVuIHdpciBWYXJpYWJsZW4gZmVzdGxlZ2VuLCBmw7xyIGRlcmVuIGVpbnplbG5lIEF1c3Byw6RndW5nZW4gZGllIGZvbGdlbmRlbiBPcGVyYXRpb25lbiAoYnp3LiBiZWkgYC5ieWAgZGllIGFrdHVlbGxlIE9wZXJhdGlvbikgZ2V0cmVubnQgZHVyY2hnZWbDvGhydCB3aXJkLiBTbyBrw7ZubmVuIHdpciB1bnMgYmVpc3BpZWxzd2Vpc2UgZsO8ciBqZWRlIFBhcnRlaSBkZW4gTWl0dGVsd2VydCBkZXMgUHVibGlrYXRpb25zemVpdHB1bmt0cyBhbnplaWdlbiBsYXNzZW46DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSANCiAgZ3JvdXBfYnkocGFydHlfbGFiZWwpICU+JSANCiAgc3VtbWFyaXNlKG1lYW5fZGF0ZSA9IG1lYW4oY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCkpDQpgYGANCg0KRGllIEZ1bmt0aW9uIGBuKClgIGdpYnQgdW5zIGluIEtvbWJpbmF0aW9uIG1pdCBgc3VtbWFyaXNlKClgIGRpZSBHZXNhbXR6YWhsIGFuIEJlb2JhY2h0dW5nZW4gKGFsc28gUmVpaGVuKSBlaW5lcyBEYXRlbnNhdHplcyBhdXMuIFdlbm4gd2lyIGRpZSBEYXRlbiB2b3JoZXIgZ3J1cHBpZXJlbiwgYXVjaCBmw7xyIGFsbGUgQXVzcHLDpGd1bmdlbiBlaW5lciBWYXJpYWJsZSwgYnNwd3MuIGRpZSBQYXJ0ZWllbjoNCg0KYGBge3J9DQpwYXJ0eV9zdW1tYXJ5IDwtIHBhcnR5X3ZpZGVvcyAlPiUgDQogIGdyb3VwX2J5KHBhcnR5X2xhYmVsKSAlPiUgDQogIHN1bW1hcmlzZSh0b3RhbF92aWRlb3MgPSBuKCkpDQoNCnBhcnR5X3N1bW1hcnkNCmBgYA0KDQojIyMjICoqZ3JvdXBfYnkoKSoqDQoNCkViZW5zbyBrw7ZubmVuIHdpciBgZ3JvdXBfYnkoKWAgenVtIGdydXBwZW53ZWlzZW4gIm11dGllcmVuIiB2b3JoYW5kZW5lciBWYXJpYWJsZW4gbnV0emVuLiBTbyBrw7ZubmVuIHdpciBiZWlzcGllbHN3ZWlzZSB6dWVyc3QgZWluZSBuZXVlIFZhcmlhYmxlIGVyc3RlbGxlbiwgd2VsY2hlIHVucyBkZW4gVGFnIGRlciBQdWJsaWthdGlvbiBhbnplaWd0LCB1bmQgZGFubiBmw7xyIGplZGVuIFRhZyBkaWUgR2VzYW10emFobCBhbiBWaWRlb3MgenUgZGVtIHZvcmhhbmRlbmVuIERhdGVuc2F0eiBoaW56dWbDvGdlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfZGF5IDwtIHBhcnR5X3ZpZGVvcyAlPiUgDQogIG11dGF0ZShkYXkgPSBhc19kYXRlKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQpKSAlPiUgDQogIGdyb3VwX2J5KGRheSkgJT4lIA0KICBtdXRhdGUoZGFpbHlfdmlkZW9zID0gbigpKQ0KDQpwYXJ0eV92aWRlb3NfZGF5DQpgYGANCg0KQmVhY2h0ZXQsIGRhc3MgYmVpIFZlcndlbmR1bmcgdm9uIGBncm91cF9ieSgpYCAqKiphbGxlKioqIGZvbGdlbmRlbiBPcGVyYXRpb25lbiBhdWYgZGVuIGdydXBwaWVydGVuIERhdGVuIHN0YXR0ZmluZGVuLCB3YXMgenUgdW5lcndhcnRldGVuIEVyZ2Vibmlzc2VuIGbDvGhyZW4ga2Fubi4gV2VubiB3aXIgamV0enQgYmVpc3BpZWxzd2Vpc2UgZGllIFN1bW1lIGRlciBWaWRlb3MgYW56ZWlnZW4gbGFzc2VuIHdvbGxlbiwgZXJoYWx0ZW4gd2lyIGVpbiB1bmVyd2FydGV0ZXMgRXJnZWJuaXM6DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX2RheSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKQ0KYGBgDQoNCkFuc3RhdHQgdW5zIGRpZSBHZXNhbXR6YWhsIGRlciBWaWRlb3MgenUgemVpZ2VuLCBnaWJ0IHVucyBkaWUgRnVua3Rpb24gZGllIFN1bW1lIGRlciBWaWRlb3MgZsO8ciBqZWRlIEF1c3Byw6RndW5nIGRlciBncnVwcGllcmVuZGVuIFZhcmlhYmxlIGF1cy4gVW0gZGllcyB6dSDDpG5kZXJuLCBtw7xzc2VuIHdpciBkaWUgRnVua3Rpb24gYHVuZ3JvdXAoKWAgdmVyd2VuZGVuLCB3ZWxjaGUgYWxsZSBHcnVwcGllcnVuZ2VuIGluIGVpbmVtIE9iamVrdCBhdWZoZWJ0Og0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvc19kYXkgJT4lIHVuZ3JvdXAoKSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKQ0KYGBgDQoNCkRhcnVtIGlzdCBlcyBzaW5udm9sbCwgbmFjaCBqZWRlciBgZ3JvdXBfYnkoKWAgT3BlcmF0aW9uIGRpZSBHcnVwcGllcnVuZyBhdWZ6dWhlYmVuLCB3ZW5uIHdpciBkYXMgRXJnZWJuaXMgZWluZW0gT2JqZWt0IHp1b3JkbmVuLiBTbyB2ZXJtZWlkZW4gd2lyIHp1IHZlcmdlc3NlbiwgZGFzcyBlaW4gT2JqZWt0IGdydXBwaWVydCBpc3QuIFNvbnN0IGthbm4gZXMgbWl0dW50ZXIgenUgRmVobGVybiBpbiBkZW4gZm9sZ2VuZGVuIEJlcmVjaG51bmdlbiBrb21tZW4hDQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX2RheSA8LSBwYXJ0eV92aWRlb3MgJT4lIA0KICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIA0KICBncm91cF9ieShkYXkpICU+JSANCiAgbXV0YXRlKGRhaWx5X3ZpZGVvcyA9IG4oKSkgJT4lIA0KICB1bmdyb3VwKCkNCmBgYA0KDQpXZW5uIHdpciBkcGx5ciAxLjEuMCBvZGVyIG5ldWVyIGluc3RhbGxpZXIgaGFiZW4sIGvDtm5uZW4gd2lyIGF1Y2ggZGllIE9wdGlvbiBgLmJ5YCB2ZXJ3ZW5kZW4sIGRpZSBnZW5hdSBkaWVzZSBQcm9ibGVtYXRpayBiZWhlYmVuIHNvbGwuIEFuc3RhdHQgZGVuIERhdGVuc2F0eiBpbnNnZXNhbXQgenUgZ3J1cHBpZXJlbiwgZXJsYXVidCBzaWUgZXMgaWhuIGbDvHIgZWluZSBlaW56ZWxuZSBPcGVyYXRpb24gdGVtcG9yw6RyIHp1IGdydXBwaWVyZW4uIGBncm91cF9ieSgpYCBpc3QgYWxzbyBuw7x0emxpY2hlciwgd2VubiB3aXIgbWVocmVyZSBPcGVyYXRpb25lbiBhdWYgZWluIHVuZCBkZXJzZWxiZW4gR3J1cHBpZXJ1bmcgZHVyY2hmw7xocmVuIHdvbGxlbiwgd8OkaHJlbmQgYC5ieWAgZsO8ciBlaW56ZWxuZSBncnVwcGllcnRlIE9wZXJhdGlvbmVuIGdlZWlnbmV0IHVuZCB3ZW5pZ2VyIGZlaGxlcmFuZsOkbGxpZyBpc3QuDQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zX2RheSA8LSBwYXJ0eV92aWRlb3MgJT4lIA0KICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIA0KICBtdXRhdGUoZGFpbHlfdmlkZW9zID0gbigpLCAuYnkgPSBkYXkpDQoNCnBhcnR5X3ZpZGVvc19kYXkNCg0KcGFydHlfdmlkZW9zX2RheSAlPiUgc3VtbWFyaXNlKHRvdGFsX3ZpZGVvcyA9IHN1bShkYWlseV92aWRlb3MpKQ0KYGBgDQoNCiMjIyMgKiptdXRhdGUoKSoqIHZzLiAqKnN1bW1hcmlzZSgpKioNCg0KV2FzIGbDpGxsdCBpbiBkZW0gbGV0enRlbiBFcmdlYm5pcyBhdWY/IEdlbmF1LCBkaWUgU3VtbWUgZGVyIHTDpGdsaWNoZW4gVmlkZW9zIGlzdCBkZXV0bGljaCBow7ZoZXIgYWxzIGRpZSBBbnphaGwgYW4gQmVvYmFjaHR1bmdlbiBpbiB1bnNlcmVtIHVyc3Byw7xuZ2xpY2hlbiBEYXRhZnJhbWUuIERhcyBsaWVndCBkYXJhbiwgZGFzcyB3aXIgKioqZsO8ciBqZWRlcyBWaWRlbyoqKiBlaW5lbiBFaW50cmFnIGdlbWFjaHQgaGFiZW4sIHdlbGNoZXIgZGllIEFuemFobCBhbGxlciBWaWRlb3MgYW4gZGllc2VtIFRhZyBlbnRow6RsdC4gTWl0IGFuZGVyZW4gV29ydGVuOiB3aXIgaGFiZW4gZGllIEdlc2FtdHphaGwgdMOkZ2xpY2hlciBWaWRlb3MgcXVhZHJpZXJ0LCBkYSB3aXIgZGllIEFuemFobCBkZXIgdMOkZ2xpY2hlbiBWaWRlb3MgZsO8ciBqZWRlcyBWaWRlbyBlaW56ZWxuIGF1ZmFkZGllcnQgaGFiZW4uIFdlbm4gZXMgYW4gZWluZW0gVGFnIDMgVmlkZW9zIGdhYiBhbHNvICgzICsgMyArIDMpLiBKZSBuYWNoZGVtLCB3YXMgd2lyIHZvcmhhYmVuLCBrYW5uIGVzIHRyb3R6ZGVtIHNpbm52b2xsIHNlaW4sIGVpbmUgc29sY2hlIEtvbnRyb2xsdmFyaWFibGUgd2llIGRpZSBnZXNhbXRlbiB0w6RnbGljaGVuIFZpZGVvcyB2b3J6dWhhbHRlbi4gV2VubiB3aXIgZGllIFN1bW1lIGRlciBWaWRlb3MgYnJhdWNoZW4sIGlzdCBzaWUgYWJlciBuaWNodCBnZWVpZ25ldC4gSMOkdHRlbiB3aXIgYHN1bW1hcmlzZSgpYCB2ZXJ3ZW5kZXQsIHfDpHJlIGRpZXNlcyBQcm9ibGVtIG5pY2h0IGF1ZmdldHJldGVuLCBkYSBgc3VtbWFyaXNlKClgIG51ciBlaW5lIFJlaWhlIHBybyBHcnVwcGVudmFyaWFibGUgYXVzZ2lidDoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3NfZGF5X3N1bSA8LSBwYXJ0eV92aWRlb3MgJT4lIA0KICBtdXRhdGUoZGF5ID0gYXNfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSkgJT4lIA0KICBzdW1tYXJpc2UoZGFpbHlfdmlkZW9zID0gbigpLCAuYnkgPSBkYXkpDQoNCnBhcnR5X3ZpZGVvc19kYXlfc3VtDQoNCnBhcnR5X3ZpZGVvc19kYXlfc3VtICU+JSBzdW1tYXJpc2UodG90YWxfdmlkZW9zID0gc3VtKGRhaWx5X3ZpZGVvcykpDQpgYGANCg0KV8OkcmVuIHdpciBudXIgYW4gZGVyIEdlc2FtdHphaGwgYW4gQmVvYmFjaHR1bmdlbiBpbnRlcmVzc2llcnQgZ2V3ZXNlbiwgaMOkdHRlbiB3aXIgZGllc2Ugc29nYXIgbm9jaCBlaW5mYWNoZXIgbWl0IGBuKClgIG9kZXIgYG5yb3coKWAgZXJoYWx0ZW4ga8O2bm5lbi4gYG5yb3coKWAgZ2lidCB1bnMgbGVkaWdsaWNoIGRpZSBBbnphaGwgUmVpaGVuIGluIGVpbmVtIERhdGFmcmFtZSBhdXMsIHfDpGhyZW5kIGBuKClgIHVuZCBgc3VtbWFyaXNlKClgIGVpbiBuZXVlcywgenVzYW1tZW5nZWZhc3N0ZXMgRGF0YWZyYW1lIChiencuIGVpbmUgVGlkeXZlcnNlICpUaWJibGUqKSBwcm9kdXppZXJlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIHN1bW1hcmlzZSh0b3RhbF92aWRlb3MgPSBuKCkpDQoNCnBhcnR5X3ZpZGVvcyAlPiUgbnJvdygpDQogICAgICAgICAgICAgICAgICAgICAgICAgICANCmBgYA0KDQojIyMgw5xidW5nIDQNCg0Kw5xiZXJwcsO8ZmUsIG9iIGVzIGVpbmVuIFVudGVyc2NoaWVkIHp3aXNjaGVuIGBwYXJ0eV92aWRlb3NgIHVuZCBgcGFydHlfdmlkZW9zX2Rpc3RpbmN0YCBnaWJ0LiBIaW53ZWlzOiBkYSBgZGlzdGluY3QoKWAgZHVwbGl6aWVydGUgUmVpaGVuIChpbiBkaWVzZW0gRmFsbCBpZGVudGlzY2hlIElEcykgZW50ZmVybnQsIHNvbGx0ZSBzaWNoLCBmYWxscyBlaW4gVW50ZXJzY2hpZWQgYmVzdGVodCwgZGllIEFuemFobCBSZWloZW4gdW50ZXJzY2hlaWRlbi4gRGllcyBrw7ZubnQgaWhyIG1pdCBgbnJvdygpYCBvZGVyIGBzdW1tYXJpc2UoKWAgdW5kIGBuKClgIHByw7xmZW4uIEF1w59lcmRlbSBlcmxhdWJ0IGVzIGBpZGVudGljYWwob2JqZWt0MSwgb2JqZWt0MilgLCB6dSBwcsO8ZmVuLCBvYiB6d2VpIE9iamVrdGUgKHouQi4gendlaSBEYXRlbnPDpHR6ZSkgdm9sbGtvbW1lbiBpZGVudGlzY2ggc2luZC4NCg0KYGBge3J9DQoNCg0KDQoNCmBgYA0KDQpGaWx0ZXJ0IGRlbiBEYXRlbnNhdHosIHVtIGV1Y2g6XA0KYSkgYWxsZSBWaWRlb3MgZGVyIEZEUCBhbnplaWdlbiB6dSBsYXNzZW4sXA0KYikgYWxsZSBWaWRlb3MgYWIgQXVndXN0IDIwMjIgYW56ZWlnZW4genUgbGFzc2VuLFwNCmMpIGFsbGUgVmlkZW9zIGRlciBBZkQgaW0gU2VwdGVtYmVyIDIwMjEgYW56ZWlnZW4genUgbGFzc2VuLg0KDQpgYGB7cn0NCg0KYGBgDQoNClByw7xmdCwgd2VsY2hlIFZhcmlhYmxlbiBpbiBgcGFydHlfdmlkZW9zYCBtw7ZnbGljaGVyd2Vpc2Uga2VpbmUgcmVsZXZhbnRlbiBJbmZvcm1hdGlvbmVuIGVudGhhbHRlbi4gRGF6dSBrw7ZubnQgaWhyIHUuYS4gZGllIEZ1bmt0aW9uIGBkaXN0aW5jdCgpYCB2ZXJ3ZW5kZW4uIEhpbndlaXM6IERlbmt0IGRhcmFuLCBkYXNzLCB3ZW5uIGlociBtZWhyZXJlIFZhcmlhYmxlbiBhbiBgZGlzdGluY3QoKWAgZ2VidCwgZWluemlnYXJ0aWdlIEtvbWJpbmF0aW9uZW4gZGllc2VyIFZhcmlhYmxlbiBhdXNnZWdlYmVuIHdlcmRlbiwgYmVpIGVpbmVyIFZhcmlhYmxlIGFsbGUgZGlzdGlua3RlbiBXZXJ0ZSBkaWVzZXIgZWluZW4gVmFyaWFibGUuIFZlcndlbmRldCBkYW5uIGBzZWxlY3QoKWAsIHVtIGRpZXNlIFZhcmlhYmxlbiB6dSBlbnRmZXJuZW4gdW5kIHNwZWljaGVydCBkYXMgRXJnZWJuaXMgYWxzIGVpbiBuZXVlcyBPYmpla3QuIEJlbmVubnQgYXXDn2VyZGVtIG1pbmRlc3RlbnMgZWluZSBkZXIgw7xicmlnZW4gVmFyaWFibGVuIG1pdHRlbHMgYHJlbmFtZSgpYMKgdW0uDQoNCmBgYHtyfQ0KDQpgYGANCg0KVmVyd2VuZGV0IGBtdXRhdGUoKWAsIHVtIGV1cmVtIERhdGVuc2F0eiBlaW5lIG5ldWUgVmFyaWFibGUgaGluenV6dWbDvGdlbiwgZGllIGRlbiBNb25hdCBhdXNnaWJ0LCBpbiBkZXIgZGFzIFZpZGVvIHZlcsO2ZmZlbnRsaWNoIHd1cmRlLiBEYXp1IGvDtm5udCBpaHIgZGllICpsdWJyaWRhdGUqLUZ1bmt0aW9uIGBmbG9vcl9kYXRlKHgsIHVuaXQgPSAibW9udGgiKWAgdmVyd2VuZGVuLCB1bSBkZW4gVmVyw7ZmZmVudGxpY2h1bmdzemVpdHB1bmt0IGluIGRlbiBlcnN0ZW4gZGVzIE1vbmF0cyB1bXp1d2FuZGVsbiAod29iZWkgKngqIGRpZSB6dSBtb2RpZml6aWVyZW5kZSBWYXJpYWJsZSBkYXJzdGVsbHQpLg0KDQpgYGB7cn0NCg0KYGBgDQoNCkZhc3N0IGV1cmVuIERhdGVuc2F0eiB6dXNhbW1lbiwgaW5kZW0gaWhyIGV1Y2ggbWl0IGBzdW1tYXJpc2UoKWAgZGllIEFuemFobCBhbiBWaWRlb3MgcHJvIFdvY2hlIHVuZCBQYXJ0ZWkgYXVzZ2ViZW4gbGFzc3QuIFNwZWljaGVydCBkaWVzZSBadXNhbW1lbmZhc3N1bmcgYWxzIG5ldWVzIE9iamVrdCBhYi4gSGlud2VpczogYGdyb3VwX2J5KClgIHVuZCBgLmJ5YCBuZWhtZW4gbWVocmVyZSBWYXJpYWJsZW4gYW4sIGluZGVtIGlociBzaWUgbWl0IGVpbmVtIEtvbW1hIHRyZW5udCBiencuIHp1IGVpbmVtIFZla3RvciB6dXNhbW1lbmZhc3N0IChgZ3JvdXBfYnkoeCwgeSlgIGJ6dy4gYHN1bW1hcmlzZSguLi4sIC5ieSA9IGMoeCwgeSkpYCkuDQoNCmBgYHtyfQ0KDQpgYGANCg0KIyMgNS4gRGF0ZW4gdmlzdWFsaXNpZXJlbg0KDQpNaXQgKipnZ3Bsb3QqKiBrw7ZubmVuIHdpciBpbm5lcmhhbGIgZGVzICpUaWR5dmVyc2UqIERhdGVuIHZpc3VhbGlzaWVyZW4uIERhenUga8O2bm5lbiB3aXIgdmVyc2NoaWVkZW5lIEFydGVuIHZvbiBHcmFwaGVuIHfDpGhsZW4gc293aWUgYmVzdGltbWVuLCB3ZWxjaGUgKmFlc3RoZXRpY3MqLCBhbHNvIHdlbGNoZSBBeGVuIGJ6dy4gd2VpdGVyZSBWaXN1YWxpc2llcnVuZ3Ntw7ZnbGljaGtlaXRlbiwgZHVyY2ggd2VsY2hlIFZhcmlhYmxlbiBkYXJnZXN0ZWxsdCB3ZXJkZW4gc29sbGVuLiBCZWlzcGllbHN3ZWlzZSBrw7ZubmVuIHdpciB1bnMgbWl0dGVscyBlaW5lcyBCYXItRGlhZ3JhbW1zIGFuemVpZ2VuIGxhc3Nlbiwgd2lldmllbGUgQmVvYmFjaHR1bmdlbiBlaW5lciBWYXJpYWJsZSBpbSBEYXRlbnNhdHogdm9yaGFuZGVuIHNpbmQuIGBnZW9tX2JhcigpYCB6w6RobHQgZGFiZWkgYXV0b21hdGlzY2ggZGllIEJlb2JhY2h0dW5nZW4gdW5kIG9yZG5ldCBkaWVzZW4gKmNvdW50KiBkZXIgWS1BY2hzZSB6dS4gQmVhY2h0ZXQsIGRhc3MgKipnZ3Bsb3QqKiBlaW4gKipgK2AqKiBzdGF0dCBkZXIgKnBpcGUqIGAmPiZgIHZlcndlbmRldC4NCg0KYGBge3J9DQpnZ3Bsb3QocGFydHlfdmlkZW9zLCBhZXMoeCA9IHBhcnR5X2xhYmVsKSkgKw0KICBnZW9tX2JhcigpDQpgYGANCg0KV2lyIGvDtm5uZW4gYWJlciBhdWNoIGRpZSBBbnphaGwgVmlkZW9zIGltIFplaXR2ZXJsYXVmIGRhcnN0ZWxsZW4uIERhenUgbcO8c3NlbiB3aXIgbmViZW4gZGVyIFgtQWNoc2UgYWxzIFplaXRwdW5rdCBhdWNoIGRpZSBZLUFjaHNlIGFscyBBbnphaGwgVmlkZW9zIGFuZ2ViZW4uIERhIHdpciBkaWUgQW56YWhsIGRlciBWaWRlb3MgenUgZWluZW0gWmVpdHB1bmt0IG5pY2h0IGluIHVuc2VyZW4gRGF0ZW4gaGFiZW4sIG3DvHNzZW4gd2lyIGRpZXNlIHp1bsOkY2hzdCBiZXJlY2huZW4uIERhenUga8O2bm5lbiB3aXIgZXJuZXV0IGBzdW1tYXJ5KClgIG51dHplbiwgdW0gZGllIEFuemFobCBhbiBWaWRlb3MgenVzYW1tZW56dWZhc3Nlbi4gRGFzIEVyZ2VibmlzIGvDtm5uZW4gd2lyIG1pdHRlbHMgZGVyICpwaXBlKiBkaXJla3QgYW4gYGdncGxvdCgpYCBnZWJlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIA0KICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0KSAlPiUgDQogIGdncGxvdChhZXMoeCA9IGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQsIHkgPSB2aWRlb3MpKSArDQogIGdlb21fbGluZSgpDQpgYGANCg0KV2llIHdpciBzZWhlbiwgaXN0IGVpbmUgRGFyc3RlbGx1bmcgbmFjaCBQdWJsaWthdGlvbnN6ZWl0cHVua3QgdW5nZWVpZ25ldC4gRGFzIGxpZWd0IGRhcmFuLCBkYXNzIHNvIG51ciBkaWVqZW5pZ2VuIFZpZGVvcyBkZW5zZWxiZW4gUHVua3QgYXVmIGRlciBZLUFjaHNlIGJlbGVnZW4sIGRpZSB6dW0gZXhha3Qgc2VsYmVuIFplaXRwdW5rdCBwdWJsaXppZXJ0IHd1cmRlbi4gTWl0IGFuZGVyZW4gV29ydGVuOiB3aXIgbcO8c3NlbiB1bnNlcmUgRGF0ZW4gYWdncmVnaWVyZW4sIHVtIGVpbmUgYmVzc2VyZSBEYXJzdGVsbHVuZyB6dSBlcnppZWxlbi4gRGllcyBrw7ZubmVuIHdpciBlcm5ldXQgbWl0IGBtdXRhdGUoKWAgdW5kIGBzdW1tYXJpc2UoKWAgZXJ6aWVsZW4sIGluZGVtIHdpciBkaWUgVmlkZW9zIG5hY2ggUHVibGlrYXRpb25zbW9uYXQgYWdncmVnaWVyZW46DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gIm1vbnRoIikpICU+JSANCiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gbW9udGgpICU+JSANCiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MpKSArDQogIGdlb21fbGluZSgpDQpgYGANCg0KV2lyIGvDtm5uZW4gZGllIHB1YmxpemllcnRlbiBWaWRlb3MgZWJlbnNvIG5hY2ggUGFydGVpZW4gYXVmdGVpbGVuLCBpbmRlbSB3aXIgZGllIERhdGVuIGVudHNwcmVjaGVuZCBhdWZiZXJlaXRlbiB1bmQgZGVyIFZhcmlhYmxlICpQYXJ0ZWkqIGRhcyBBdHRyaWJ1dCAqRmFyYmUqIHp1b3JkbmVuOg0KDQpgYGB7cn0NCnBhcnR5X3ZpZGVvcyAlPiUgDQogIG11dGF0ZShtb250aCA9IGZsb29yX2RhdGUoY29udGVudERldGFpbHMudmlkZW9QdWJsaXNoZWRBdCwgdW5pdCA9ICJtb250aCIpKSAlPiUgDQogIHN1bW1hcmlzZSh2aWRlb3MgPSBuKCksIC5ieSA9IGMobW9udGgsIHBhcnR5X2xhYmVsKSkgJT4lIA0KICBnZ3Bsb3QoYWVzKHggPSBtb250aCwgeSA9IHZpZGVvcywgY29sb3IgPSBwYXJ0eV9sYWJlbCkpICsNCiAgZ2VvbV9saW5lKCkNCmBgYA0KDQpEaWVzZSBEYXJzdGVsbHVuZyBpc3QgamVkb2NoIGV0d2FzIHVuw7xiZXJzaWNodGxpY2gsIGRhIHNpY2ggdGVpbHdlaXNlIG51ciBzY2h3ZXIgZXJrZW5uZW4gbMOkc3N0LCB3ZWxjaGUgUGFydGVpIHp1IHdlbGNoZW0gWmVpdHB1bmt0IHdpZXZpZWxlIFZpZGVvcyB2ZXLDtmZmZW50bGljaHQgaGF0LiBEYXMgbMOkc3N0IHNpY2ggbWl0IGRlciBGdW5rdGlvbiBgZmFjZXRfd3JhcCgpYCBiZXNzZXIgZGFyc3RlbGxlbi4gRGFtaXQgd2lyZCBqZWRlIEF1c3Byw6RndW5nIGRlciBzcGV6aWZpemllcnRlbiBWYXJpYWJsZSBpbiBlaW5lbSBlaWdlbmVuIEdyYXBoZW4gZGFyZ2VzdGVsbHQuDQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gIm1vbnRoIikpICU+JSANCiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gYyhtb250aCwgcGFydHlfbGFiZWwpKSAlPiUgDQogIGdncGxvdChhZXMoeCA9IG1vbnRoLCB5ID0gdmlkZW9zLCBjb2xvciA9IHBhcnR5X2xhYmVsKSkgKw0KICBnZW9tX2xpbmUoKSArDQogIGZhY2V0X3dyYXAoIH4gcGFydHlfbGFiZWwsIG5jb2wgPSAzKQ0KYGBgDQoNCldpciBrw7ZubmVuIGRpZSBEYXJzdGVsbHVuZyBub2NoIHdlaXRlciB2ZXJiZXNzZXJuIHVuZCB2ZXJzY2jDtm5lcm4uIEJlaXNwaWVsc3dlaXNlIGlzdCBkaWUgVW50ZXJ0ZWlsdW5nIGRlciBHcmFwaGxpbmllbiBuYWNoIEZhcmJlIG5pY2h0IG1laHIgbsO2dGlnLCBkYSB3aXIgZGllc2VsYmVuIEluZm9ybWF0aW9uZW4gYmVyZWl0cyBpbiBkZW4gRmFjZXR0ZW4gZGVzIEdyYXBocyBkYXJzdGVsbGVuLiBXaXIga8O2bm50ZW4gZWluZmFjaCBkYXMgQXR0cmlidXQgYGNvbG9yID0gcGFydHlfbGFiZWxgIGF1cyBgYWVzKClgIGVudGZlcm5lbi4gV2lyIGZpbmRlbiBhYmVyLCBkYXNzIGRpZSB1bnRlcnNjaGllZGxpY2hlbiBGYXJiZW4gdW5zZXJlIEdyYWZpayBhbnNycHJlY2hlbmRlciBtYWNoZW4uIERlbm5vY2ggbmltbXQgZGllIExlZ2VuZGUgYXVmIGRlciByZWNodGVuIFNlaXRlIHp1IHZpZWwgUGxhdHogZWluIHVuZCBiaWV0ZXQga2VpbmUgenVzw6R0emxpY2hlbiBJbmZvcm1hdGlvbmVuLiBXaXIga8O2bm5lbiBzaWUgZW50ZmVybmVuLCBpbmRlbSB3aXIgZGllIHNvZ2VuYW5udGVuICpndWlkZXMqLCBhbHNvIGRpZSBMZWdlbmRlbiwgYmVhcmJlaXRlbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIA0KICBtdXRhdGUobW9udGggPSBmbG9vcl9kYXRlKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQsIHVuaXQgPSAibW9udGgiKSkgJT4lIA0KICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSANCiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArDQogIGdlb21fbGluZSgpICsNCiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICsNCiAgZ3VpZGVzKGNvbG9yID0gIm5vbmUiKQ0KYGBgDQoNClNjaG9uIGJlc3Nlci4gV2lyIGjDpHR0ZW4gYWxsZXJkaW5ncyBnZXJuZSwgZGFzcyBkaWUgRmFyYmVuIGRlciBMaW5pZW4gZsO8ciBqZWRlIFBhcnRlaSBkZW4gaWhyZXIga2xhc3Npc2NoZW4gUGFydGVpZmFyYmUgKGFsc28gcm90IGbDvHIgZGllIFNQRCwgc2Nod2FyeiBmw7xyIGRpZSBDRFUsIGV0Yy4pIGVudHNwcmljaHQuIERhenUgbcO8c3NlbiB3aXIgenVuw6RjaHN0IGVpbiBPYmpla3QgbWl0IGRlbiBOYW1lbiB1bmQgUkdCLVdlcnRlbiBkZXIgUGFydGVpZW4gZXJzdGVsbGVuLCBkYXNzIHdpciBkYXJhdWZoaW4gbWl0dGVscyBgc2NhbGVfY29sb3JfbWFudWFsKClgIHVuc2VyZW0gR3JhcGhlbiBoaW56dWdlYmVuLiBCZWFjaHRldCwgZGFzcyBkaWUgT2JqZWt0d2VydGUgZGVuIFdlcnRlbiBpbiBkZXIgVmFyaWFibGUgZW50c3ByZWNoZW4gbcO8c3NlbiwgZGVyIHNpZSB6dWdlb3JkbmV0IHdlcmRlbiBzb2xsZW4uIEluIHVuc2VyZW0gRmFsbGUgYWxzbyBkZW4ga29ycmVrdGVuIFBhcnRlaW5hbWVuLiBEZXIgendlaXRlIFdlcnQgbXVzcyBlaW4gUkdCLSBvZGVyIGFuZGVyZXIgRmFyYndlcnQgc2Vpbi4gQW5zb25zdGVuIHdlacOfIGRpZSBGdW5rdGlvbiBuaWNodCwgd2VsY2hlIEZhcmJlIHNpZSB3ZWxjaGVtIFdlcnQgenVvcmRuZW4gc29sbC4NCg0KYGBge3J9DQpjb2xvcnMgPC0NCiAgYygNCiAgICAiQWZEIiA9IHJnYigwLCA2MCwgMTQ1LCBtYXhDb2xvclZhbHVlID0gMjU1KSwNCiAgICAiQ0RVIiA9IHJnYig1MCwgNDgsIDQ2LCBtYXhDb2xvclZhbHVlID0gMjU1KSwNCiAgICAiRElFIExJTktFIiA9IHJnYigxODIsIDI4LCA2MiwgbWF4Q29sb3JWYWx1ZSA9IDI1NSksDQogICAgIkZEUCIgPSByZ2IoMjU1LCAyMzcsIDAsIG1heENvbG9yVmFsdWUgPSAyNTUpLA0KICAgICJCw7xuZG5pcyA5MC9EaWUgR3LDvG5lbiIgPSByZ2IoNzAsIDE1MCwgNDMsIG1heENvbG9yVmFsdWUgPSAyNTUpLA0KICAgICJTUEQiID0gcmdiKDIyNywgMCwgMTUsIG1heENvbG9yVmFsdWUgPSAyNTUpDQogICkNCg0KcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gIm1vbnRoIikpICU+JSANCiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gYyhtb250aCwgcGFydHlfbGFiZWwpKSAlPiUgDQogIGdncGxvdChhZXMoeCA9IG1vbnRoLCB5ID0gdmlkZW9zLCBjb2xvciA9IHBhcnR5X2xhYmVsKSkgKw0KICBnZW9tX2xpbmUoKSArDQogIGZhY2V0X3dyYXAoIH4gcGFydHlfbGFiZWwsIG5jb2wgPSAzKSArDQogIGd1aWRlcyhjb2xvciA9ICJub25lIikgKw0KICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gY29sb3JzKQ0KYGBgDQoNCk51biB3b2xsZW4gd2lyIG5vY2ggdW5zZXJlIEF4ZW4gdW1iZW5lbm5lbiB1bmQgZGVtIEdyYXBoZW4gZWluZW4gaW5mb3JtYXRpdmVuIFRpdGVsIGdlYmVuLCBkZXIgYmVzY2hyZWlidCwgd2FzIHdpciBoaWVyIHNlaGVuIHVuZCBiZXJlY2huZXQgaGFiZW4uIERhcyBnZWh0IGVpbmZhY2ggbWl0IGRlciBgbGFicygpYC1GdW5rdGlvbjoNCg0KYGBge3J9DQpwYXJ0eV92aWRlb3MgJT4lIA0KICBtdXRhdGUobW9udGggPSBmbG9vcl9kYXRlKGNvbnRlbnREZXRhaWxzLnZpZGVvUHVibGlzaGVkQXQsIHVuaXQgPSAibW9udGgiKSkgJT4lIA0KICBzdW1tYXJpc2UodmlkZW9zID0gbigpLCAuYnkgPSBjKG1vbnRoLCBwYXJ0eV9sYWJlbCkpICU+JSANCiAgZ2dwbG90KGFlcyh4ID0gbW9udGgsIHkgPSB2aWRlb3MsIGNvbG9yID0gcGFydHlfbGFiZWwpKSArDQogIGdlb21fbGluZSgpICsNCiAgZmFjZXRfd3JhcCggfiBwYXJ0eV9sYWJlbCwgbmNvbCA9IDMpICsNCiAgZ3VpZGVzKGNvbG9yID0gIm5vbmUiKSArDQogIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjb2xvcnMpICsNCiAgbGFicygNCiAgICB4ID0gIk1vbmF0IiwNCiAgICB5ID0gIlZlcsO2ZmZlbnRsaWNodGUgVmlkZW9zIiwNCiAgICBjb2xvciA9ICJQYXJ0ZWkiLA0KICAgIHRpdGxlID0gIlZpZGVvcyDDvGJlciBaZWl0IG5hY2ggUGFydGVpLCBHZXNhbXR6ZWl0cmF1bSINCiAgKSANCmBgYA0KDQpTY2hsdXNzZW5kbGljaCBrw7ZubmVuIHdpciBub2NoIGRhcyBzb2dlbmFubnRlICp0aGVtZSogYW5wYXNzZW4sIGFsc28gZGFzIEZhcmJ0aGVtYSwgZGFzIHZvcmdpYnQsIHdpZSBiZWlzcGllbHN3ZWlzZSBkZXIgSGludGVyZ3J1bmQgZGVyIEdyYXBoZW4gY29sb3JpZXJ0IGlzdC4gYHRoZW1lX2J3KClgIGlzdCBlaW4gc2NobGljaHRlcyBzY2h3YXJ6LXdlacOfIFRoZW1hLCB3ZWxjaGVzIGRpZSBGYXJiZW4gaW4gdW5zZXJlbSBHcmFwaGVuIGd1dCB6dXIgR2VsdHVuZyBicmluZ3Q6DQoNCmBgYHtyfQ0KcGFydHlfdmlkZW9zICU+JSANCiAgbXV0YXRlKG1vbnRoID0gZmxvb3JfZGF0ZShjb250ZW50RGV0YWlscy52aWRlb1B1Ymxpc2hlZEF0LCB1bml0ID0gIm1vbnRoIikpICU+JSANCiAgc3VtbWFyaXNlKHZpZGVvcyA9IG4oKSwgLmJ5ID0gYyhtb250aCwgcGFydHlfbGFiZWwpKSAlPiUgDQogIGdncGxvdChhZXMoeCA9IG1vbnRoLCB5ID0gdmlkZW9zLCBjb2xvciA9IHBhcnR5X2xhYmVsKSkgKw0KICBnZW9tX2xpbmUoKSArDQogIGZhY2V0X3dyYXAoIH4gcGFydHlfbGFiZWwsIG5jb2wgPSAzKSArDQogIGd1aWRlcyhjb2xvciA9ICJub25lIikgKw0KICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gY29sb3JzKSArDQogIGxhYnMoDQogICAgeCA9ICJNb25hdCIsDQogICAgeSA9ICJWZXLDtmZmZW50bGljaHRlIFZpZGVvcyIsDQogICAgY29sb3IgPSAiUGFydGVpIiwNCiAgICB0aXRsZSA9ICJWaWRlb3Mgw7xiZXIgWmVpdCBuYWNoIFBhcnRlaSwgR2VzYW10emVpdHJhdW0iDQogICkgKw0KICB0aGVtZV9idygpDQpgYGANCg0KIyMjIMOcYnVuZyA1DQoNClByb2JpZXJ0IHdlaXRlcmUgVmlzdWFsaXNpZXJ1bmdzbcO2Z2xpY2hrZWl0ZW4gYXVzLiBWZXJ3ZW5kZXQgZGF6dSB6dW7DpGNoc3QgZGFzIGBwYXJ0eV9zdW1tYXJ5YC1PYmpla3QsIHdlbGNoZXMgd2lyIGluIGVpbmVyIGRlciB2b3JoZXJpZ2VuIEFic2Nobml0dGUgZXJzdGVsbHQgaGFiZW4uIFp1ciBFcmlubmVydW5nOiBgcGFydHlfc3VtbWFyeWAgZW50aMOkbHQgZWluZSBtaXQgYHN1bW1hcmlzZSgpYCBlcnN0ZWxsdGUgWnVzYW1tZW5mYXNzdW5nIGRlciBWaWRlb3MgcHJvIFBhcnRlaS4gTnV0enQgYGFlcygpYCwgdW0gZGllIFZhcmlhYmxlICpwYXJ0eV9sYWJlbCogYWxzIFgtLCAqdG90YWxfdmlkZW9zKiBhbHMgWS1BY2hzZSBmZXN0enVsZWdlbiB1bmQgZGFubiBkaWUgRnVua3Rpb24gYGdlb21fY29sKClgLCB1bSBlaW4gQmFsa2VuZGlhZ3JhbW0genUgZXJzdGVsbGVuLiBXYXMgZsOkbGx0IGF1Ziwgd2VubiBpaHIgZGFzIEVyZ2VibmlzIG1pdCBkZW0gQmFyLURpYWdyYW1tIHZlcmdsZWljaHQsIGRhcyB3aXIgenUgQmVnaW5uIGRpZXNlcyBBYnNjaG5pdHRzIGVyc3RlbGx0IGhhYmVuPw0KDQpgYGB7cn0NCg0KYGBgDQoNClRhdXNjaHQgbnVuIGRpZSBYLSB1bmQgZGllIFktQWNoc2UgZXVyZXIgQmFsa2VuZGlhZ3JhbW1zLCBpbmRlbSBpaHIgZGllIFdlcnRlIGluIGBhZXMoKWAgZW50c3ByZWNoZW5kIMOkbmRlcnQuDQoNCmBgYHtyfQ0KDQpgYGANCg0KRsO8Z3QgenVzw6R0emxpY2ggZGllIEZhcmJlIGFscyBBdHRyaWJ1dCBkZXIgUGFydGVpIGhpbnp1IChlcm5ldXQgbWl0IGBhZXMoKWApLiBFbnRmZXJudCBhdcOfZXJkZW0gZGllIExlZ2VuZGUgZGVzIEZhcmJhdHRyaWJ1dHMgbWl0IGBndWlkZXMoKWAuIEhpbndlaXM6IHVtIGRpZSBCYWxrZW4genUgImbDvGxsZW4iICh1bmQgbmljaHQgbnVyIGRlbiBBdcOfZW5yYW5kIGVpbnp1ZsOkcmJlbikgbcO8c3N0IGlociBkYXMgQXR0cmlidXQgKmZpbGwqIGluIGBhZXMoKWAgdW5kIGBndWlkZXMoKWAgdmVyd2VuZGVuLg0KDQpgYGB7cn0NCg0KYGBgDQoNCsOEbmRlcnQgbnVuIGRpZSBGYXJiZW4genUgZGVuIG9mZml6aWVsbGVuIFBhcnRlaWZhcmJlbiwgaW5kZW0gaWhyIGRpZSBGdW5rdGlvbiBgc2NhbGVfZmlsbF9tYW51YWwoKWAgdmVyd2VuZGV0LiBIaW53ZWlzOiBpaHIga8O2bm50IGRhcyBgY29sb3JzYC1PYmpla3QgdmVyd2VuZGVuLCBkYXMgd2lyIGJlcmVpdHMgZXJzdGVsbHQgaGFiZW4uDQoNCmBgYHtyfQ0KDQpgYGANCg0Kw4RuZGVydCBtaXQgYGxhYnMoKWAgZGllIExhYmVsIGRlciBYLSB1bmQgWS1BY2hzZSB1bmQgZsO8Z3QgZWluZW4gVGl0ZWwgZWluLiDDhG5kZXJ0IGF1w59lcmRlbSBkYXMgRmFyYnRoZW1hLiBNaXQgYD90aGVtZV9idygpYCBrw7ZubnQgaWhyIGV1Y2ggZGllIHZlcmbDvGdiYXJlbiBUaGVtZW4gYW56ZWlnZW4gbGFzc2VuLg0KDQpgYGB7cn0NCg0KYGBgDQoNCiMjIDYuIERhdGVuIHNwZWljaGVybg0KDQpXaXIga8O2bm5lbiB1bnNlcmUgRXJnZWJuaXNzZSBzcGVpY2hlcm4sIGluZGVtIHdpciBEYXRlbnPDpHR6ZSBhbHMgLlJEUyBhYnNwZWljaGVybjoNCg0KYGBge3J9DQpzYXZlUkRTKHBhcnR5X3N1bW1hcnksICJwYXJ0eV9zdW1tYXJ5LlJEUyIpDQpgYGANCg0KRWJlbnNvZ3V0IGvDtm5uZW4gd2lyIHNpZSBhbHMgLmNzdiBleHBvcnRpZXJlbiwgaW5kZW0gd2lyIGRpZSAqVGlkeXZlcnNlKiBGdW5rdGlvbiBgd3JpdGVfY3N2KClgIHZlcndlbmRlbjoNCg0KYGBge3J9DQp3cml0ZV9jc3YocGFydHlfc3VtbWFyeSwgInBhcnR5X3N1bW1hcnkuY3N2IikNCmBgYA0KDQpVbnNlciBHcmFmaWtlbiBrw7ZubmVuIHdpciBhdWYgdW50ZXJzY2hpZWRsaWNoZSBXZWlzZSBzcGVpY2hlcm4uIFp1bSB3aXJkIGV1Y2ggZGllIEdyYWZpaywgZGllIGlociBlcnN0ZWxsdCwgdW50ZXIgZGVtIFJlaXRlciAiUGxvdHMiIGluIFJTdHVkaW8gYW5nZXplaWd0LCB3ZW5uIGlociBkZW4gQ29kZSBkaXJla3QgaW4gZGVyIEtvbnNvbGUgYXVzZsO8aHJ0ICh3ZW5uIGlociBkZW4gQ29kZSB3aWUgaGllciBpbiBlaW5lbSBOb3RlYm9vayBhdXNmw7xocnQsIGlzdCBkYXMgbmljaHQgZGVyIEZhbGwhKS4gRG9ydCBmaW5kZXQgaWhyIGVpbmUgcHJha3Rpc2NoZSAiRXhwb3J0Ii1GdW5rdGlvbi4gWnVtIGFuZGVyZW4gYmlldGV0ICpnZ3Bsb3QqIGRpZSBGdW5rdGlvbiBgZ2dzYXZlKClgLCBtaXQgZGVyIGlociBkZW4gbGV0enRlbiBhdXNnZWbDvGhydGVuIFBsb3QgKG9kZXIgZWluIFBsb3QtT2JqZWt0IGV1cmVyIFdhaGwpIGV4cG9ydGllcmVuIGvDtm5udC4gSGlud2VpczogYGdnc2F2ZSgpYCBiaWV0ZXQgemFobHJlaWNoZSBPcHRpb25lbiB6dW0gRXhwb3J0LCBkaWUgaWhyIHVudGVyIGA/Z2dzYXZlKClgIGZpbmRldC4gRGllIFN0YW5kYXJkZWluc3RlbGx1bmdlbiBzaW5kIGjDpHVmaWcgYWJlciBhdXNyZWljaGVuZDoNCg0KYGBge3J9DQpnZ3NhdmUoInBhcnR5X292ZXJ2aWV3LnBuZyIpDQpgYGANCg0KU2NobHVzc2VuZGxpY2gga8O2bm50IGlociBkaWUgRXJnZWJuaXNzZSBldXJlcyBOb3RlYm9va3MgbWl0c2FtdCBkZW0gVGV4dCBleHBvcnRpZXJlbi4gR2VodCBkYXp1IGF1ZiBkZW4ga2xlaW5lbiBQZmVpbCBuZWJlbiAiUHJldmlldyIgdW5kIGtsaWNrdCBhdWYgZWluZW4gZGVyICJLbml0Ii1FaW50csOkZ2UuIEhpbndlaXM6IERlciBQREYtRXhwb3J0IGJlbsO2dGlndCBlaW5lIGluc3RhbGxpZXJ0ZSBMYVRlWCBEaXN0cmlidXRpb24sIGRlciBXb3JkLUV4cG9ydCBlaW5lIFdvcmQtSW5zdGFsbGF0aW9uLiBIVE1MIGzDpHNzdCBzaWNoIGltbWVyIGV4cG9ydGllcmVuIHVuZCBrYW5uIG1pdCBlaW5lbSBCcm93c2VyIGV1cmVyIFdhaGwgZ2XDtmZmbmV0IHdlcmRlbi4NCg0KIyMjIMOcYnVuZyA2DQoNClNwZWljaGVydCBkaWUgT2JqZWt0ZSwgZGllIGlociBpbiAqKsOcYnVuZyA0KiogZXJzdGVsbHQgaGFidCBhbHMgLmNzdiB1bmQgLlJEUyBhYi4NCg0KYGBge3J9DQoNCmBgYA0KDQpTcGVpY2hlcnQgZGVuIFBsb3QgZGVyIFBhcnRlaXZpZGVvcyDDvGJlciBaZWl0LCBkZW4gd2lyIGluIMOcYnVuZyA1IGdlbWVpbnNhbSBlcnN0ZWxsdCBoYWJlbiwgYWIuIERlbmt0IGRhcmFuLCBkYXNzIGBnZ3NhdmUoKWAgc3RhbmRhcmRtw6TDn2lnIGltbWVyIGRlbiBsZXR6dGVuIFBsb3QgZXhwb3J0aWVydC4gRsO8aHJ0IGdnZi4gYWxzbyBub2NoIGVpbm1hbCBkZW4gQ29kZSBhdXMsIGRlciBkZW4gUGxvdCBlcnN0ZWxsdCBoYXQsIGJldm9yIGlociBgZ2dzYXZlKClgIHZlcndlbmRldC4NCg0KYGBge3J9DQoNCmBgYA0KDQpFeHBvcnRpZXJ0IGRpZSBFcmdlYm5pc3NlIGRpZXNlcyBOb3RlYm9va3MgYWxzIEhUTUwsIGluZGVtIGlociAiS25pdCB0byBIVE1MIiB2ZXJ3ZW5kZXQuDQoNCiMjIFp1c8OkdHpsaWNoZSDDnGJ1bmdlbg0KDQpJaHIgZmluZGV0IGltIExlYXJud2ViIGF1w59lcmRlbSBkZW4gRGF0ZW5zYXR6ICpwYXJ0eV9jb21tZW50c19qYW51YXJ5LmNzdiosIHdlbGNoZXIgYWxsZSBLb21tZW50YXJlIHp1IGRlbiBQYXJ0ZWl2aWRlb3MgYXVzIGRlbSBKYW51YXIgMjAyMiBlbnRow6RsdC4gTGVzdCBkaWVzZW4gaW4gZXVyZSBSLVVtZ2VidW5nIGVpbjoNCg0KYGBge3J9DQoNCmBgYA0KDQpMYXNzdCBldWNoIG1pdCBgc3VtbWFyaXNlKClgIGFuemVpZ2VuLCB3aWV2aWVsZSBLb21tZW50YXJlIGplZGUgUGFydGVpIGJla29tbWVuIGhhdC4NCg0KYGBge3J9DQoNCmBgYA0KDQpWZXJ3ZW5kZXQgYGZpbHRlcigpYCwgdW0gZXVjaCBkaWUgS29tbWVudGFyZSBmw7xyOlwNCmEpIGVpbmVuIFRhZyxcDQpiKSBlaW5lIFBhcnRlaSxcDQpjKSBlaW4gZWluemVsbmVzIFZpZGVvLFwNCmQpIGVpbmVuIFRhZyBmw7xyIHp3ZWkgUGFydGVpZW5cDQphbnplaWdlbiB6dSBsYXNzZW4uXA0KSGlud2VpczogQmVkZW5rdCwgZGFzcyBpaHIgZ2dmLiB6dW7DpGNoc3QgbWl0IGBtdXRhdGUoKWAgZGFzIERhdGVuZm9ybWF0IGFucGFzc2VuIG3DvHNzdCwgdW0gZXVjaCBlaW56ZWxuZSBUYWdlIGFuemVpZ2VuIHp1IGxhc3Nlbi4gQWx0ZXJuYXRpdiBrw7ZubnQgaWhyIG1pdCBgZG15X2htcygpYCAoKipEKipheS0qKk0qKm9udGgtKipZKiplYXItKipIKipvdXItKipNKippbnV0ZSoqLVMqKmVjb25kKSBuYWNoIGdlbmF1ZXJlbiBaZWl0cHVua3RlbiwgZXR3YSBkZW0gQmVnaW5uIHVuZCBFbmRlIGVpbmVzIFRhZ2VzLCBmaWx0ZXJuLiBVbSBtZWhyZXJlIGBmaWx0ZXIoKWAgS29tYmluYXRpb25lbiB6dSBrb21iaW5pZXJlbiBrYW5uIGVzIGF1w59lcmRlbSBuw7x0emxpY2ggc2VpbiwgS2xhbW1lcm4genUgc2V0emVuLCBkYSBkaWVzZSBnZW1laW5zYW0gZXZhbHVpZXJ0IHdlcmRlbiAoVGFnIFVORCAoUGFydHkgYSBvZGVyIGIpIG9kZXIgbWVocmVyZSBgZmlsdGVyKClgLUJlZmVobGUgbmFjaGVpbmFuZGVyIGF1c3p1ZsO8aHJlbi4NCg0KYGBge3J9DQoNCg0KYGBgDQoNClZpc3VhbGlzaWVydCBkaWUgRGF0ZW4gbWl0IGBnZ3Bsb3QoKWAuIExhc3N0IGV1Y2ggZGllIEtvbW1lbnRhcmUgaW4gdW50ZXJzY2hpZWRsaWNoZW4gRm9ybWF0ZW4gYW56ZWlnZW4sIGV0d2EgYWxzIEJhbGtlbmRpYWdyYW1tIG9kZXIgw7xiZXIgWmVpdCBhbHMgTGluaWUuIFByb2JpZXJ0IGF1Y2ggd2VpdGVyZSBWaXN1YWxpc2llcnVuZ3N0eXBlbiwgZXR3YSBgZ2VvbV9wb2ludCgpYMKgb2RlciBgZ2VvbV9zbW9vdGgoKWAgYXVzLiBJaHIga8O2bm50IGF1Y2ggbWVocmVyZSBQbG90LVR5cGVuIGtvbWJpbmllcmVuLCBpbmRlbSBpaHIgc2llIGhpbnRlcmVpbmFuZGVyIGhpbnp1ZsO8Z3QuIFBhc3N0IGViZW5mYWxscyBkaWUgTGFiZWxzLCBUaGVtZXMgdW5kIEd1aWRlcyBldXJlciBQbG90cyBhbiB1bmQgcHJvYmllcnQsIGRpZSBEYXRlbiBpbiB1bnRlcnNjaGllZGxpY2hlIEZvcm1hdGUgenUgYnJpbmdlbiwgYmV2b3IgaWhyIHNpZSBwbG90dGV0IC0gZXR3YSBtaXQgYHN1bW1hcmlzZSgpYC5cDQpIaW53ZWlzOiBCZWFjaHRldCwgZGFzcyAqdmlkZW9fUHVibGlzaGVkQXQqIGRlbiBaZWl0cHVua3QgZGVyIFZpZGVvcHVibGlrYXRpb24sICpjb21tZW50X1B1Ymxpc2hlZEF0KiBkZW4gWmVpdHB1bmt0IGRlcyBLb21tZW50YXJzIGFuZ2lidC4NCg0KYGBge3J9DQoNCmBgYA0K</div>
 
 
 

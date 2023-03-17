@@ -5,7 +5,7 @@ output: html_notebook
 
 ## Die YouTube API
 
-[![](yt-data-api-search_720.png)](https://developers.google.com/static/youtube/images/yt-data-api-search_720.png?hl=de)
+[![](images/yt-data-api-search_720.png)](https://developers.google.com/static/youtube/images/yt-data-api-search_720.png?hl=de)
 
 Die **vollständige Dokumentation der YouTube API** findet ihr unter\
 <https://developers.google.com/youtube/v3/docs>
@@ -53,9 +53,8 @@ Ihr werdet zunächst gefragt, ob ihr eine lokale Datei erstellen wollt, um die C
 Danach öffnet sich euer Browser und ihr landet auf einer Authentifizierungsseite. Dort müsst ihr euch **mit dem Account einloggen, den ihr als Test Account in der App angegeben habt**. Danach stimmt ihr zu, dass ihr der Entwickler\*in (euch selbst) vertraut und Zugriff auf die API gewährt. Und fertig!
 
 ```{r}
-yt_oauth(
-  app_id = "xxxxxxxx",
-  app_secret = "xxxxxxxx")
+yt_oauth(app_id = "xxxx",
+         app_secret = "xxxx")
 ```
 
 ## Zugriff auf Metadaten von Videos
@@ -82,7 +81,7 @@ video_data <- get_video_details(video_id = c("6qSVM-APauo",
 
 ## Zugriff auf Kommentare
 
-![](comments.png)
+![](images/comments.png)
 
 Um auf Kommentare für einzelne Videos zuzugreifen, können wir die Funktion `get_all_comments()` verwenden, welche lediglich die Video ID benötigt. Beachtet, dass `get_all_comments()` allerdings nicht alle Antworten auf Kommentare ausgibt.
 
@@ -128,7 +127,7 @@ for (i in 1:length(ids)) {
 
 ## Vorgeschlagene Videos
 
-![](related_videos.png)
+![](images/related_videos.png)
 
 Die Funktion `get_related_videos()` gibt uns die vorgeschlagenen Videos zu einem Video aus. Mit `max_results` geben wir die Anzahl an vorgeschlagenen Videos an, die wir pro Video erhalten möchten - bis zu 50 Stück. Es ist allerdings anzunehmen, dass nur weniger User\*innen mehr als 10 vorgeschlagene Videos überhaupt sehen. Wer scrollt schon lange durch diese Liste? Außerdem belastet es unser API Ratelimit relativ stark, die Daten dieser vogeschlagenen Videos zu ziehen (mehr dazu in der API Dokumentation). Deshalb entscheiden wir uns, nur 10 vorgeschlagene Videos zu ziehen:
 
@@ -239,7 +238,15 @@ Analysiert eure Ergebnisse:
 3.  Lasst euch das durschnittliche Publikationsdatum der vorgeschlagenen Videos pro Ausgangsvideo ausgeben
 
 ```{r}
+video_comments %>% summarise(count = n(), .by = videoId)
+```
 
+```{r}
+write_csv(video_comments, "video_comments.csv")
+
+write_csv(related_videos, "related_videos.csv")
+
+write_csv(video_data, "video_data.csv")
 ```
 
 # Replikation der Fallbeispiele
@@ -248,7 +255,7 @@ Analysiert eure Ergebnisse:
 
 Das Fallbeispiel aus der Präsentation sind die YouTube Kanäle der großen deutschen Parteien . Für eure eigenen Projekte könnt ihr natürlich alle anderen Kanäle verwenden. In diesem Abschnitt findet ihr Code, um das Beispiel zu reproduzieren oder (mit leichten Änderungen) auf andere Kanäle anzuwenden.
 
-![](party_channels.png)
+![](images/party_channels.png)
 
 Wenn wir die Videos mehrerer Kanäle ziehen wollen, sollten wir zunächst die Channel IDs (händisch) heraussuchen und ablegen. Da ich außerdem vermerken will, welche Partei zu welchem Channel gehört, lege ich dazu eine tibble, also eine Art Dataframe, an:
 

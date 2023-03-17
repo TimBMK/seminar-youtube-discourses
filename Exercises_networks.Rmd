@@ -43,11 +43,11 @@ library(ggraph)
 Daraufhin laden wir die Daten aus dem Learnweb in unsere R Umgebung. Nachdem ihr sie heruntergeladen habt (und sichergestellt, dass euer *working directory* demselben Ordner entspricht, in dem ihr sie ablegt habt), können wir die Daten einlesen. Wir benötigen *party_comments_january* und (später) *related_videos_january* sowie *party_videos_january.*
 
 ```{r}
-party_comments_january <- read_csv("party_comments_january.csv")
+party_comments_january <- read_csv("data/party_comments_january.csv")
 
-related_videos_january <- read_csv("related_videos_january.csv")
+related_videos_january <- read_csv("data/related_videos_january.csv")
 
-party_videos_january <- read_csv("party_videos_january.csv")
+party_videos_january <- read_csv("data/party_videos_january.csv")
 ```
 
 Zunächst müssen wir aus unseren Daten einen **Netzwerkgraphen** machen. Dazu nutzen wir `as_tbl_graph()`, das aus einem Dataframe oder Tible einen Graphen macht. Da wir uns für die User:innen interessieren, die Parteivideos kommentieren, sind die beiden **Nodetypen** die *video_id* und der *authorDisplayName*, also der Name der User:in. Wir könnten auch einen Graphen erstellen, der von *video_id* zu *comment_id*, also dem einzelnen Kommentar geht. Oder einen Graphen, der direkt von der Partei, die ein Video gepostet hat, zu den User:innen geht. Bei allen drei Netzwergraphen handelt es sich um **bipartite Netzwerke**. Da wir daran interessiert sind, wie sich Userkommentare um Videos (auch derselben Partei) gruppieren, wählen wir *video_id* und *authorDisplayName.*

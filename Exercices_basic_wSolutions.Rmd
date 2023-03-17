@@ -85,13 +85,13 @@ party_videos_csv <- read_csv("party_videos.csv")
 Legt euer Working Directory mit `setwd()` auf euren Projektordner fest. Überprüft mit `getwd()`, ob ihr im richtigen Ordner gelandet sein. Lest dann den *party_videos*-Datensatz ein: einmal als .RDS, einmal als .csv.
 
 ```{r}
-setwd("...")
+setwd("seminar-youtube-discourses")
 
 getwd()
 
-party_videos <- readRDS("party_videos.RDS")
+party_videos <- readRDS("data/party_videos.RDS")
 
-party_videos_csv <- read_csv("party_videos.csv")
+party_videos_csv <- read_csv("data/party_videos.csv")
 ```
 
 ## 3. Daten inspizieren
@@ -376,12 +376,9 @@ party_videos %>% nrow()
 party_videos_distinct %>% summarise(videos = n())
 
 identical(party_videos, party_videos_distinct)
-
-
-
 ```
 
-Filtert den Datensatz, um euch: \
+Filtert den Datensatz, um euch:\
 a) alle Videos der FDP anzeigen zu lassen,\
 b) alle Videos ab August 2022 anzeigen zu lassen,\
 c) alle Videos der AfD im September 2021 anzeigen zu lassen.
@@ -641,7 +638,7 @@ Exportiert die Ergebnisse dieses Notebooks als HTML, indem ihr "Knit to HTML" ve
 Ihr findet im Learnweb außerdem den Datensatz *party_comments_january.csv*, welcher alle Kommentare zu den Parteivideos aus dem Januar 2022 enthält. Lest diesen in eure R-Umgebung ein:
 
 ```{r}
-party_comments_january <- readRDS("party_comments_january.RDS")
+party_comments_january <- readRDS("data/party_comments_january.RDS")
 ```
 
 Lasst euch mit `summarise()` anzeigen, wieviele Kommentare jede Partei bekommen hat.
@@ -654,8 +651,8 @@ Verwendet `filter()`, um euch die Kommentare für:\
 a) einen Tag,\
 b) eine Partei,\
 c) ein einzelnes Video,\
-d) einen Tag für zwei Parteien \
-anzeigen zu lassen. \
+d) einen Tag für zwei Parteien\
+anzeigen zu lassen.\
 Hinweis: Bedenkt, dass ihr ggf. zunächst mit `mutate()` das Datenformat anpassen müsst, um euch einzelne Tage anzeigen zu lassen. Alternativ könnt ihr mit `dmy_hms()` (**D**ay-**M**onth-**Y**ear-**H**our-**M**inute**-S**econd) nach genaueren Zeitpunkten, etwa dem Beginn und Ende eines Tages, filtern. Um mehrere `filter()` Kombinationen zu kombinieren kann es außerdem nützlich sein, Klammern zu setzen, da diese gemeinsam evaluiert werden (Tag UND (Party a oder b) oder mehrere `filter()`-Befehle nacheinander auszuführen.
 
 ```{r}
@@ -673,7 +670,7 @@ party_comments_january %>% filter(day == dmy("13.1.2022") &
 
 ```
 
-Visualisiert die Daten mit `ggplot()`. Lasst euch die Kommentare in unterschiedlichen Formaten anzeigen, etwa als Balkendiagramm oder über Zeit als Linie. Probiert auch weitere Visualisierungstypen, etwa `geom_point()` oder `geom_smooth()` aus. Ihr könnt auch mehrere Plot-Typen kombinieren, indem ihr sie hintereinander hinzufügt. Passt ebenfalls die Labels, Themes und Guides eurer Plots an und probiert, die Daten in unterschiedliche Formate zu bringen, bevor ihr sie plottet - etwa mit `summarise()`. \
+Visualisiert die Daten mit `ggplot()`. Lasst euch die Kommentare in unterschiedlichen Formaten anzeigen, etwa als Balkendiagramm oder über Zeit als Linie. Probiert auch weitere Visualisierungstypen, etwa `geom_point()` oder `geom_smooth()` aus. Ihr könnt auch mehrere Plot-Typen kombinieren, indem ihr sie hintereinander hinzufügt. Passt ebenfalls die Labels, Themes und Guides eurer Plots an und probiert, die Daten in unterschiedliche Formate zu bringen, bevor ihr sie plottet - etwa mit `summarise()`.\
 Hinweis: Beachtet, dass *video_PublishedAt* den Zeitpunkt der Videopublikation, *comment_PublishedAt* den Zeitpunkt des Kommentars angibt.
 
 ```{r}

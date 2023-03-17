@@ -85,7 +85,7 @@ party_videos_csv <- read_csv("party_videos.csv")
 Legt euer Working Directory mit `setwd()` auf euren Projektordner fest. Überprüft mit `getwd()`, ob ihr im richtigen Ordner gelandet sein. Lest dann den *party_videos*-Datensatz ein: einmal als .RDS, einmal als .csv.
 
 ```{r}
-
+getwd()
 ```
 
 ## 3. Daten inspizieren
@@ -132,18 +132,26 @@ View()
 Lasst euch mittels `distinct()` die distinkten Werte für die Variablen *party* und *party_label* ausgeben. Was fällt euch auf?
 
 ```{r}
+party_videos %>% distinct(party)
 
+party_videos %>% distinct(party_label)
 ```
 
 Was passiert, wenn ihr euch mittels `distinct()` alle einzigartigen Kombinationen der Variablen *party* und *id* ausgeben lasst? Hinweis: `distinct()` lässt euch beliebig viele Variablenkombinationen angeben, wenn ihr diese mit einem Komma (,) trennt.
 
 ```{r}
-
+party_videos %>% distinct(party, id)
 ```
 
 Zieht erneut die *contentDetails.videoPublishedAt*-Variable mittels `pull()` aus dem Datensatz. Wendet dieses Mal jedoch andere Funktionen darauf an, um weitere Informationen zu erhalten. Insbesondere folgende Funktionen sind sinnvoll: `max()`, `mean()`, `range()`. Welche Informationen erhaltet ihr jeweils? Wenn ihr euch unsicher seid, schaut mittels `?` in die Helpfiles, z.B. mit `?mean()`.
 
 ```{r}
+party_videos %>% pull(contentDetails.videoPublishedAt) %>% max()
+
+party_videos %>% pull(contentDetails.videoPublishedAt) %>% mean()
+
+party_videos %>% pull(contentDetails.videoPublishedAt) %>% range()
+
 
 ```
 
